@@ -1,2 +1,2 @@
-# play_sfml
+# sfml_exercises
 Exercises for SFML
