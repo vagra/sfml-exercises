@@ -30,7 +30,7 @@ void App::run() {
 
         float x = float(rand() % 1200);
         float y = float(rand() % 800);
-        actor.setPosition(x, y);
+        actor.sprite.setPosition(x, y);
 
         actors.push_back(actor);
     }
@@ -70,7 +70,7 @@ void App::run() {
 
         for (auto& actor : actors)
         {
-            window.draw(actor);
+            window.draw(actor.sprite);
         }
 
         window.draw(text);

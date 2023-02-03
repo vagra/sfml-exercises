@@ -5,7 +5,7 @@
 			"name": "Clang LLDB Debug",
 			"type": "lldb",
 			"request": "launch",
-			"program": "${fileDirname}/${fileBasenameNoExtension}-d.exe",
+			"program": "${fileDirname}/${fileDirnameBasename}-d.exe",
 			"args": [],
 			"cwd": "${fileDirname}",
 			"preLaunchTask": "Build: Debug",

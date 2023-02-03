@@ -56,8 +56,7 @@ const int ANIM_STEPS[STEPS] = { 0, 1, 2, 1 };
 
 static sf::Texture textures[ACTORS];
 
-class Actor :
-    public sf::Sprite
+class Actor
 {
 public:
     Actor();
@@ -70,6 +69,8 @@ public:
     void random();
     void play(sf::Time elapsed);
     void step();
+
+    sf::Sprite sprite;
 
 private:
 

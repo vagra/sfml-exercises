@@ -7,13 +7,13 @@ Actor::Actor() {
 void Actor::init() {
 
 	m_no = rand() % ACTORS;
-	setTexture(textures[m_no]);
+	sprite.setTexture(textures[m_no]);
 
 	m_anim_timer = 0;
 	m_action_timer = 0;
 
 	m_area = sf::IntRect(0, 0, EDGE, EDGE);
-	setScale(SCALE, SCALE);
+	sprite.setScale(SCALE, SCALE);
 
 	random();
 	step();
@@ -57,7 +57,7 @@ void Actor::play(sf::Time elapsed) {
 		step();
 	}
 
-	move(m_vector);
+	sprite.move(m_vector);
 }
 
 void Actor::step() {
@@ -75,11 +75,11 @@ void Actor::changeFrame() {
 	m_area.top = m_frame.y * EDGE;
 
 	// cout << fmt::format("area: ({}, {}, {}, {})", m_area.left, m_area.top, m_area.width, m_area.height) << endl;
-	setTextureRect(m_area);
+	sprite.setTextureRect(m_area);
 }
 
 int Actor::genDirection() {
-	sf::Vector2f pos = static_cast<sf::Vector2f>(getPosition());
+	sf::Vector2f pos = static_cast<sf::Vector2f>(sprite.getPosition());
 	sf::Vector2f win = sf::Vector2f(float(App::width), float(App::height));
 
 	// cout << fmt::format("pos: ({},{})\twin: ({},{})", pos.x, pos.y, win.x, win.y) << endl;
@@ -98,7 +98,7 @@ int Actor::genDirection() {
 }
 
 bool Actor::zOrder(const Actor& actor1, const Actor& actor2) {
-	return (actor1.getPosition().y < actor2.getPosition().y);
+	return (actor1.sprite.getPosition().y < actor2.sprite.getPosition().y);
 }
 
 void Actor::readTextures() {
