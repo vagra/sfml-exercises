@@ -1,0 +1,10 @@
+.vs/
+.vscode/
+/build/
+/packages/
+*/x64/
+*/x32/
+
+*.exe
+*.ninja
+*.filters
