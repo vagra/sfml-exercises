@@ -6,5 +6,5 @@
 
 using namespace std;
 
-const int MAX = 1000;
+const int MAX = 5000;
 
