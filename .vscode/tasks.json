@@ -1,0 +1,96 @@
+{
+    "presentation": {
+		"echo": false,
+		"reveal": "always",
+		"focus": true,
+		"panel": "shared",
+		"clear": false,
+		"showReuseMessage": true
+	},
+    "tasks": [
+        {
+			"label": "Build: Release",
+			"command": "cmake",
+			"args": [
+				"--build",
+				"./build/",
+				"--target",
+				"${fileDirnameBasename}",
+				"--config",
+				"Debug",
+			],
+			"type": "shell",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+		},
+		{
+			"label": "Build: Debug",
+			"command": "cmake",
+			"args": [
+				"--build",
+				"./build/",
+				"--target",
+				"${fileDirnameBasename}",
+				"--config",
+				"Debug",
+			],
+			"type": "shell",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
+			"label": "ReBuild: Release",
+			"command": "cmake",
+			"args": [
+				"--build",
+				"./build/",
+				"--clean-first",
+				"--target",
+				"${fileDirnameBasename}",
+				"--config",
+				"Debug",
+			],
+			"type": "shell",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+		},
+		{
+			"label": "ReBuild: Debug",
+			"command": "cmake",
+			"args": [
+				"--build",
+				"./build/",
+				"--clean-first",
+				"--target",
+				"${fileDirnameBasename}",
+				"--config",
+				"Debug",
+			],
+			"type": "shell",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+    ],
+    
+    "version": "2.0.0"
+}

@@ -1,15 +1,11 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.22)
 project(SFMLExercises
     LANGUAGES CXX
     VERSION 1.0.0
 )
 
+set(CMAKE_CONFIGURATION_TYPES "Release;Debug")
 set(CMAKE_DEBUG_POSTFIX "-d")
-
-if(NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE Debug)
-endif()
-message("build: $(CMAKE_BUILD_TYPE)")
 
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
