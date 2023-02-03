@@ -1,2 +1,2 @@
-# sfml_exercises
+# sfml-exercises
 Some practice projects for sfml.
