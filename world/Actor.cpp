@@ -13,6 +13,7 @@ void Actor::init() {
 	m_action_timer = 0;
 
 	m_area = sf::IntRect(0, 0, EDGE, EDGE);
+
 	sprite.setScale(SCALE, SCALE);
 
 	random();
@@ -54,6 +55,7 @@ void Actor::play(sf::Time elapsed) {
 
 	if (m_anim_timer >= ANIM_CYCLE) {
 		m_anim_timer = m_anim_timer % ANIM_CYCLE;
+
 		step();
 	}
 
@@ -104,11 +106,18 @@ void Actor::setRegion(int width, int height) {
 	region = sf::Vector2i(width, height);
 }
 
-void Actor::readTextures() {
+void Actor::initTextures() {
 	textures.clear();
 
+	sf::Texture shadowTexture;
+	if (!shadowTexture.loadFromFile(SHADOW_PNG)) {
+		cout << "can't read texture: " << SHADOW_PNG << endl;
+	}
+
+	string png = "";
+
 	for (int i = 0; i < ACTORS; i++) {
-		string png = fmt::format(ACTOR_PNG, i);
+		png = fmt::format(ACTOR_PNG, i);
 
 		sf::Texture texture;
 
@@ -116,7 +125,44 @@ void Actor::readTextures() {
 			cout << "can't read texture: " << png << endl;
 		}
 		else {
+			addShadow(texture, shadowTexture);
 			textures.push_back(texture);
 		}
 	}
+}
+
+void Actor::addShadow(sf::Texture &sheetTexture, sf::Texture shadowTexture) {
+
+	sf::RenderTexture renderTexture;
+	if (!renderTexture.create(PNG_WIDTH, PNG_HEIGHT))
+	{
+		cout << "error when render textures" << endl;
+	}
+
+	vector<sf::Sprite> shadows;
+	for (int i = 0; i < PNG_COLS; i++) {
+		for (int j = 0; j < PNG_ROWS; j++) {
+			sf::Sprite shadow;
+			shadow.setTexture(shadowTexture);
+			shadow.setPosition(float(i * EDGE) + SHADOW_OFFX, float(j * EDGE) + SHADOW_OFFY);
+
+			shadows.push_back(shadow);
+		}
+	}
+
+	sf::Sprite sheet;
+	sheet.setTexture(sheetTexture);
+	sheet.setPosition(0, 0);
+
+	renderTexture.clear(sf::Color::Transparent);
+
+	for (auto shadow : shadows) {
+		renderTexture.draw(shadow);
+	}
+
+	renderTexture.draw(sheet);
+
+	renderTexture.display();
+
+	sheetTexture = renderTexture.getTexture();
 }

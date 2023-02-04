@@ -7,6 +7,7 @@ using namespace std;
 
 const string FONT_OTF = "../assets/fonts/ark-pixel-12px-monospaced-zh_cn.ttf";
 const sf::String APP_NAME = L"你好, SFML!";
+const sf::Color BG_COLOR = sf::Color(173, 213, 162);
 
 class App
 {

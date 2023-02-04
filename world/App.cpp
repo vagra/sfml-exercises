@@ -46,7 +46,7 @@ void App::run() {
         fps = int(1 / elapsed.asSeconds());
         text.setString(fmt::format("Character Number: {}\nFPS: {}", MAX, fps));
 
-        window.clear();
+        window.clear(BG_COLOR);
 
         for (auto& actor : actors)
         {
@@ -92,7 +92,7 @@ void App::initText() {
 
 void App::initActors() {
 
-    Actor::readTextures();
+    Actor::initTextures();
 
     actors = vector<Actor>();
 

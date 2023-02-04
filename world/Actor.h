@@ -22,6 +22,10 @@ const float SQR = 0.7071f;
 const float SCALE = 0.8f;
 
 const string ACTOR_PNG = "../assets/characters/actor-{}-0.png";
+const string SHADOW_PNG = "../assets/characters/shadow.png";
+
+const int SHADOW_OFFX = 30;
+const int SHADOW_OFFY = 80;
 
 const V2i ANIM_STARTS[DIRECTIONS] = {
     V2i(0, 0),    // ↓
@@ -60,7 +64,7 @@ public:
 
     static bool zOrder(const Actor& actor1, const Actor& actor2);
 
-    static void readTextures();
+    static void initTextures();
     static void setRegion(int width, int height);
 
     void init();
@@ -71,6 +75,8 @@ public:
     sf::Sprite sprite;
 
 private:
+
+    static void addShadow(sf::Texture& sheetTexture, sf::Texture shadowTexture);
 
     void changeFrame();
     int genDirection();
@@ -92,4 +98,5 @@ private:
 
     static inline sf::Vector2i region = sf::Vector2i(INIT_WIDTH, INIT_HEIGHT);
     static inline vector<sf::Texture> textures = vector<sf::Texture>();
+    static inline sf::Texture shadow_texture = sf::Texture();
 };

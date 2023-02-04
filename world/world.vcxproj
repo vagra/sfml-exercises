@@ -98,6 +98,7 @@
       <AdditionalLibraryDirectories>$(VCPKG_ROOT)\packages\sfml_x64-windows\lib;$(VCPKG_ROOT)\packages\fmt_x64-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>fmt.lib;sfml-audio.lib;sfml-graphics.lib;sfml-network.lib;sfml-system.lib;sfml-window.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(TargetPath)</OutputFile>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PostBuildEvent>
       <Command> copy $(TargetPath) $(ProjectDir)</Command>
