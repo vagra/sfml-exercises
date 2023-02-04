@@ -3,7 +3,8 @@
 
 int main()
 {
-    App::run();
+    App app;
+    app.run();
 
     return 0;
 }

@@ -2,7 +2,6 @@
 
 #include "globals.h"
 #include "V.h"
-#include "App.h"
 
 using namespace std;
 
@@ -54,8 +53,6 @@ const V2i ACTION_ORIGINS[ACTIONS] = {
 
 const int ANIM_STEPS[STEPS] = { 0, 1, 2, 1 };
 
-static sf::Texture textures[ACTORS];
-
 class Actor
 {
 public:
@@ -64,6 +61,7 @@ public:
     static bool zOrder(const Actor& actor1, const Actor& actor2);
 
     static void readTextures();
+    static void setRegion(int width, int height);
 
     void init();
     void random();
@@ -73,6 +71,9 @@ public:
     sf::Sprite sprite;
 
 private:
+
+    void changeFrame();
+    int genDirection();
 
     int m_no;
     int m_anim_timer;
@@ -89,7 +90,6 @@ private:
     V2i m_frame;
     sf::IntRect m_area;
 
-    void changeFrame();
-    int genDirection();
+    static inline sf::Vector2i region = sf::Vector2i(INIT_WIDTH, INIT_HEIGHT);
+    static inline vector<sf::Texture> textures = vector<sf::Texture>();
 };
-

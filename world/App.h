@@ -8,20 +8,26 @@ using namespace std;
 const string FONT_OTF = "../assets/fonts/ark-pixel-12px-monospaced-zh_cn.ttf";
 const sf::String APP_NAME = L"你好, SFML!";
 
-const int INIT_WIDTH = 1600;
-const int INIT_HEIGHT = 800;
-
-static sf::RenderWindow window;
-
 class App
 {
 public:
-	static void run();
+	App();
 
-	static int width;
-	static int height;
+	void init();
+	void run();
 
 private:
-	static void onResize();
+	void initWindow();
+	void initText();
+	void initActors();
+
+	void onResize();
+
+	sf::RenderWindow window;
+	sf::Font font;
+	sf::Text text;
+
+	vector<Actor> actors;
+
 };
 

@@ -80,19 +80,18 @@ void Actor::changeFrame() {
 
 int Actor::genDirection() {
 	sf::Vector2f pos = static_cast<sf::Vector2f>(sprite.getPosition());
-	sf::Vector2f win = sf::Vector2f(float(App::width), float(App::height));
 
-	// cout << fmt::format("pos: ({},{})\twin: ({},{})", pos.x, pos.y, win.x, win.y) << endl;
+	// cout << fmt::format("pos: ({},{})\tregion: ({},{})", pos.x, pos.y, region.x, region.y) << endl;
 
 	if (pos.x < 0 && pos.y < 0) return 1;
-	if (pos.x < 0 && pos.y > win.y) return 3;
-	if (pos.x > win.x && pos.y > win.y) return 5;
-	if (pos.x > win.x && pos.y < 0) return 7;
+	if (pos.x < 0 && pos.y > region.y) return 3;
+	if (pos.x > region.x && pos.y > region.y) return 5;
+	if (pos.x > region.x && pos.y < 0) return 7;
 
 	if (pos.y < 0) return 0;
 	if (pos.x < 0) return 2;
-	if (pos.y > win.y) return 4;
-	if (pos.x > win.x) return 6;
+	if (pos.y > region.y) return 4;
+	if (pos.x > region.x) return 6;
 
 	return rand() % DIRECTIONS;
 }
@@ -101,15 +100,23 @@ bool Actor::zOrder(const Actor& actor1, const Actor& actor2) {
 	return (actor1.sprite.getPosition().y < actor2.sprite.getPosition().y);
 }
 
+void Actor::setRegion(int width, int height) {
+	region = sf::Vector2i(width, height);
+}
+
 void Actor::readTextures() {
+	textures.clear();
 
 	for (int i = 0; i < ACTORS; i++) {
-		
 		string png = fmt::format(ACTOR_PNG, i);
 
-		if (!textures[i].loadFromFile(png))
-		{
+		sf::Texture texture;
+
+		if (!texture.loadFromFile(png)) {
 			cout << "can't read texture: " << png << endl;
+		}
+		else {
+			textures.push_back(texture);
 		}
 	}
 }
