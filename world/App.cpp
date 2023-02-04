@@ -5,10 +5,10 @@ App::App() {
 }
 
 void App::init() {
-
     initWindow();
-
     initText();
+
+    TextureManager::init();
 
     initActors();
 }
@@ -72,7 +72,6 @@ void App::onResize() {
     // cout << fmt::format("win: ({}, {})", win.x, win.y) << endl;
 }
 
-
 void App::initWindow() {
     window.create(sf::VideoMode(INIT_WIDTH, INIT_HEIGHT), APP_NAME);
     window.setVerticalSyncEnabled(true);
@@ -90,19 +89,14 @@ void App::initText() {
     text.setFillColor(sf::Color::Yellow);
 }
 
-void App::initActors() {
 
-    Actor::initTextures();
+void App::initActors() {
 
     actors = vector<Actor>();
 
     for (int i = 0; i < MAX; i++)
     {
         Actor actor;
-
-        float x = float(rand() % 1200);
-        float y = float(rand() % 800);
-        actor.sprite.setPosition(x, y);
 
         actors.push_back(actor);
     }

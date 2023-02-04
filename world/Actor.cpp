@@ -7,16 +7,23 @@ Actor::Actor() {
 void Actor::init() {
 
 	m_no = rand() % ACTORS;
-	sprite.setTexture(textures[m_no]);
+	m_name = fmt::format(ACTOR_PNG, m_no);
+
+	m_position = genPosition();
+	sprite.setPosition(m_position);
+
+	mp_texture = TextureManager::getTexture(m_name);
+	sprite.setTexture(*mp_texture);
+
+	sprite.setScale(SCALE, SCALE);
+
+	m_area = sf::IntRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
 	m_anim_timer = 0;
 	m_action_timer = 0;
 
-	m_area = sf::IntRect(0, 0, EDGE, EDGE);
-
-	sprite.setScale(SCALE, SCALE);
-
 	random();
+
 	step();
 }
 
@@ -34,7 +41,7 @@ void Actor::random() {
 		m_action = 0;	// Walk
 	}
 	else {
-		m_action = 2;
+		m_action = 2;	// Raise
 	}
 
 	m_vector.x = VECTORS[m_direction].x * m_speed;
@@ -47,6 +54,7 @@ void Actor::play(sf::Time elapsed) {
 	m_action_timer += elapsed.asMilliseconds();
 
 	// cout << fmt::format("anim_timer{}, elapsed: {}", m_anim_timer, elapsed.asMilliseconds()) << endl;
+
 	if (m_action_timer >= m_actionCycle) {
 		m_action_timer = 0;
 
@@ -60,12 +68,41 @@ void Actor::play(sf::Time elapsed) {
 	}
 
 	sprite.move(m_vector);
+
+	m_position = sprite.getPosition();
 }
 
 void Actor::step() {
 	// cout << fmt::format("step: {}, action: {}, direction: {}", m_step, m_action, m_direction) << endl;
+
 	changeFrame();
+
+	sprite.setTextureRect(m_area);
+
 	m_step = (m_step + 1) % STEPS;
+}
+
+sf::Vector2f Actor::genPosition() {
+	float x = float(rand() % 1200);
+	float y = float(rand() % 800);
+
+	return sf::Vector2f(x, y);
+}
+
+int Actor::genDirection() {
+	// cout << fmt::format("position: ({},{})\tregion: ({},{})", m_position.x, m_position.y, region.x, region.y) << endl;
+
+	if (m_position.x < 0 && m_position.y < 0) return 1;
+	if (m_position.x < 0 && m_position.y > region.y) return 3;
+	if (m_position.x > region.x && m_position.y > region.y) return 5;
+	if (m_position.x > region.x && m_position.y < 0) return 7;
+
+	if (m_position.y < 0) return 0;
+	if (m_position.x < 0) return 2;
+	if (m_position.y > region.y) return 4;
+	if (m_position.x > region.x) return 6;
+
+	return rand() % DIRECTIONS;
 }
 
 void Actor::changeFrame() {
@@ -73,29 +110,10 @@ void Actor::changeFrame() {
 	m_frame.x = ANIM_STARTS[m_direction].x + ACTION_ORIGINS[m_action].x + ANIM_STEPS[m_step];
 	m_frame.y = ANIM_STARTS[m_direction].y + ACTION_ORIGINS[m_action].y;
 
-	m_area.left = m_frame.x * EDGE;
-	m_area.top = m_frame.y * EDGE;
+	m_area.left = m_frame.x * FRAME_WIDTH;
+	m_area.top = m_frame.y * FRAME_HEIGHT;
 
 	// cout << fmt::format("area: ({}, {}, {}, {})", m_area.left, m_area.top, m_area.width, m_area.height) << endl;
-	sprite.setTextureRect(m_area);
-}
-
-int Actor::genDirection() {
-	sf::Vector2f pos = static_cast<sf::Vector2f>(sprite.getPosition());
-
-	// cout << fmt::format("pos: ({},{})\tregion: ({},{})", pos.x, pos.y, region.x, region.y) << endl;
-
-	if (pos.x < 0 && pos.y < 0) return 1;
-	if (pos.x < 0 && pos.y > region.y) return 3;
-	if (pos.x > region.x && pos.y > region.y) return 5;
-	if (pos.x > region.x && pos.y < 0) return 7;
-
-	if (pos.y < 0) return 0;
-	if (pos.x < 0) return 2;
-	if (pos.y > region.y) return 4;
-	if (pos.x > region.x) return 6;
-
-	return rand() % DIRECTIONS;
 }
 
 bool Actor::zOrder(const Actor& actor1, const Actor& actor2) {
@@ -104,65 +122,4 @@ bool Actor::zOrder(const Actor& actor1, const Actor& actor2) {
 
 void Actor::setRegion(int width, int height) {
 	region = sf::Vector2i(width, height);
-}
-
-void Actor::initTextures() {
-	textures.clear();
-
-	sf::Texture shadowTexture;
-	if (!shadowTexture.loadFromFile(SHADOW_PNG)) {
-		cout << "can't read texture: " << SHADOW_PNG << endl;
-	}
-
-	string png = "";
-
-	for (int i = 0; i < ACTORS; i++) {
-		png = fmt::format(ACTOR_PNG, i);
-
-		sf::Texture texture;
-
-		if (!texture.loadFromFile(png)) {
-			cout << "can't read texture: " << png << endl;
-		}
-		else {
-			addShadow(texture, shadowTexture);
-			textures.push_back(texture);
-		}
-	}
-}
-
-void Actor::addShadow(sf::Texture &sheetTexture, sf::Texture shadowTexture) {
-
-	sf::RenderTexture renderTexture;
-	if (!renderTexture.create(PNG_WIDTH, PNG_HEIGHT))
-	{
-		cout << "error when render textures" << endl;
-	}
-
-	vector<sf::Sprite> shadows;
-	for (int i = 0; i < PNG_COLS; i++) {
-		for (int j = 0; j < PNG_ROWS; j++) {
-			sf::Sprite shadow;
-			shadow.setTexture(shadowTexture);
-			shadow.setPosition(float(i * EDGE) + SHADOW_OFFX, float(j * EDGE) + SHADOW_OFFY);
-
-			shadows.push_back(shadow);
-		}
-	}
-
-	sf::Sprite sheet;
-	sheet.setTexture(sheetTexture);
-	sheet.setPosition(0, 0);
-
-	renderTexture.clear(sf::Color::Transparent);
-
-	for (auto shadow : shadows) {
-		renderTexture.draw(shadow);
-	}
-
-	renderTexture.draw(sheet);
-
-	renderTexture.display();
-
-	sheetTexture = renderTexture.getTexture();
 }

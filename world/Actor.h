@@ -1,16 +1,15 @@
 #pragma once
 
 #include "globals.h"
+
 #include "V.h"
+#include "TextureManager.h"
 
 using namespace std;
-
-const int EDGE = 100;
 
 const int DIRECTIONS = 8;
 const int STEPS = 4;
 const int ACTIONS = 3;  // Walk, Run, Raise
-const int ACTORS = 17;
 
 const int ANIM_CYCLE = 150;
 const int MAX_ACTION_CYCLE = 5000;
@@ -20,12 +19,6 @@ const float MAX_RAISE_SPEED = 0.5f;
 
 const float SQR = 0.7071f;
 const float SCALE = 0.8f;
-
-const string ACTOR_PNG = "../assets/characters/actor-{}-0.png";
-const string SHADOW_PNG = "../assets/characters/shadow.png";
-
-const int SHADOW_OFFX = 30;
-const int SHADOW_OFFY = 80;
 
 const V2i ANIM_STARTS[DIRECTIONS] = {
     V2i(0, 0),    // ↓
@@ -63,11 +56,8 @@ public:
     Actor();
 
     static bool zOrder(const Actor& actor1, const Actor& actor2);
-
-    static void initTextures();
     static void setRegion(int width, int height);
 
-    void init();
     void random();
     void play(sf::Time elapsed);
     void step();
@@ -76,12 +66,16 @@ public:
 
 private:
 
-    static void addShadow(sf::Texture& sheetTexture, sf::Texture shadowTexture);
+    void init();
 
-    void changeFrame();
+    sf::Vector2f genPosition();
     int genDirection();
 
+    void changeFrame();
+
     int m_no;
+    string m_name;
+
     int m_anim_timer;
     int m_action_timer;
     int m_actionCycle;
@@ -89,14 +83,16 @@ private:
     int m_step;
     int m_action;
 
+    sf::Vector2f m_position;
     int m_direction;
+
     float m_speed;
     sf::Vector2f m_vector;
 
     V2i m_frame;
     sf::IntRect m_area;
 
+    sf::Texture* mp_texture;
+
     static inline sf::Vector2i region = sf::Vector2i(INIT_WIDTH, INIT_HEIGHT);
-    static inline vector<sf::Texture> textures = vector<sf::Texture>();
-    static inline sf::Texture shadow_texture = sf::Texture();
 };

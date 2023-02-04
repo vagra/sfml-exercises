@@ -5,6 +5,7 @@ project (world)
 set(SOURCES
     Actor.cpp
     App.cpp
+    TextureManager.cpp
     world.cpp
 )
 

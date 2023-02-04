@@ -107,11 +107,13 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="world.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="App.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="V.h" />
     <ClInclude Include="globals.h" />
   </ItemGroup>
