@@ -3,4 +3,4 @@ Some practice projects for sfml.
 
 
 ## world
-![world](https://github.com/vagra/sfml-exercises/blob/8ecac1e0127d646a7f1c4721d123517fcae0ce23/assets/screenshots/world.jpg)
+![world](https://github.com/vagra/sfml-exercises/blob/bdc6b3f94abdd12c60051662a7c8c45ad473c3b9/assets/screenshots/world.jpg)
