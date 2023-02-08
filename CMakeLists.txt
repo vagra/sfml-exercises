@@ -36,6 +36,8 @@ endif()
 
 add_subdirectory(hello)
 add_subdirectory(world)
+add_subdirectory(soldier)
+
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

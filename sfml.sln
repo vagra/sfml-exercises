@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "world", "world\world.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hello", "hello\hello.vcxproj", "{C53C1D61-4B10-467A-92C1-1B9DFE4B3C63}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soldier", "soldier\soldier.vcxproj", "{AB0FE410-FFD6-48C7-9519-188F4378B87F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,10 @@ Global
 		{C53C1D61-4B10-467A-92C1-1B9DFE4B3C63}.Debug|x64.Build.0 = Debug|x64
 		{C53C1D61-4B10-467A-92C1-1B9DFE4B3C63}.Release|x64.ActiveCfg = Release|x64
 		{C53C1D61-4B10-467A-92C1-1B9DFE4B3C63}.Release|x64.Build.0 = Release|x64
+		{AB0FE410-FFD6-48C7-9519-188F4378B87F}.Debug|x64.ActiveCfg = Debug|x64
+		{AB0FE410-FFD6-48C7-9519-188F4378B87F}.Debug|x64.Build.0 = Debug|x64
+		{AB0FE410-FFD6-48C7-9519-188F4378B87F}.Release|x64.ActiveCfg = Release|x64
+		{AB0FE410-FFD6-48C7-9519-188F4378B87F}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
