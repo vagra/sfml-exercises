@@ -7,3 +7,4 @@ Some practice projects for sfml.
 
 
 ## soldier
+![soldier](https://github.com/vagra/sfml-exercises/blob/01c1e09476439e925f157b4e2809a1ed720a4438/assets/screenshots/soldier.jpg)
