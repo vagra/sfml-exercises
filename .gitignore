@@ -8,3 +8,5 @@
 *.exe
 *.ninja
 *.filters
+
+/grid/

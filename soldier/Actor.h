@@ -18,7 +18,7 @@ const float MAX_WALK_SPEED = 0.7f;
 const float MAX_STOP_SPEED = 0.2f;
 
 const float SQR = 0.7071f;
-const float SCALE = 1.0f;
+const float SCALE = 0.8f;
 
 const V2f VECTORS[DIRECTIONS] = {
     V2f(0.0,  1.0),
