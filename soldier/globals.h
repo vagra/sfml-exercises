@@ -12,7 +12,7 @@ using namespace std;
 const int INIT_WIDTH = 1600;
 const int INIT_HEIGHT = 800;
 
-const int ACTORS = 6;
+const int ACTORS = 1;
 
 const int MAX = 2000;
 

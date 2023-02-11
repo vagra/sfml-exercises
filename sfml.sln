@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hello", "hello\hello.vcxpro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soldier", "soldier\soldier.vcxproj", "{AB0FE410-FFD6-48C7-9519-188F4378B87F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grid", "grid\grid.vcxproj", "{F6F175AB-B753-4B1B-AF7E-0FD805E29590}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -27,6 +29,10 @@ Global
 		{AB0FE410-FFD6-48C7-9519-188F4378B87F}.Debug|x64.Build.0 = Debug|x64
 		{AB0FE410-FFD6-48C7-9519-188F4378B87F}.Release|x64.ActiveCfg = Release|x64
 		{AB0FE410-FFD6-48C7-9519-188F4378B87F}.Release|x64.Build.0 = Release|x64
+		{F6F175AB-B753-4B1B-AF7E-0FD805E29590}.Debug|x64.ActiveCfg = Debug|x64
+		{F6F175AB-B753-4B1B-AF7E-0FD805E29590}.Debug|x64.Build.0 = Debug|x64
+		{F6F175AB-B753-4B1B-AF7E-0FD805E29590}.Release|x64.ActiveCfg = Release|x64
+		{F6F175AB-B753-4B1B-AF7E-0FD805E29590}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
