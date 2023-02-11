@@ -15,13 +15,13 @@ using uniform-grid for 2d collision detection. very fast!
 
 ## thanks for
 
-### library
-- [sfml](https://github.com/SFML/SFML)
-- [fmt](https://github.com/fmtlib/fmt)
+- **library**
+  - [sfml](https://github.com/SFML/SFML)
+  - [fmt](https://github.com/fmtlib/fmt)
 
-### collision detection
-- [Dragon Energy@stackoverflow](https://stackoverflow.com/questions/41946007)
-  - [dragon-space](https://github.com/terrybrash/dragon-space)
-  - [quadtree](https://github.com/rangercyh/quadtree)
-  - [aoi](https://github.com/Lyra-Game/aoi)
+- **collision detection**
+  - [Dragon Energy@stackoverflow](https://stackoverflow.com/questions/41946007)
+    - [dragon-space](https://github.com/terrybrash/dragon-space)
+    - [quadtree](https://github.com/rangercyh/quadtree)
+    - [aoi](https://github.com/Lyra-Game/aoi)
 
