@@ -10,3 +10,6 @@
 - [ ] Introducing collision detection.
 - [ ] stop if hit.
 
+
+## grid
+- [ ] optimizing.
