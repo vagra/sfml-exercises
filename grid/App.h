@@ -23,11 +23,20 @@ private:
 	void init();
 
 	void initWindow();
+
 	void initText();
+	void updateText(sf::Time elapsed);
+	void drawText();
+
 	void initActors();
+	void updateActors(sf::Time elapsed);
+	void drawActors();
 
 	void initUGrid();
 	void updateUGrid();
+
+	void initRects();
+	void drawRects();
 
 	void onResize();
 
@@ -38,6 +47,8 @@ private:
 	vector<Actor> actors;
 
 	UGrid* mp_grid;
+
+	vector<sf::RectangleShape> rects;
 
 };
 

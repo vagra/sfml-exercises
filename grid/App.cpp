@@ -13,13 +13,13 @@ void App::init() {
     initActors();
 
     initUGrid();
+    initRects();
 }
 
 void App::run() {
     
     sf::Clock clock;
     sf::Time elapsed;
-    int fps;
 
     while (window.isOpen())
     {
@@ -38,27 +38,19 @@ void App::run() {
 
         elapsed = clock.restart();
 
-        for (auto& actor : actors)
-        {
-            actor.play(elapsed);
-        }
-
-        // sort(actors.begin(), actors.end(), Actor::zOrder);
-
-        fps = int(1 / elapsed.asSeconds());
-        text.setString(fmt::format("Character Number: {}\nFPS: {}", MAX, fps));
-
-        window.clear(BG_COLOR);
-
-        for (auto& actor : actors)
-        {
-            window.draw(actor.sprite);
-        }
-
-        window.draw(text);
-        window.display();
+        updateActors(elapsed);
+        updateText(elapsed);
 
         updateUGrid();
+
+        window.clear(BG_COLOR);
+        
+        drawRects();
+        drawActors();
+
+        drawText();
+        
+        window.display();
     }
 }
 
@@ -91,6 +83,15 @@ void App::initText() {
     text.setFillColor(sf::Color::Yellow);
 }
 
+void App::drawText() {
+    window.draw(text);
+}
+
+void App::updateText(sf::Time elapsed) {
+    int fps = int(1 / elapsed.asSeconds());
+    text.setString(fmt::format("Character Number: {}\nFPS: {}", MAX, fps));
+}
+
 void App::initActors() {
 
     actors = vector<Actor>();
@@ -100,6 +101,20 @@ void App::initActors() {
         Actor actor;
 
         actors.push_back(actor);
+    }
+}
+
+void App::updateActors(sf::Time elapsed) {
+    for (auto& actor : actors)
+    {
+        actor.play(elapsed);
+    }
+}
+
+void App::drawActors() {
+    for (auto& actor : actors)
+    {
+        window.draw(actor.sprite);
     }
 }
 
@@ -115,22 +130,6 @@ void App::initUGrid() {
     }
 
     ugrid_optimize(mp_grid);
-
-    cout << fmt::format("{} {} {}", mp_grid->num_rows, mp_grid->num_cols, mp_grid->num_rows) << endl;
-
-    /*
-    for (auto& actor : actors)
-    {
-        cout << fmt::format("in_bound({}, {}) = {}", actor.getX(), actor.getY(), 
-            ugrid_in_bounds(mp_grid, actor.getX(), actor.getY())) << endl;
-    }
-    */
-
-    /*
-    Actor &actor = actors[0];
-    actor.sprite.setColor(sf::Color(255, 0, 0));
-    cout << fmt::format("{}: {}, {}", actor.getID(), actor.getX(), actor.getY()) << endl;
-    */
 
 }
 
@@ -160,4 +159,31 @@ void App::updateUGrid() {
 
     ugrid_optimize(mp_grid);
 
+}
+
+void App::initRects() {
+    for (int i = 0; i < mp_grid->num_rows; i++) {
+        for (int j = 0; j < mp_grid->num_cols; j++) {
+            sf::RectangleShape rect(sf::Vector2f(CELL_WIDTH, CELL_HEIGHT));
+            rect.setPosition(float(CELL_WIDTH) * j, float(CELL_HEIGHT) * i);
+            rect.setFillColor(sf::Color::Transparent);
+            rect.setOutlineColor(sf::Color(0, 255, 0, 50));
+            rect.setOutlineThickness(1.f);
+            rects.push_back(rect);
+        }
+    }
+}
+
+void App::drawRects() {
+    int r = 0;
+    for (int i = 0; i < mp_grid->num_rows; i++) {
+        UGridRow* row = &mp_grid->rows[i];
+        for (int j = 0; j < mp_grid->num_cols; j++) {
+            int* cell = &row->cells[j];
+            if (*cell != -1) {
+                window.draw(rects[r]);
+            }
+            r++;
+        }
+    }
 }
