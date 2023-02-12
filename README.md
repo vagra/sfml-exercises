@@ -10,7 +10,7 @@ Some practice projects for sfml.
 
 ### grid
 using uniform-grid for 2d collision detection. very fast!
-![grid](https://github.com/vagra/sfml-exercises/blob/dec61d38eb1daa3ca8034cd7fbaf9af1b38493af/assets/screenshots/grid.png)
+![grid](https://github.com/vagra/sfml-exercises/blob/066d98090c64500652d2757c12b2ef68f0b5f312/assets/screenshots/grid.png)
 
 
 ## thanks for
