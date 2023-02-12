@@ -59,7 +59,8 @@ void Actor::play(sf::Time elapsed) {
 
 
 void Actor::turn() {
-	m_direction = (m_direction + 4) % DIRECTIONS;
+	int range = rand() % (DIRECTIONS - 3) + 2;
+	m_direction = (m_direction + range) % DIRECTIONS;
 
 	m_vector.x = VECTORS[m_direction].x * m_speed;
 	m_vector.y = VECTORS[m_direction].y * m_speed;
@@ -103,10 +104,29 @@ void Actor::setRegion(int width, int height) {
 }
 
 bool Actor::atFront(const Actor& actor1, const Actor& actor2) {
-	float offX = actor2.m_position.x - actor1.m_position.x;
-	float offY = actor2.m_position.y - actor1.m_position.y;
+	float dx = actor2.m_position.x - actor1.m_position.x;
+	float dy = actor2.m_position.y - actor1.m_position.y;
 
-	return (actor1.m_vector.x * offX >= 0 && actor1.m_vector.y * offY >= 0);
+	switch (actor1.m_direction) {
+	case 0:
+		return dy > abs(dx);
+	case 1:
+		return dx > 0 && dy > 0;
+	case 2:
+		return dx > abs(dy);
+	case 3:
+		return dx > 0 and dy < 0;
+	case 4:
+		return -dy > abs(dx);
+	case 5:
+		return dx < 0 and dy < 0;
+	case 6:
+		return -dx > abs(dy);
+	case 7:
+		return dx < 0 and dy > 0;
+	default:
+		return false;
+	}
 }
 
 int Actor::getID() {

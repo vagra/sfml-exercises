@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <filesystem>
+#include <cmath>
 #include <SFML/Graphics.hpp>
 #include <fmt/core.h>
 

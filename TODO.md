@@ -13,3 +13,4 @@
 
 ## grid
 - [ ] optimizing.
+- [ ] show uniform-grid border.
