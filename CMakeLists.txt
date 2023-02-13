@@ -38,6 +38,7 @@ add_subdirectory(hello)
 add_subdirectory(world)
 add_subdirectory(soldier)
 add_subdirectory(grid)
+add_subdirectory(dgrid)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

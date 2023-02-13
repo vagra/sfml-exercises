@@ -12,7 +12,7 @@ void App::init() {
 
     initActors();
 
-    initUGrid();
+    initGrid();
     initRects();
 }
 
@@ -41,7 +41,8 @@ void App::run() {
         updateActors(elapsed);
         updateText(elapsed);
 
-        updateUGrid();
+        updateGrid();
+        updateRects();
 
         window.clear(BG_COLOR);
         
@@ -118,31 +119,31 @@ void App::drawActors() {
     }
 }
 
-void App::initUGrid() {
-    mp_grid = ugrid_create(
-        SPRITE_RADIUS, CELL_WIDTH, CELL_HEIGHT,
+void App::initGrid() {
+    mp_grid = lgrid_create(
+        LCELL_WIDTH, LCELL_HEIGHT, TCELL_WIDTH, TCELL_HEIGHT,
         0.f, 0.f, GRID_WIDTH, GRID_HEIGHT 
     );
 
     for (auto& actor : actors)
     {
-        ugrid_insert(mp_grid, actor.getID(), actor.getX(), actor.getY());
+        lgrid_insert(mp_grid, actor.getID(), actor.getX(), actor.getY(), SPRITE_HALFW, SPRITE_HALFH);
     }
 
-    ugrid_optimize(mp_grid);
+    lgrid_optimize(mp_grid);
 
 }
 
-void App::updateUGrid() {
+void App::updateGrid() {
 
     SmallList<int> ids;
 
     for (auto& actor : actors)
     {
-        ugrid_move(mp_grid, actor.getID(), actor.prevX(), actor.prevY(),
+        lgrid_move(mp_grid, actor.getID(), actor.prevX(), actor.prevY(),
             actor.getX(), actor.getY());
 
-        ids = ugrid_query(mp_grid, actor.getX(), actor.getY(), 2.f * SPRITE_RADIUS, actor.getID());
+        ids = lgrid_query(mp_grid, actor.getX(), actor.getY(), SPRITE_HALFW, SPRITE_HALFH, actor.getID());
 
         if (ids.size() == 0) {
             continue;
@@ -157,33 +158,61 @@ void App::updateUGrid() {
         }
     }
 
-    ugrid_optimize(mp_grid);
-
+    lgrid_optimize(mp_grid);
 }
 
 void App::initRects() {
-    for (int i = 0; i < mp_grid->num_rows; i++) {
-        for (int j = 0; j < mp_grid->num_cols; j++) {
-            sf::RectangleShape rect(sf::Vector2f(CELL_WIDTH, CELL_HEIGHT));
-            rect.setPosition(float(CELL_WIDTH) * j, float(CELL_HEIGHT) * i);
-            rect.setFillColor(sf::Color::Transparent);
-            rect.setOutlineColor(sf::Color(0, 255, 0, 100));
-            rect.setOutlineThickness(1.f);
-            rects.push_back(rect);
+
+    for (int i = 0; i < mp_grid->loose.num_rows; i++) {
+        for (int j = 0; j < mp_grid->loose.num_cols; j++) {
+
+            sf::RectangleShape trect(sf::Vector2f(TCELL_WIDTH, TCELL_HEIGHT));
+            trect.setPosition(float(TCELL_WIDTH) * j, float(TCELL_HEIGHT) * i);
+            trect.setFillColor(sf::Color::Transparent);
+            trect.setOutlineColor(sf::Color(128, 0, 0, 100));
+            trect.setOutlineThickness(0.5f);
+            trects.push_back(trect);
         }
+    }
+
+    for (int i = 0; i < mp_grid->loose.num_cells; i++) {
+        LGridLooseCell* lcell = &mp_grid->loose.cells[i];
+
+        sf::RectangleShape lrect(sf::Vector2(
+            lcell->rect[2] - lcell->rect[0],
+            lcell->rect[3] - lcell->rect[1]
+        ));
+        lrect.setPosition(sf::Vector2(
+            lcell->rect[0], lcell->rect[1]
+        ));
+        lrect.setFillColor(sf::Color::Transparent);
+        lrect.setOutlineColor(sf::Color(0, 255, 0, 100));
+        lrect.setOutlineThickness(1.f);
+        lrects.push_back(lrect);
+    }
+}
+
+void App::updateRects() {
+
+    for (int i = 0; i < mp_grid->loose.num_cells; i++) {
+        LGridLooseCell* lcell = &mp_grid->loose.cells[i];
+
+        lrects[i].setSize(sf::Vector2(
+            lcell->rect[2] - lcell->rect[0],
+            lcell->rect[3] - lcell->rect[1]
+        ));
+        lrects[i].setPosition(sf::Vector2(
+            lcell->rect[0], lcell->rect[1]
+        ));
     }
 }
 
 void App::drawRects() {
-    int r = 0;
-    for (int i = 0; i < mp_grid->num_rows; i++) {
-        UGridRow* row = &mp_grid->rows[i];
-        for (int j = 0; j < mp_grid->num_cols; j++) {
-            int* cell = &row->cells[j];
-            if (*cell != -1) {
-                window.draw(rects[r]);
-            }
-            r++;
-        }
+    for (auto& trect : trects) {
+        window.draw(trect);
+    }
+
+    for (auto& lrect : lrects) {
+        window.draw(lrect);
     }
 }
