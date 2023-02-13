@@ -12,6 +12,10 @@ Some practice projects for sfml.
 using uniform-grid for 2d collision detection. very fast!
 ![grid](https://github.com/vagra/sfml-exercises/blob/066d98090c64500652d2757c12b2ef68f0b5f312/assets/screenshots/grid.png)
 
+### dgrid
+using loose/tight double-grid for 2d collision detection. very fast!
+![dgrid](https://github.com/vagra/sfml-exercises/blob/75a60965f6ee48544ea09d3dedb5ff8eccc8315b/assets/screenshots/dgrid.png)
+
 
 ## thanks for
 

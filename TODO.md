@@ -12,5 +12,7 @@
 
 
 ## grid
-- [ ] optimizing.
-- [ ] show uniform-grid border.
+- [x] optimizing.
+- [x] show uniform-grid border.
+
+## dgrid
