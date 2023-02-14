@@ -163,8 +163,8 @@ void App::updateGrid() {
 
 void App::initRects() {
 
-    for (int i = 0; i < mp_grid->loose.num_rows; i++) {
-        for (int j = 0; j < mp_grid->loose.num_cols; j++) {
+    for (int i = 0; i < mp_grid->tight.num_rows; i++) {
+        for (int j = 0; j < mp_grid->tight.num_cols; j++) {
 
             sf::RectangleShape trect(sf::Vector2f(TCELL_WIDTH, TCELL_HEIGHT));
             trect.setPosition(float(TCELL_WIDTH) * j, float(TCELL_HEIGHT) * i);
@@ -197,6 +197,10 @@ void App::updateRects() {
     for (int i = 0; i < mp_grid->loose.num_cells; i++) {
         LGridLooseCell* lcell = &mp_grid->loose.cells[i];
 
+        if (lcell->head == -1) {
+            continue;
+        }
+
         lrects[i].setSize(sf::Vector2(
             lcell->rect[2] - lcell->rect[0],
             lcell->rect[3] - lcell->rect[1]
@@ -208,11 +212,14 @@ void App::updateRects() {
 }
 
 void App::drawRects() {
-    for (auto& trect : trects) {
-        window.draw(trect);
+    for (int i = 0; i < mp_grid->tight.num_cells; i++) {
+        window.draw(trects[i]);
     }
 
-    for (auto& lrect : lrects) {
-        window.draw(lrect);
+    for (int i = 0; i < mp_grid->loose.num_cells; i++) {
+
+        if (mp_grid->loose.cells[i].head != -1) {
+            window.draw(lrects[i]);
+        }
     }
 }
