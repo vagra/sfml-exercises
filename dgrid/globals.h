@@ -15,7 +15,7 @@ const int INIT_HEIGHT = 800;
 
 const int ACTORS = 4;
 
-const int MAX = 5000;
+const int MAX = 8000;
 
 const int PNG_WIDTH = 64;
 const int PNG_HEIGHT = 64;
@@ -30,8 +30,8 @@ const int GRID_HEIGHT = 1200;
 const int CELL_WIDTH = 40;
 const int CELL_HEIGHT = 40;
 
-const int LCELL_WIDTH = 40;
-const int LCELL_HEIGHT = 40;
+const int LCELL_WIDTH = 50;
+const int LCELL_HEIGHT = 50;
 const int TCELL_WIDTH = 100;
 const int TCELL_HEIGHT = 100;
 
