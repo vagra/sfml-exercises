@@ -7,7 +7,7 @@ Actor::Actor() {
 void Actor::init() {
 
 	m_no = rand() % ACTORS;
-	m_name = fmt::format(ACTOR_PNG, m_no);
+	m_name = fmt::vformat(ACTOR_PNG, fmt::make_format_args(m_no));
 
 	m_position = genPosition();
 	sprite.setPosition(m_position);
