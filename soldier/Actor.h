@@ -18,7 +18,6 @@ const float MAX_WALK_SPEED = 0.7f;
 const float MAX_STOP_SPEED = 0.2f;
 
 const float SQR = 0.7071f;
-const float SCALE = 0.8f;
 
 const V2f VECTORS[DIRECTIONS] = {
     V2f(0.0,  1.0),
@@ -54,9 +53,19 @@ public:
     static bool zOrder(const Actor& actor1, const Actor& actor2);
     static void setRegion(int width, int height);
 
+    static bool atFront(const Actor& actor1, const Actor& actor2);
+
     void random();
     void play(sf::Time elapsed);
+    void turn();
+    void stop();
     void step();
+
+    int getID();
+    float getX();
+    float getY();
+    float preX();
+    float preY();
 
     sf::Sprite sprite;
 
@@ -70,6 +79,7 @@ private:
 
     void changeFrame();
 
+    int m_id;
     int m_no;
     string m_name;
 
@@ -81,6 +91,7 @@ private:
     int m_action;
 
     sf::Vector2f m_position;
+    sf::Vector2f m_prev_position;
     int m_direction;
 
     float m_speed;
@@ -92,4 +103,6 @@ private:
     sf::Texture* mp_texture;
 
     static inline sf::Vector2i region = sf::Vector2i(INIT_WIDTH, INIT_HEIGHT);
+
+    static inline int counter = 0;
 };

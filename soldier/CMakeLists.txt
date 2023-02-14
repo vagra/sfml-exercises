@@ -3,6 +3,7 @@ project (soldier)
 
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
+    LGrid.cpp
     Actor.cpp
     App.cpp
     TextureManager.cpp

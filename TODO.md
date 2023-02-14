@@ -7,7 +7,7 @@
 - [x] Copy battle sprites to base textures, add battle action.
 
 ## soldier
-- [ ] Introducing collision detection.
+- [x] Introducing collision detection.
 - [ ] stop if hit.
 
 

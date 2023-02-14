@@ -104,12 +104,16 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LGrid.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="soldier.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="SmallList.h" />
+    <ClInclude Include="FreeList.h" />
+    <ClInclude Include="LGrid.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="TextureManager.h" />

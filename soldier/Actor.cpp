@@ -6,6 +6,9 @@ Actor::Actor() {
 
 void Actor::init() {
 
+	m_id = counter;
+	counter++;
+
 	m_no = rand() % ACTORS;
 	m_name = fmt::vformat(ACTOR_PNG, fmt::make_format_args(m_no));
 
@@ -15,6 +18,7 @@ void Actor::init() {
 	mp_texture = TextureManager::getTexture(m_name);
 	sprite.setTexture(*mp_texture);
 
+	sprite.setOrigin(ORIGIN_X,ORIGIN_Y);
 	sprite.setScale(SCALE, SCALE);
 
 	m_area = sf::IntRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
@@ -23,7 +27,7 @@ void Actor::init() {
 	m_action_timer = 0;
 
 	random();
-
+	
 	step();
 }
 
@@ -53,8 +57,6 @@ void Actor::play(sf::Time elapsed) {
 	m_anim_timer += elapsed.asMilliseconds();
 	m_action_timer += elapsed.asMilliseconds();
 
-	// cout << fmt::format("anim_timer{}, elapsed: {}", m_anim_timer, elapsed.asMilliseconds()) << endl;
-
 	if (m_action_timer >= m_actionCycle) {
 		m_action_timer = 0;
 
@@ -69,11 +71,25 @@ void Actor::play(sf::Time elapsed) {
 
 	sprite.move(m_vector);
 
+	m_prev_position = m_position;
 	m_position = sprite.getPosition();
 }
 
+
+void Actor::turn() {
+	int range = rand() % (DIRECTIONS - 3) + 2;
+	m_direction = (m_direction + range) % DIRECTIONS;
+
+	m_vector.x = VECTORS[m_direction].x * m_speed;
+	m_vector.y = VECTORS[m_direction].y * m_speed;
+}
+
+void Actor::stop() {
+	m_vector.x = 0.f;
+	m_vector.y = 0.f;
+}
+
 void Actor::step() {
-	// cout << fmt::format("step: {}, action: {}, direction: {}", m_step, m_action, m_direction) << endl;
 
 	changeFrame();
 
@@ -96,7 +112,6 @@ sf::Vector2f Actor::genPosition() {
 }
 
 int Actor::genDirection() {
-	// cout << fmt::format("position: ({},{})\tregion: ({},{})", m_position.x, m_position.y, region.x, region.y) << endl;
 
 	if (m_position.x < 0 && m_position.y < 0) return 1;
 	if (m_position.x < 0 && m_position.y > region.y) return 3;
@@ -112,14 +127,11 @@ int Actor::genDirection() {
 }
 
 void Actor::changeFrame() {
-
 	m_frame.x = ACTION_ORIGINS[m_action].x + m_step;
 	m_frame.y = ACTION_ORIGINS[m_action].y + m_direction;
 
 	m_area.left = m_frame.x * FRAME_WIDTH;
 	m_area.top = m_frame.y * FRAME_HEIGHT;
-
-	// cout << fmt::format("area: ({}, {}, {}, {})", m_area.left, m_area.top, m_area.width, m_area.height) << endl;
 }
 
 bool Actor::zOrder(const Actor& actor1, const Actor& actor2) {
@@ -128,4 +140,50 @@ bool Actor::zOrder(const Actor& actor1, const Actor& actor2) {
 
 void Actor::setRegion(int width, int height) {
 	region = sf::Vector2i(width, height);
+}
+
+bool Actor::atFront(const Actor& actor1, const Actor& actor2) {
+	float dx = actor2.m_position.x - actor1.m_position.x;
+	float dy = actor2.m_position.y - actor1.m_position.y;
+
+	switch (actor1.m_direction) {
+	case 0:
+		return dy > abs(dx);
+	case 1:
+		return dx > 0 && dy > 0;
+	case 2:
+		return dx > abs(dy);
+	case 3:
+		return dx > 0 and dy < 0;
+	case 4:
+		return -dy > abs(dx);
+	case 5:
+		return dx < 0 and dy < 0;
+	case 6:
+		return -dx > abs(dy);
+	case 7:
+		return dx < 0 and dy > 0;
+	default:
+		return false;
+	}
+}
+
+int Actor::getID() {
+	return m_id;
+}
+
+float Actor::getX() {
+	return m_position.x;
+}
+
+float Actor::getY() {
+	return m_position.y;
+}
+
+float Actor::preX() {
+	return m_prev_position.x;
+}
+
+float Actor::preY() {
+	return m_prev_position.y;
 }
