@@ -16,6 +16,9 @@ using uniform-grid for 2d collision detection. very fast!
 using loose/tight double-grid for 2d collision detection. very fast!
 ![dgrid](https://github.com/vagra/sfml-exercises/blob/a95648ee756096fddf362886338823f8e3b9d774/assets/screenshots/dgrid.png)
 
+### viewer
+using z change actor, x change action, arrow key change direction and move.
+
 
 ## thanks for
 

@@ -4,6 +4,7 @@
             "name": "Win64",
             "includePath": [
                 "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
                 "D:/Library/msys64/clang64/include",
                 "${vcpkgRoot}/x64-windows/include",
                 "${vcpkgRoot}/x64-windows-static/include",

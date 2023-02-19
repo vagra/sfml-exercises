@@ -19,6 +19,8 @@ endif()
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include_directories("include")
+
 find_package(SFML 2 REQUIRED COMPONENTS graphics system window network audio)
 find_package(FMT REQUIRED)
 
@@ -39,6 +41,7 @@ add_subdirectory(world)
 add_subdirectory(soldier)
 add_subdirectory(grid)
 add_subdirectory(dgrid)
+add_subdirectory(viewer)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

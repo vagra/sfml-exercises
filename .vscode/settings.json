@@ -1,8 +1,0 @@
-{
-    "terminal.integrated.defaultProfile.windows": "Clang64",
-    "terminal.integrated.env.windows": {
-        "MSYSTEM": "CLANG64",
-        "CHERE_INVOKING": "1",
-        "MSYS2_PATH_TYPE": "inherit"
-    },
-}

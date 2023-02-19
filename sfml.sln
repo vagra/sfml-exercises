@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grid", "grid\grid.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dgrid", "dgrid\dgrid.vcxproj", "{C9F3CEA0-5307-4F9A-81DE-9D274A13D3F9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "viewer", "viewer\viewer.vcxproj", "{3A1032D6-653E-4737-87A7-9B7D33A1F617}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -39,6 +41,10 @@ Global
 		{C9F3CEA0-5307-4F9A-81DE-9D274A13D3F9}.Debug|x64.Build.0 = Debug|x64
 		{C9F3CEA0-5307-4F9A-81DE-9D274A13D3F9}.Release|x64.ActiveCfg = Release|x64
 		{C9F3CEA0-5307-4F9A-81DE-9D274A13D3F9}.Release|x64.Build.0 = Release|x64
+		{3A1032D6-653E-4737-87A7-9B7D33A1F617}.Debug|x64.ActiveCfg = Debug|x64
+		{3A1032D6-653E-4737-87A7-9B7D33A1F617}.Debug|x64.Build.0 = Debug|x64
+		{3A1032D6-653E-4737-87A7-9B7D33A1F617}.Release|x64.ActiveCfg = Release|x64
+		{3A1032D6-653E-4737-87A7-9B7D33A1F617}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
