@@ -25,6 +25,7 @@ using z change actor, x change action, arrow key change direction and move.
 - **library**
   - [sfml](https://github.com/SFML/SFML)
   - [fmt](https://github.com/fmtlib/fmt)
+  - [rapidcsv](https://github.com/d99kris/rapidcsv)
 
 - **collision detection**
   - [Dragon Energy@stackoverflow](https://stackoverflow.com/questions/41946007)
