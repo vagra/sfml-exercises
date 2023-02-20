@@ -54,11 +54,11 @@
 			"args": [
 				"--build",
 				"./build/",
-				"--clean-first",
 				"--target",
 				"${fileDirnameBasename}",
 				"--config",
-				"Debug",
+				"Release",
+				"--clean-first"
 			],
 			"type": "shell",
 			"group": {
@@ -75,11 +75,11 @@
 			"args": [
 				"--build",
 				"./build/",
-				"--clean-first",
 				"--target",
 				"${fileDirnameBasename}",
 				"--config",
 				"Debug",
+				"--clean-first"
 			],
 			"type": "shell",
 			"group": {
