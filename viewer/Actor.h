@@ -11,7 +11,7 @@ const int DIRECTIONS = 8;
 const int INIT_DIRECTION = 6;
 const float SPEED = 2.0f;
 
-const int DURATION = 150;
+const int DURATION = 100;
 
 const float SQR = 0.7071f;
 
@@ -71,4 +71,5 @@ private:
     static inline sf::Vector2f m_position = sf::Vector2f(INIT_WIDTH / 2, INIT_HEIGHT / 2);
     static inline int m_direction = 0;
     static inline bool m_move = false;
+    static inline bool m_change = false;
 };

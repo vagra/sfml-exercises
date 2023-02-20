@@ -16,7 +16,7 @@ const int INIT_WIDTH = 1600;
 const int INIT_HEIGHT = 800;
 
 const int ACTORS = 8;
-const int ACTIONS = 12;
+const int ACTIONS = 11;
 const int STEPS = 6;
 
 const int FRAME_WIDTH = 80;

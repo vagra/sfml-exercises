@@ -45,6 +45,9 @@ private:
 
 	static void loadActions();
 
+	static void printMap();
+	static void printList();
+
 	static inline unordered_map<string, ActionSet*> action_sets;
 	static inline vector<string> names;
 	static inline vector<string> action_names;

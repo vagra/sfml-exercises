@@ -103,6 +103,27 @@ void ActionManager::loadActions() {
     csv.Clear();
 
     cout << fmt::format("\t{} action sets ready.", getCount()) << endl;
+
+    printList();
+}
+
+void ActionManager::printMap() {
+    for (auto const& [actor_name, action_set] : action_sets) {
+        cout << fmt::format("actor {}:", actor_name) << endl;
+        for (auto const& [action_name, action] : action_set->actions) {
+            cout << fmt::format("\t{}\t{}\t{}", action_name, action->frames, action->start) << endl;
+        }
+    }
+}
+
+void ActionManager::printList() {
+    for (auto const& actor_name : names) {
+        cout << fmt::format("actor {}:", actor_name) << endl;
+        for (auto const& action_name : action_names) {
+            Action* action = action_sets[actor_name]->actions[action_name];
+            cout << fmt::format("\t{}\t{}\t{}", action->name, action->frames, action->start) << endl;
+        }
+    }
 }
 
 const int ActionManager::getActionCount() {

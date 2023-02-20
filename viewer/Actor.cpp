@@ -51,8 +51,9 @@ void Actor::play(sf::Time elapsed) {
 
 	m_timer += elapsed.asMilliseconds();
 
-	if (m_timer >= DURATION) {
+	if (m_timer >= DURATION || m_change) {
 		m_timer = m_timer % DURATION;
+		m_change = false;
 		step();
 	}
 
@@ -72,6 +73,8 @@ void Actor::turn(int direction) {
 
 void Actor::change(int action_id) {
 	m_action_id = action_id;
+	m_step = 0;
+	m_change = true;
 }
 
 void Actor::pause() {
@@ -84,6 +87,8 @@ void Actor::move(bool move) {
 void Actor::step() {
 	m_frame.x = getActionStartFrame() + m_step;
 	m_frame.y = m_direction;
+
+	cout << fmt::format("{} {}", m_action_id, m_frame.x) << endl;
 
 	m_area.left = m_frame.x * FRAME_WIDTH;
 	m_area.top = m_frame.y * FRAME_HEIGHT;
