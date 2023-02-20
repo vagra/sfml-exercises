@@ -15,7 +15,7 @@ const int DURATION = 150;
 
 const float SQR = 0.7071f;
 
-const sf::Vector2f VECTORS[DIRECTIONS] = {
+const array<sf::Vector2f, DIRECTIONS> VECTORS= {
     sf::Vector2f(0.0,   1.0),
     sf::Vector2f(SQR,   SQR),
     sf::Vector2f(1.0,   0.0),

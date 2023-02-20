@@ -4,6 +4,7 @@
 #include <iostream>
 #include <filesystem>
 #include <cmath>
+#include <array>
 #include <SFML/Graphics.hpp>
 #include <fmt/core.h>
 
