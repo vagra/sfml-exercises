@@ -6,7 +6,7 @@ Action* ActionSet::getAction(string name)
         return actions[name];
     }
     else {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -43,7 +43,7 @@ ActionSet* ActionManager::getActionSet(string name)
         return action_sets[name];
     }
     else {
-        return NULL;
+        return nullptr;
     }
 }
 

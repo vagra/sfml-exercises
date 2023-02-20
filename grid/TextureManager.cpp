@@ -25,7 +25,7 @@ sf::Texture* TextureManager::getTexture(string name)
         return textures[name];
     }
     else {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -43,7 +43,7 @@ sf::Texture* TextureManager::loadTexture(string name, string path)
         cout << fmt::format("error when load texture file: ", name) << endl;
 
         delete pTexture;
-        return NULL;
+        return nullptr;
     }
 
     textures[name] = pTexture;

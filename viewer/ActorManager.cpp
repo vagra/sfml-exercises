@@ -27,7 +27,7 @@ Actor* ActorManager::getActor(string name)
         return actors[name];
     }
     else {
-        return NULL;
+        return nullptr;
     }
 }
 
