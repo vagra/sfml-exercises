@@ -27,6 +27,9 @@ private:
 
 	static void makeActors();
 
+	static void printMap();
+	static void printList();
+
 	static inline unordered_map<string, Actor*> actors;
 	static inline vector<string> names;
 };

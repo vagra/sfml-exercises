@@ -44,6 +44,8 @@ public:
     void change(int action_id);
 
     sf::Sprite* sprite;
+    const int& id = m_id;
+    const string& name = m_name;
 
 private:
 

@@ -65,7 +65,26 @@ void ActorManager::makeActors() {
     }
 
     cout << fmt::format("\t{} actors ready.", getCount()) << endl;
+
+    printList();
 }
+
+
+void ActorManager::printMap() {
+    for (auto const& [name, actor] : actors) {
+        cout << fmt::format("{}  {}",
+            actor->id, actor->name) << endl;
+    }
+}
+
+void ActorManager::printList() {
+    for (auto const& name : names) {
+        Actor* actor = actors[name];
+        cout << fmt::format("{}  {}",
+            actor->id, actor->name) << endl;
+    }
+}
+
 
 ActorManager::~ActorManager()
 {

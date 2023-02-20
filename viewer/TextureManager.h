@@ -23,6 +23,9 @@ private:
     static void listFiles();
     static void loadTextures();
 
+    static void printMap();
+    static void printList();
+
     static inline unordered_map<string, sf::Texture*> textures;
     static inline unordered_map<string, string> files;
     static inline vector<string> names;

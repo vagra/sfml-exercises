@@ -85,6 +85,29 @@ void TextureManager::loadTextures() {
     }
 
     cout << fmt::format("\t\t{} textures ready.", getCount()) << endl;
+
+    printList();
+}
+
+
+void TextureManager::printMap() {
+    for (auto const& [file_name, file_path] : files) {
+        cout << fmt::format("{}: {}", file_name, file_path) << endl;
+    }
+
+    for (auto const& [file_name, texture] : textures) {
+        cout << fmt::format("{}: {},{}", 
+            file_name, texture->getSize().x, texture->getSize().y) << endl;
+    }
+}
+
+void TextureManager::printList() {
+    for (auto const& file_name : names) {
+        string file_path = files[file_name];
+        sf::Texture* texture = textures[file_name];
+        cout << fmt::format("{}: {},{}\t{}",
+            file_name, texture->getSize().x, texture->getSize().y, file_path) << endl;
+    }
 }
 
 

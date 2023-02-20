@@ -87,7 +87,7 @@ void Actor::step() {
 	m_frame.x = getActionStartFrame() + m_step;
 	m_frame.y = m_direction;
 
-	cout << fmt::format("{} {}", m_action_id, m_frame.x) << endl;
+	// cout << fmt::format("{} {}", m_action_id, m_frame.x) << endl;
 
 	m_area.left = m_frame.x * FRAME_WIDTH;
 	m_area.top = m_frame.y * FRAME_HEIGHT;
