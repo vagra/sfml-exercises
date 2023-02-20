@@ -14,7 +14,7 @@ struct Action
 struct ActionSet
 {
 	string name;
-	map<string, Action*> actions;
+	unordered_map<string, Action*> actions;
 	vector<string> names;
 
 	Action* getAction(string name);
@@ -45,7 +45,7 @@ private:
 
 	static void loadActions();
 
-	static inline map<string, ActionSet*> action_sets;
+	static inline unordered_map<string, ActionSet*> action_sets;
 	static inline vector<string> names;
 	static inline vector<string> action_names;
 };

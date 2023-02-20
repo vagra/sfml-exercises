@@ -27,7 +27,7 @@ private:
 
 	static void makeActors();
 
-	static inline map<string, Actor*> actors;
+	static inline unordered_map<string, Actor*> actors;
 	static inline vector<string> names;
 };
 

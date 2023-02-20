@@ -28,8 +28,8 @@ private:
     static void listFiles();
     static void loadTextures();
 
-    static inline map<string, sf::Texture*> textures;
-    static inline map<string, string> files;
+    static inline unordered_map<string, sf::Texture*> textures;
+    static inline unordered_map<string, string> files;
     static inline std::vector<string> order;
 };
 
