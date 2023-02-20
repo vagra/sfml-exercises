@@ -22,6 +22,9 @@ using z change actor, x change action, arrow key change direction and move.
 
 ## thanks for
 
+- [github](https://github.com)
+- [stackoverflow](https://stackoverflow.com)
+
 - **library**
   - [sfml](https://github.com/SFML/SFML)
   - [fmt](https://github.com/fmtlib/fmt)
