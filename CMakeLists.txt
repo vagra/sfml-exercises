@@ -42,6 +42,7 @@ add_subdirectory(soldier)
 add_subdirectory(grid)
 add_subdirectory(dgrid)
 add_subdirectory(viewer)
+add_subdirectory(battle)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
