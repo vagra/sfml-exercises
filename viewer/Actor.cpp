@@ -43,7 +43,6 @@ void Actor::init() {
 
 	m_timer = 0;
 	m_step = 0;
-	m_action_id = 0;
 	m_move = false;
 }
 

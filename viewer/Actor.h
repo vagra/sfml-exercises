@@ -60,7 +60,6 @@ private:
 
     int m_timer;
     int m_step;
-    int m_action_id;
 
     sf::Vector2i m_frame;
     sf::IntRect m_area;
@@ -69,6 +68,7 @@ private:
     sf::Texture* mp_texture;
 
     static inline sf::Vector2f m_position = sf::Vector2f(INIT_WIDTH / 2, INIT_HEIGHT / 2);
+    static inline int m_action_id = 0;
     static inline int m_direction = 0;
     static inline bool m_move = false;
     static inline bool m_change = false;
