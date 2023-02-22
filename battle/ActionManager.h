@@ -33,7 +33,10 @@ public:
 	static ActionSet* getActionSet(string name);
 	static ActionSet* getActionSet(int index);
 
-	static int getActionID(string action_name);
+	static int getActionSetIndex(string name);
+	static string getActionSetName(int index);
+
+	static int getActionIndex(string action_name);
 	static string getActionName(int action_index);
 
 	static const vector<string>& getNames();

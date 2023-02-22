@@ -13,82 +13,64 @@ void ActorManager::init() {
     cout << "init actor manager done." << endl << endl;
 }
 
+void ActorManager::update(sf::Time elapsed) {
+
+    for (auto& actor : actors) {
+        actor->play(elapsed);
+    }
+}
+
+void ActorManager::draw(sf::RenderWindow& window) {
+
+    for (auto& actor : actors) {
+        window.draw(*actor->sprite);
+    }
+}
+
 int ActorManager::getCount() {
     return (int)actors.size();
 }
 
-const vector<string>* ActorManager::getNames() {
-    return &names;
-}
-
-Actor* ActorManager::getActor(string name)
-{
-    if (actors.find(name) != actors.end()) {
-        return actors[name];
-    }
-    else {
-        return nullptr;
-    }
+int ActorManager::genID() {
+    counter++;
+    return counter;
 }
 
 Actor* ActorManager::getActor(int index)
 {
-    return getActor(names[index]);
-}
-
-int ActorManager::getActorID(string name) {
-    auto it = std::find(names.begin(), names.end(), name);
-    if (it == names.end()) {
-        return -1;
-    }
-    else {
-        int dst = (int)distance(names.begin(), it);
-        return dst;
-    }
-}
-
-string ActorManager::getActorName(int index) {
-    return names.at(index);
+    return actors[index];
 }
 
 void ActorManager::makeActors() {
     cout << "make actors with texture, actions and sprite...";
 
     actors.clear();
-    names.clear();
 
-    for (auto& actor_name : ActionManager::getNames()) {
-        Actor* actor = new Actor(actor_name);
+    for (int i = 0; i < MAX; i++) {
 
-        actors[actor_name] = actor;
-        names.push_back(actor_name);
+        int type = rand() % ACTOR_TYPES;
+
+        Actor* actor = new Actor(type);
+
+        actors.push_back(actor);
     }
 
     cout << fmt::format("\t{} actors ready.", getCount()) << endl;
 
-    printList();
+    print();
 }
 
-
-void ActorManager::printMap() {
-    for (auto const& [name, actor] : actors) {
+void ActorManager::print() {
+    for (auto const& actor : actors) {
         cout << fmt::format("{}  {}",
-            actor->id, actor->name) << endl;
-    }
-}
-
-void ActorManager::printList() {
-    for (auto const& name : names) {
-        Actor* actor = actors[name];
-        cout << fmt::format("{}  {}",
-            actor->id, actor->name) << endl;
+            actor->id, actor->type) << endl;
     }
 }
 
 
 ActorManager::~ActorManager()
 {
-    for (auto const& [name, pointer] : actors) {
-        delete pointer;
+    for (auto const& actor : actors) {
+        delete actor;
     }
 }

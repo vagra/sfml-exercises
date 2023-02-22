@@ -52,8 +52,23 @@ ActionSet* ActionManager::getActionSet(int index)
     return getActionSet(names[index]);
 }
 
+int ActionManager::getActionSetIndex(string name) {
+    auto it = std::find(names.begin(), names.end(), name);
+    if (it == names.end()) {
+        return -1;
+    }
+    else {
+        int dst = (int)distance(names.begin(), it);
+        return dst;
+    }
+}
 
-int ActionManager::getActionID(string action_name) {
+string ActionManager::getActionSetName(int index) {
+    return names[index];
+}
+
+
+int ActionManager::getActionIndex(string action_name) {
     auto it = std::find(action_names.begin(), action_names.end(), action_name);
     if (it == action_names.end()) {
         return -1;

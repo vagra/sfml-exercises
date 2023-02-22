@@ -29,29 +29,11 @@ private:
 	void updateText(sf::Time elapsed);
 	void drawText();
 
-	void initActor(int actor_id);
-	void updateActor(sf::Time elapsed);
-	void drawActor();
-
 	void onResize();
 	void onKeyboard();
-
-	void changeDirection();
-	void changeActor();
-	void changeAction();
-
-	int getDirection(bool l, bool u, bool r, bool d);
-	bool needMove(bool l, bool u, bool r, bool d);
 
 	sf::RenderWindow window;
 	sf::Font font;
 	sf::Text text;
-
-	Actor* actor;
-
-	int actor_id;
-	int action_id;
-	int direction;
-	bool move;
 };
 
