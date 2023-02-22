@@ -31,7 +31,7 @@ const array<sf::Vector2f, DIRECTIONS> VECTORS = {
     sf::Vector2f(-SQR,  SQR)    // 7
 };
 
-const enum ACTION {
+enum ACTION {
     WALK = 0,
     RUN = 1,
     SIT = 2,
@@ -53,7 +53,6 @@ const array<ACTION, RUN_COUNT> RUN_ACTIONS = { ACTION::RUN, ACTION::ADVANCE };
 const array<ACTION, WALK_COUNT> WALK_ACTIONS = { ACTION::WALK, ACTION::JUMP };
 const array<ACTION, STOP_COUNT> STOP_ACTIONS = {
     ACTION::STAND, ACTION::ATTACK, ACTION::HIT, ACTION::REST, ACTION::DEFENCE };
-
 
 class Actor
 {
