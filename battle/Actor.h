@@ -66,13 +66,18 @@ public:
     void random();
     void play(sf::Time elapsed);
     void step();
+    void turn();
 
     static void setRegion(int width, int height);
+    static bool atFront(const Actor* actor1, const Actor* actor2);
 
     sf::Sprite* sprite;
     const int& id = m_id;
     const int& type = m_type;
     const string& name = m_name;
+    const sf::Vector2f& position = m_position;
+    const sf::Vector2f& prev_position = m_prev_position;
+
 
 private:
 

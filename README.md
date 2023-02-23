@@ -20,6 +20,9 @@ using loose/tight double-grid for 2d collision detection. very fast!
 using z change actor, x change action, arrow key change direction and move.
 ![viewer](https://github.com/vagra/sfml-exercises/blob/1107838bcdff3457f61cadcff6c46eab549f4e21/assets/screenshots/viewer.png)
 
+### battle
+![battle]()
+
 ## thanks for
 
 - [github](https://github.com)

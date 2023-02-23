@@ -31,6 +31,6 @@ private:
 
 	static void print();
 
-	static int inline counter = 0;
+	static int inline counter = -1;
 };
 

@@ -36,6 +36,7 @@ void Actor::init() {
 	m_area = sf::IntRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 
 	m_position = genPosition();
+	m_prev_position = m_position;
 
 	random();
 
@@ -45,7 +46,8 @@ void Actor::init() {
 	sprite->setPosition(m_position);
 	sprite->setTexture(*mp_texture);
 	sprite->setScale(SCALE, SCALE);
-	sprite->setTextureRect(m_area);
+	
+	step();
 }
 
 
@@ -81,10 +83,10 @@ void Actor::play(sf::Time elapsed) {
 		sf::Vector2f offset = VECTORS[m_direction] * m_speed;
 
 		sprite->move(offset);
-
-		m_prev_position = m_position;
-		m_position = sprite->getPosition();
 	}
+
+	m_prev_position = m_position;
+	m_position = sprite->getPosition();
 }
 
 void Actor::step() {
@@ -101,6 +103,11 @@ void Actor::step() {
 	m_frame_step = (m_frame_step + 1) % getActionFrameCount();
 }
 
+void Actor::turn() {
+	int range = rand() % (DIRECTIONS - 3) + 2;
+	m_direction = (m_direction + range) % DIRECTIONS;
+}
+
 
 void Actor::setRegion(int width, int height) {
 
@@ -109,6 +116,32 @@ void Actor::setRegion(int width, int height) {
 
 	region.left = x;
 	region.top = y;
+}
+
+bool Actor::atFront(const Actor* actor1, const Actor* actor2) {
+	float dx = actor2->m_position.x - actor1->m_position.x;
+	float dy = actor2->m_position.y - actor1->m_position.y;
+
+	switch (actor1->m_direction) {
+	case 0:
+		return dy > abs(dx);
+	case 1:
+		return dx > 0 && dy > 0;
+	case 2:
+		return dx > abs(dy);
+	case 3:
+		return dx > 0 and dy < 0;
+	case 4:
+		return -dy > abs(dx);
+	case 5:
+		return dx < 0 and dy < 0;
+	case 6:
+		return -dx > abs(dy);
+	case 7:
+		return dx < 0 and dy > 0;
+	default:
+		return false;
+	}
 }
 
 

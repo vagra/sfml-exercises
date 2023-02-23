@@ -104,6 +104,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GridManager.cpp" />
     <ClCompile Include="LGrid.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="App.cpp" />
@@ -113,6 +114,7 @@
     <ClCompile Include="battle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GridManager.h" />
     <ClInclude Include="SmallList.h" />
     <ClInclude Include="FreeList.h" />
     <ClInclude Include="LGrid.h" />

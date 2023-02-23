@@ -57,13 +57,13 @@ void ActorManager::makeActors() {
 
     cout << fmt::format("\t{} actors ready.", getCount()) << endl;
 
-    print();
+    // print();
 }
 
 void ActorManager::print() {
     for (auto const& actor : actors) {
-        cout << fmt::format("{}  {}",
-            actor->id, actor->type) << endl;
+        cout << fmt::format("{}  {}  {},{}",
+            actor->id, actor->type, actor->position.x, actor->position.y) << endl;
     }
 }
 

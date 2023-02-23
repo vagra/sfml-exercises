@@ -9,6 +9,7 @@ set(SOURCES
     TextureManager.cpp
     ActionManager.cpp
     ActorManager.cpp
+    GridManager.cpp
     battle.cpp
 )
 

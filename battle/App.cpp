@@ -12,6 +12,7 @@ void App::init() {
     TextureManager::init();
     ActionManager::init();
     ActorManager::init();
+    GridManager::init(true);
 }
 
 void App::run() {
@@ -44,10 +45,11 @@ void App::run() {
 
         ActorManager::update(elapsed);
         updateText(elapsed);
+        GridManager::update();
 
         window.clear(BG_COLOR);
         
-        ActorManager::draw(window);
+        GridManager::draw(window);
         drawText();
         
         window.display();

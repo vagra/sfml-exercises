@@ -4,6 +4,7 @@
 #include "TextureManager.h"
 #include "ActionManager.h"
 #include "ActorManager.h"
+#include "GridManager.h"
 #include "Actor.h"
 
 using namespace std;

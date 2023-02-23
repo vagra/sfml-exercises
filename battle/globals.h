@@ -19,7 +19,7 @@ const int INIT_HEIGHT = 800;
 const int ACTOR_TYPES = 8;
 const int ACTIONS = 11;
 
-const int MAX = 1000;
+const int MAX = 5000;
 
 const int FRAME_WIDTH = 80;
 const int FRAME_HEIGHT = 80;
@@ -28,10 +28,10 @@ const int ORIGIN_Y = 59;
 
 const float SCALE = 1.0f;
 
-const int AGENT_WIDTH = 16;
-const int AGENT_HEIGHT = 16;
-const int AGENT_HALFW = 8;
-const int AGENT_HALFH = 8;
+const int AGENT_WIDTH = 20;
+const int AGENT_HEIGHT = 20;
+const int AGENT_HALFW = 10;
+const int AGENT_HALFH = 10;
 
 const int GRID_WIDTH = 2000;
 const int GRID_HEIGHT = 1200;
