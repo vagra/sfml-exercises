@@ -8,11 +8,12 @@
 
 ## soldier
 - [x] Introducing collision detection.
-- [ ] stop if hit.
+- [x] stop if hit.
 
 
 ## grid
 - [x] optimizing.
 - [x] show uniform-grid border.
 
-## dgrid
+## battle
+- [ ] if hit the enemy then attack.
