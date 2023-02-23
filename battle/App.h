@@ -11,7 +11,7 @@ using namespace std;
 
 const string FONT_OTF = "../assets/fonts/ark-pixel-12px-monospaced-zh_cn.ttf";
 const sf::String APP_NAME = L"战斗";
-const sf::Color BG_COLOR = sf::Color(69, 86, 103);
+const sf::Color BG_COLOR = sf::Color(22, 24, 35);
 
 class App
 {
