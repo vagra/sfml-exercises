@@ -75,6 +75,7 @@ public:
     const int& id = m_id;
     const int& type = m_type;
     const string& name = m_name;
+    const int& hp = m_hp;
     const sf::Vector2f& position = m_position;
     const sf::Vector2f& prev_position = m_prev_position;
 
@@ -99,6 +100,8 @@ private:
     int m_type;
     string m_name;
 
+    int m_hp;
+
     int m_frame_timer;
     int m_frame_step;
 
@@ -116,8 +119,8 @@ private:
 
     float m_speed;
 
-    int m_action_id = 0;
-    int m_direction = 0;
+    int m_action_id;
+    int m_direction;
 
     bool m_move = false;
     bool m_change = false;

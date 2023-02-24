@@ -65,7 +65,7 @@ private:
     enum { fixed_cap = 256 };
     struct ListData {
         ListData();
-        T buf[fixed_cap];
+        T buf[fixed_cap]{};
         T* data{};
         int num{};
         int cap{};
@@ -151,9 +151,10 @@ void SmallList<T>::reserve(int n) {
     enum { type_size = sizeof(T) };
     if (n > ld.cap) {
         if (ld.cap == fixed_cap) {
+            assert(n > fixed_cap);
             ld.data = static_cast<T*>(malloc((long long)n * type_size));
             assert(ld.data != nullptr);
-            memcpy(ld.data, ld.buf, sizeof(ld.buf));
+            memcpy(ld.data, ld.buf, type_size * fixed_cap);
         } else {
             T* temp = static_cast<T*>(realloc(ld.data, (long long)n * type_size));
             assert(temp != nullptr);

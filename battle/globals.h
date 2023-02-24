@@ -19,7 +19,7 @@ const int INIT_HEIGHT = 800;
 const int ACTOR_TYPES = 8;
 const int ACTIONS = 11;
 
-const int MAX = 5000;
+const int MAX = 1000;
 
 const int FRAME_WIDTH = 80;
 const int FRAME_HEIGHT = 80;
