@@ -16,4 +16,5 @@
 - [x] show uniform-grid border.
 
 ## battle
-- [ ] if hit the enemy then attack.
+- [x] if hit the enemy then attack.
+- [ ] play attack/hit animation when battle.
