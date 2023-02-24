@@ -38,18 +38,38 @@ void Actor::init() {
 	m_position = genPosition();
 	m_prev_position = m_position;
 
+	m_hp = MAX_HP;
+	m_battle_cycle = genBattleCycle();
+	m_battle_timer = 0;
+
 	random();
 
-	sprite = new sf::Sprite();
-
-	sprite->setOrigin(ORIGIN_X, ORIGIN_Y);
-	sprite->setPosition(m_position);
-	sprite->setTexture(*mp_texture);
-	sprite->setScale(SCALE, SCALE);
+	initSprite();
+	initText();
 	
 	step();
 }
 
+void Actor::initSprite() {
+	sprite = new sf::Sprite();
+
+	sprite->setTexture(*mp_texture);
+	sprite->setScale(SCALE, SCALE);
+	sprite->setOrigin(ORIGIN_X, ORIGIN_Y);
+	sprite->setPosition(m_position);
+}
+
+void Actor::initText() {
+	text = new sf::Text();
+
+	sf::Font* font = FontManager::getFont(HP_FONT);
+	text->setFont(*font);
+	text->setCharacterSize(HP_FONT_SIZE);
+	text->setFillColor(HP_COLOR);
+	text->setString(to_string(m_hp));
+	text->setOrigin(0, ORIGIN_Y);
+	text->setPosition(m_position);
+}
 
 void Actor::random() {
 	m_frame_timer = 0;
@@ -65,8 +85,20 @@ void Actor::random() {
 
 void Actor::play(sf::Time elapsed) {
 
-	m_action_timer += elapsed.asMilliseconds();
-	m_frame_timer += elapsed.asMilliseconds();
+	int ms = elapsed.asMilliseconds();
+
+	m_frame_timer += ms;
+	m_action_timer += ms;
+	m_battle_timer += ms;
+
+	if (m_battle_timer >= m_battle_cycle) {
+		m_battle_timer = 0;
+		m_battle = false;
+	}
+
+	if (m_battle) {
+		text->setString(to_string(m_hp));
+	}
 
 	if (m_action_timer >= m_action_cycle) {
 		m_action_timer = 0;
@@ -83,6 +115,7 @@ void Actor::play(sf::Time elapsed) {
 		sf::Vector2f offset = VECTORS[m_direction] * m_speed;
 
 		sprite->move(offset);
+		text->move(offset);
 	}
 
 	m_prev_position = m_position;
@@ -107,7 +140,6 @@ void Actor::turn() {
 	int range = rand() % (DIRECTIONS - 3) + 2;
 	m_direction = (m_direction + range) % DIRECTIONS;
 }
-
 
 void Actor::setRegion(int width, int height) {
 
@@ -145,8 +177,25 @@ bool Actor::atFront(const Actor* actor1, const Actor* actor2) {
 }
 
 
+void Actor::attack(Actor* actor1, Actor* actor2) {
+	actor1->m_battle = true;
+	actor1->m_battle_timer = 0;
+
+	actor2->m_battle = true;
+	actor2->m_battle_timer = 0;
+
+	actor2->m_hp--;
+
+	// cout << fmt::format("{}->{}  {}  {}", actor1->id, actor2->id, actor2->hp, actor2->m_hp) << endl;
+}
+
+
 int Actor::genActionCycle() {
 	return rand() % (MAX_ACTION_CYCLE - MIN_ACTION_CYCLE) + MIN_ACTION_CYCLE;
+}
+
+int Actor::genBattleCycle() {
+	return rand() % (MAX_BATTLE_CYCLE - MIN_BATTLE_CYCLE) + MIN_BATTLE_CYCLE;
 }
 
 float Actor::genSpeed() {

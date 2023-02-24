@@ -19,7 +19,7 @@ const int INIT_HEIGHT = 800;
 const int ACTOR_TYPES = 8;
 const int ACTIONS = 11;
 
-const int MAX = 1000;
+const int MAX = 2000;
 
 const int FRAME_WIDTH = 80;
 const int FRAME_HEIGHT = 80;
@@ -40,6 +40,9 @@ const int LCELL_WIDTH = 50;
 const int LCELL_HEIGHT = 50;
 const int TCELL_WIDTH = 100;
 const int TCELL_HEIGHT = 100;
+
+const string FONT_DIR = "../assets/fonts/";
+const string FONT_EXT = ".ttf";
 
 const string PNG_DIR = "../assets/heros/";
 const string PNG_EXT = ".png";

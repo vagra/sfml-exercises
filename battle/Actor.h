@@ -2,6 +2,7 @@
 
 #include "globals.h"
 
+#include "FontManager.h"
 #include "TextureManager.h"
 #include "ActionManager.h"
 
@@ -17,6 +18,15 @@ const float MAX_STOP_SPEED = 0.5f;
 const int FRAME_CYCLE = 100;
 const int MIN_ACTION_CYCLE = 1000;
 const int MAX_ACTION_CYCLE = 5000;
+
+const int MIN_BATTLE_CYCLE = 500;
+const int MAX_BATTLE_CYCLE = 1000;
+
+const int MAX_HP = 999;
+
+const string HP_FONT = "Lato";
+const int HP_FONT_SIZE = 16;
+const sf::Color HP_COLOR = sf::Color::Red;
 
 const float SQR = 0.7071f;
 
@@ -70,12 +80,16 @@ public:
 
     static void setRegion(int width, int height);
     static bool atFront(const Actor* actor1, const Actor* actor2);
+    static void attack(Actor* actor1, Actor* actor2);
 
     sf::Sprite* sprite;
+    sf::Text* text;
+
     const int& id = m_id;
     const int& type = m_type;
     const string& name = m_name;
     const int& hp = m_hp;
+    const bool& battle = m_battle;
     const sf::Vector2f& position = m_position;
     const sf::Vector2f& prev_position = m_prev_position;
 
@@ -84,11 +98,15 @@ private:
 
     void init();
 
+    void initSprite();
+    void initText();
+
     int getActionStartFrame();
     int getActionFrameCount();
 
     sf::Vector2f genPosition();
     int genActionCycle();
+    int genBattleCycle();
     float genSpeed();
     int genDirection();
     int genAction();
@@ -108,6 +126,9 @@ private:
     int m_action_cycle;
     int m_action_timer;
 
+    int m_battle_cycle;
+    int m_battle_timer;
+
     sf::Vector2i m_frame;
     sf::IntRect m_area;
 
@@ -124,6 +145,10 @@ private:
 
     bool m_move = false;
     bool m_change = false;
+    bool m_battle = false;
+
+    Actor* m_target;
+    vector<Actor*> m_enemies;
 
     static inline sf::IntRect region = sf::IntRect(0, 0, INIT_WIDTH, INIT_HEIGHT);
 };

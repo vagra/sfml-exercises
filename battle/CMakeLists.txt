@@ -6,6 +6,7 @@ set(SOURCES
     LGrid.cpp
     Actor.cpp
     App.cpp
+    FontManager.cpp
     TextureManager.cpp
     ActionManager.cpp
     ActorManager.cpp

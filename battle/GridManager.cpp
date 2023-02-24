@@ -68,6 +68,9 @@ void GridManager::updateActors() {
         for (int i = 0; i < ids.size(); i++) {
             Actor* other = ActorManager::getActor(ids[i]);
             if (Actor::atFront(actor, other)) {
+                if (actor->type != other->type) {
+                    Actor::attack(actor, other);
+                }
                 actor->turn();
                 break;
             }
@@ -78,15 +81,24 @@ void GridManager::updateActors() {
 }
 
 void GridManager::drawActors(sf::RenderWindow& window) {
-    for (int i = 0; i < mp_grid->loose.num_cells; i++) {
-        LGridLooseCell* lcell = &mp_grid->loose.cells[i];
+    LGridLooseCell* lcell = nullptr;
+    LGridElt* elt = nullptr;
+    Actor* actor = nullptr;
+    int elt_idx = 0;
 
-        int elt_idx = lcell->head;
+    for (int i = 0; i < mp_grid->loose.num_cells; i++) {
+        lcell = &mp_grid->loose.cells[i];
+
+        elt_idx = lcell->head;
         while (elt_idx != -1)
         {
-            const LGridElt* elt = &mp_grid->elts[elt_idx];
+            elt = &mp_grid->elts[elt_idx];
+            actor = ActorManager::getActor(elt->id);
 
-            window.draw(*ActorManager::getActor(elt->id)->sprite);
+            window.draw(*actor->sprite);
+            if (actor->battle) {
+                window.draw(*actor->text);
+            }
 
             elt_idx = elt->next;
         }

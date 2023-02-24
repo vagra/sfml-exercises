@@ -66,8 +66,6 @@ void TextureManager::listFiles() {
             string path = png.path().string();
             string name = png.path().stem().string();
 
-            cout << name << endl;
-
             files[name] = path;
         }
     }

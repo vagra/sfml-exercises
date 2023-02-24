@@ -154,7 +154,7 @@ void SmallList<T>::reserve(int n) {
             assert(n > fixed_cap);
             ld.data = static_cast<T*>(malloc((long long)n * type_size));
             assert(ld.data != nullptr);
-            memcpy(ld.data, ld.buf, type_size * fixed_cap);
+            memcpy(ld.data, ld.buf, sizeof(ld.buf));
         } else {
             T* temp = static_cast<T*>(realloc(ld.data, (long long)n * type_size));
             assert(temp != nullptr);

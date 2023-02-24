@@ -6,13 +6,14 @@ App::App() {
 
 void App::init() {
 
-    initWindow();
-    initText();
-
+    FontManager::init();
     TextureManager::init();
     ActionManager::init();
     ActorManager::init();
     GridManager::init(true);
+
+    initWindow();
+    initText();
 }
 
 void App::run() {
@@ -80,14 +81,10 @@ void App::initWindow() {
 }
 
 void App::initText() {
-    if (!font.loadFromFile(FONT_OTF))
-    {
-        cout << "can't read font: " << FONT_OTF << endl;
-    }
-
-    text.setFont(font);
-    text.setCharacterSize(24);
-    text.setFillColor(sf::Color::Yellow);
+    sf::Font* font = FontManager::getFont(GUI_FONT);
+    text.setFont(*font);
+    text.setCharacterSize(GUI_FONT_SIZE);
+    text.setFillColor(GUI_COLOR);
 }
 
 void App::drawText() {

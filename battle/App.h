@@ -1,6 +1,7 @@
 #pragma once
 
 #include "globals.h"
+#include "FontManager.h"
 #include "TextureManager.h"
 #include "ActionManager.h"
 #include "ActorManager.h"
@@ -9,9 +10,13 @@
 
 using namespace std;
 
-const string FONT_OTF = "../assets/fonts/ark-pixel-12px-monospaced-zh_cn.ttf";
-const sf::String APP_NAME = L"战斗";
+const string GUI_FONT = "ark";
+const int GUI_FONT_SIZE = 24;
+const sf::Color GUI_COLOR = sf::Color::Yellow;
 const sf::Color BG_COLOR = sf::Color(22, 24, 35);
+
+const sf::String APP_NAME = L"战斗";
+
 
 class App
 {
@@ -34,7 +39,6 @@ private:
 	void onKeyboard();
 
 	sf::RenderWindow window;
-	sf::Font font;
 	sf::Text text;
 };
 
