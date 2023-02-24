@@ -21,6 +21,7 @@ using z change actor, x change action, arrow key change direction and move.
 ![viewer](https://github.com/vagra/sfml-exercises/blob/1107838bcdff3457f61cadcff6c46eab549f4e21/assets/screenshots/viewer.png)
 
 ### battle
+if touch other types actor, attack.
 ![battle](https://github.com/vagra/sfml-exercises/blob/986d94814e754d3b17af461f4f8cb49691740146/assets/screenshots/battle.png)
 
 ## thanks for
