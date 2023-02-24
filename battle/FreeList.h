@@ -42,7 +42,8 @@ public:
 private:
     union FreeElement {
         T element;
-        int next;
+        int next{};
+        constexpr FreeElement() {}
     };
     SmallList<FreeElement> data;
     int first_free;

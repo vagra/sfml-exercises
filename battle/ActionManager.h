@@ -7,8 +7,8 @@ using namespace std;
 struct Action
 {
 	string name;
-	int frames;
-	int start;
+	int frames {};
+	int start {};
 };
 
 struct ActionSet

@@ -3,6 +3,7 @@
 // *****************************************************************************
 #pragma once
 
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
@@ -65,9 +66,9 @@ private:
     struct ListData {
         ListData();
         T buf[fixed_cap];
-        T* data;
-        int num;
-        int cap;
+        T* data{};
+        int num{};
+        int cap{};
     };
     ListData ld;
 };
@@ -150,10 +151,13 @@ void SmallList<T>::reserve(int n) {
     enum { type_size = sizeof(T) };
     if (n > ld.cap) {
         if (ld.cap == fixed_cap) {
-            ld.data = static_cast<T*>(malloc(n * type_size));
+            ld.data = static_cast<T*>(malloc((long long)n * type_size));
+            assert(ld.data != nullptr);
             memcpy(ld.data, ld.buf, sizeof(ld.buf));
         } else {
-            ld.data = static_cast<T*>(realloc(ld.data, n * type_size));
+            T* temp = static_cast<T*>(realloc(ld.data, (long long)n * type_size));
+            assert(temp != nullptr);
+            ld.data = temp;
         }
         ld.cap = n;
     }

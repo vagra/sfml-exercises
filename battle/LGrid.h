@@ -15,18 +15,20 @@ struct LGridQuery4
 struct LGridElt
 {
     // Stores the index to the next element in the loose cell using an indexed SLL.
-    int next;
+    int next{};
 
     // Stores the ID of the element. This can be used to associate external
     // data to the element.
-    int id;
+    int id{};
 
     // Stores the center of the element.
-    float mx, my;
+    float mx{};
+    float my{};
 
     // Stores the half-size of the element relative to the upper-left corner
     // of the grid.
-    float hx, hy;
+    float hx{};
+    float hy{};
 };
 
 struct LGridLooseCell
@@ -34,31 +36,34 @@ struct LGridLooseCell
     // Stores the extents of the grid cell relative to the upper-left corner
     // of the grid which expands and shrinks with the elements inserted and
     // removed.
-    float rect[4];
+    float rect[4]{};
 
     // Stores the index to the first element using an indexed SLL.
-    int head;
+    int head{};
 };
 
 struct LGridLoose
 {
     // Stores all the cells in the loose grid.
-    LGridLooseCell* cells;
+    LGridLooseCell* cells{};
 
     // Stores the number of columns, rows, and cells in the loose grid.
-    int num_cols, num_rows, num_cells;
+    int num_cols{};
+    int num_rows{};
+    int num_cells{};
 
     // Stores the inverse size of a loose cell.
-    float inv_cell_w, inv_cell_h;
+    float inv_cell_w{};
+    float inv_cell_h{};
 };
 
 struct LGridTightCell
 {
     // Stores the index to the next loose cell in the grid cell.
-    int next;
+    int next{};
 
     // Stores the position of the loose cell in the grid.
-    int lcell;
+    int lcell{};
 };
 
 struct LGridTight
@@ -67,13 +72,16 @@ struct LGridTight
     FreeList<LGridTightCell> cells;
 
     // Stores the tight cell heads.
-    int* heads;
+    int* heads{};
 
     // Stores the number of columns, rows, and cells in the tight grid.
-    int num_cols, num_rows, num_cells;
+    int num_cols{};
+    int num_rows{};
+    int num_cells{};
 
     // Stores the inverse size of a tight cell.
-    float inv_cell_w, inv_cell_h;
+    float inv_cell_w{};
+    float inv_cell_h{};
 };
 
 struct LGrid
@@ -88,13 +96,15 @@ struct LGrid
     FreeList<LGridElt> elts;
 
     // Stores the number of elements in the grid.
-    int num_elts;
+    int num_elts{};
 
     // Stores the upper-left corner of the grid.
-    float x, y;
+    float x{};
+    float y{};
 
     // Stores the size of the grid.
-    float w, h;
+    float w{};
+    float h{};
 };
 
 // Creates a loose grid encompassing the specified extents using the specified cell

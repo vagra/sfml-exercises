@@ -96,5 +96,5 @@ void App::drawText() {
 
 void App::updateText(sf::Time elapsed) {
     int fps = int(1 / elapsed.asSeconds());
-    text.setString(fmt::format("Actors: {}\nFPS: {}", fps, MAX));
+    text.setString(fmt::format("Actors: {}\nFPS: {}", MAX, fps));
 }

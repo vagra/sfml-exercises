@@ -122,7 +122,7 @@ static void expand_aabb(LGrid* grid, int cell_idx, float mx, float my, float hx,
         // to see if it was already inserted.
         for (int ty = int(trect.data[1]); ty <= trect.data[3]; ++ty)
         {
-            int* tight_row = grid->tight.heads + ty*grid->tight.num_cols;
+            int* tight_row = grid->tight.heads + (long long)ty*grid->tight.num_cols;
             for (int tx = int(trect.data[0]); tx <= trect.data[2]; ++tx)
             {
                 const LGridTightCell new_tcell = {tight_row[tx], cell_idx};
@@ -139,7 +139,7 @@ static void expand_aabb(LGrid* grid, int cell_idx, float mx, float my, float hx,
         {
             for (int ty = int(trect.data[1]); ty <= trect.data[3]; ++ty)
             {
-                int* tight_row = grid->tight.heads + ty*grid->tight.num_cols;
+                int* tight_row = grid->tight.heads + (long long)ty*grid->tight.num_cols;
                 for (int tx = int(trect.data[0]); tx <= trect.data[2]; ++tx)
                 {
                     if (tx < prev_trect.data[0] || tx > prev_trect.data[2] ||
@@ -297,7 +297,7 @@ SmallList<int> lgrid_query(const LGrid* grid, float mx, float my, float hx, floa
     SmallList<int> lcell_idxs;
     for (int ty = int(trect.data[1]); ty <= trect.data[3]; ++ty)
     {
-        const int* tight_row = grid->tight.heads + ty*grid->tight.num_cols;
+        const int* tight_row = grid->tight.heads + (long long)ty*grid->tight.num_cols;
         for (int tx = int(trect.data[0]); tx <= trect.data[2]; ++tx)
         {
             // Iterate through the loose cells that intersect the tight cells.
@@ -383,7 +383,7 @@ void lgrid_optimize(LGrid* grid)
         const struct rect trect = to_tcell_idx4(grid, lcell->rect[0], lcell->rect[1], lcell->rect[2], lcell->rect[3]);
         for (int ty = int(trect.data[1]); ty <= trect.data[3]; ++ty)
         {
-            int* tight_row = grid->tight.heads + ty*grid->tight.num_cols;
+            int* tight_row = grid->tight.heads + (long long)ty*grid->tight.num_cols;
             for (int tx = int(trect.data[0]); tx <= trect.data[2]; ++tx)
             {
                 const LGridTightCell new_tcell = {tight_row[tx], c};
