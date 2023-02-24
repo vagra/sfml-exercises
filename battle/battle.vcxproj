@@ -65,6 +65,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\include;$(VCPKG_ROOT)\packages\sfml_x64-windows\include;$(VCPKG_ROOT)\packages\fmt_x64-windows\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -88,6 +91,9 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\include;$(VCPKG_ROOT)\packages\sfml_x64-windows\include;$(VCPKG_ROOT)\packages\fmt_x64-windows\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
