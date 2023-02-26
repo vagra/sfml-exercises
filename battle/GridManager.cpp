@@ -1,10 +1,5 @@
 #include "GridManager.h"
 
-
-GridManager::GridManager() {
-
-}
-
 void GridManager::init() {
     init(false);
 }
@@ -67,9 +62,9 @@ void GridManager::updateActors() {
 
         for (int i = 0; i < ids.size(); i++) {
             Actor* other = ActorManager::getActor(ids[i]);
-            if (Actor::atFront(actor, other)) {
+            if (ActorManager::atFront(actor.get(), other)) {
                 if (actor->type != other->type) {
-                    Actor::attack(actor, other);
+                    ActorManager::attack(actor.get(), other);
                 }
                 actor->turn();
                 break;
@@ -112,18 +107,20 @@ void GridManager::initRects() {
 }
 
 void GridManager::updateRects() {
+    LGridLooseCell* lcell = nullptr;
+
     for (int i = 0; i < mp_grid->loose.num_cells; i++) {
-        LGridLooseCell* lcell = &mp_grid->loose.cells[i];
+        lcell = &mp_grid->loose.cells[i];
 
         if (lcell->head == -1) {
             continue;
         }
 
-        lrects[i]->setSize(sf::Vector2(
+        lrects.at(i)->setSize(sf::Vector2(
             lcell->rect[2] - lcell->rect[0],
             lcell->rect[3] - lcell->rect[1]
         ));
-        lrects[i]->setPosition(sf::Vector2(
+        lrects.at(i)->setPosition(sf::Vector2(
             lcell->rect[0], lcell->rect[1]
         ));
     }
@@ -131,23 +128,26 @@ void GridManager::updateRects() {
 
 void GridManager::drawRects(sf::RenderWindow& window) {
     for (int i = 0; i < mp_grid->tight.num_cells; i++) {
-        window.draw(*trects[i]);
+        window.draw(*trects.at(i));
     }
 
     for (int i = 0; i < mp_grid->loose.num_cells; i++) {
         if (mp_grid->loose.cells[i].head != -1) {
-            window.draw(*lrects[i]);
+            window.draw(*lrects.at(i));
         }
     }
 }
 
 void GridManager::initLRects() {
-    for (int i = 0; i < mp_grid->loose.num_cells; i++) {
-        LGridLooseCell* lcell = &mp_grid->loose.cells[i];
+    LGridLooseCell* lcell = nullptr;
 
-        sf::RectangleShape* lrect = new sf::RectangleShape(
-            sf::Vector2(lcell->rect[2] - lcell->rect[0], lcell->rect[3] - lcell->rect[1])
-        );
+    lrects.clear();
+
+    for (int i = 0; i < mp_grid->loose.num_cells; i++) {
+        lcell = &mp_grid->loose.cells[i];
+
+        auto lrect = make_unique<sf::RectangleShape>();
+        lrect->setSize(sf::Vector2(lcell->rect[2] - lcell->rect[0], lcell->rect[3] - lcell->rect[1]));
         lrect->setPosition(sf::Vector2(
             lcell->rect[0], lcell->rect[1]
         ));
@@ -155,29 +155,28 @@ void GridManager::initLRects() {
         lrect->setOutlineColor(LRECT_COLOR);
         lrect->setOutlineThickness(1.f);
 
-        lrects.push_back(lrect);
+        lrects.push_back(move(lrect));
     }
 }
 
 void GridManager::initTRects() {
+    trects.clear();
+
     for (int i = 0; i < mp_grid->tight.num_rows; i++) {
         for (int j = 0; j < mp_grid->tight.num_cols; j++) {
 
-            sf::RectangleShape* trect = new sf::RectangleShape(
-                sf::Vector2f(TCELL_WIDTH, TCELL_HEIGHT)
+            auto trect = make_unique<sf::RectangleShape>();
+            trect->setSize(sf::Vector2f(TCELL_WIDTH, TCELL_HEIGHT));
+            trect->setPosition(
+                narrow_cast<float>(TCELL_WIDTH * j),
+                narrow_cast<float>(TCELL_HEIGHT * i)
             );
-            trect->setPosition(float(TCELL_WIDTH) * j, float(TCELL_HEIGHT) * i);
             trect->setFillColor(sf::Color::Transparent);
             trect->setOutlineColor(TRECT_COLOR);
             trect->setOutlineThickness(0.5f);
 
-            trects.push_back(trect);
+            trects.push_back(move(trect));
         }
     }
 
-}
-
-GridManager::~GridManager()
-{
-    
 }

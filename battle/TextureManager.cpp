@@ -1,9 +1,5 @@
 #include "TextureManager.h"
 
-TextureManager::TextureManager()
-{
-}
-
 void TextureManager::init() {
 
     cout << "init texture manager:" << endl;
@@ -15,18 +11,18 @@ void TextureManager::init() {
     cout << "init texture manager done." << endl << endl;
 }
 
-int TextureManager::getCount() {
-    return (int)textures.size();
+int TextureManager::getCount() noexcept{
+    return narrow_cast<int>(textures.size());
 }
 
-const vector<string>& TextureManager::getNames() {
+vector<string>& TextureManager::getNames() noexcept{
     return names;
 }
 
 sf::Texture* TextureManager::getTexture(string name)
 {
     if (textures.find(name) != textures.end()) {
-        return textures[name];
+        return textures[name].get();
     }
     else {
         return nullptr;
@@ -40,20 +36,21 @@ sf::Texture* TextureManager::getTexture(int index)
 
 sf::Texture* TextureManager::loadTexture(string name, string path)
 {
-    sf::Texture* pTexture = new sf::Texture();
+    auto texture = make_unique<sf::Texture>();
 
-    if (!pTexture->loadFromFile(path))
+    if (!texture->loadFromFile(path))
     {
         cout << fmt::format("error when load texture file: ", name) << endl;
 
-        delete pTexture;
+        texture.reset();
         return nullptr;
     }
 
-    textures[name] = pTexture;
+    textures[name] = move(texture);
 
     names.push_back(name);
-    return textures[name];
+
+    return textures[name].get();
 }
 
 void TextureManager::listFiles() {
@@ -100,18 +97,15 @@ void TextureManager::printMap() {
 }
 
 void TextureManager::printList() {
+
+    string file_path = "";
+    sf::Texture* texture = nullptr;
+
     for (auto const& file_name : names) {
-        string file_path = files[file_name];
-        sf::Texture* texture = textures[file_name];
+        file_path = files[file_name];
+        texture = textures[file_name].get();
+        assert(texture);
         cout << fmt::format("{}: {},{}\t{}",
             file_name, texture->getSize().x, texture->getSize().y, file_path) << endl;
-    }
-}
-
-
-TextureManager::~TextureManager()
-{
-    for (auto const& [name, pointer] : textures) {
-        delete pointer;
     }
 }

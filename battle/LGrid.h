@@ -2,6 +2,9 @@
 // LGrid.h
 // ************************************************************************************
 #pragma once
+#pragma warning(disable: 26400 26401 26402 26408 26409)
+#pragma warning(disable: 26426 26429 26432 26440 26455 26461 26462)
+#pragma warning(disable: 26481 26485 26493 26496 26497)
 
 #include "SmallList.h"
 #include "FreeList.h"

@@ -1,17 +1,6 @@
 #include "Actor.h"
 #include "ActorManager.h"
 
-Actor::Actor() {
-	init(0);
-}
-
-Actor::Actor(int type) {
-	init(type);
-}
-
-Actor::Actor(string name) {
-	init(name);
-}
 
 void Actor::init(int type) {
 	m_type = type;
@@ -51,7 +40,9 @@ void Actor::init() {
 }
 
 void Actor::initSprite() {
-	sprite = new sf::Sprite();
+	sprite.reset();
+
+	sprite = make_unique<sf::Sprite>();
 
 	sprite->setTexture(*mp_texture);
 	sprite->setScale(SCALE, SCALE);
@@ -60,10 +51,11 @@ void Actor::initSprite() {
 }
 
 void Actor::initText() {
-	text = new sf::Text();
+	text.reset();
 
-	sf::Font* font = FontManager::getFont(HP_FONT);
-	text->setFont(*font);
+	text = make_unique<sf::Text>();
+
+	text->setFont(*FontManager::getFont(HP_FONT));
 	text->setCharacterSize(HP_FONT_SIZE);
 	text->setFillColor(HP_COLOR);
 	text->setString(to_string(m_hp));
@@ -71,7 +63,7 @@ void Actor::initText() {
 	text->setPosition(m_position);
 }
 
-void Actor::random() {
+void Actor::random() noexcept {
 	m_frame_timer = 0;
 	m_frame_step = 0;
 	m_action_timer = 0;
@@ -85,7 +77,7 @@ void Actor::random() {
 
 void Actor::play(sf::Time elapsed) {
 
-	int ms = elapsed.asMilliseconds();
+	const int ms = elapsed.asMilliseconds();
 
 	m_frame_timer += ms;
 	m_action_timer += ms;
@@ -112,7 +104,7 @@ void Actor::play(sf::Time elapsed) {
 	}
 
 	if (m_move) {
-		sf::Vector2f offset = VECTORS[m_direction] * m_speed;
+		const sf::Vector2f offset = VECTORS.at(m_direction) * m_speed;
 
 		sprite->move(offset);
 		text->move(offset);
@@ -123,7 +115,7 @@ void Actor::play(sf::Time elapsed) {
 }
 
 void Actor::step() {
-	int direction = getScreenDirection(m_direction);
+	const int direction = getScreenDirection(m_direction);
 
 	m_frame.x = getActionStartFrame() + m_frame_step;
 	m_frame.y = direction;
@@ -136,70 +128,21 @@ void Actor::step() {
 	m_frame_step = (m_frame_step + 1) % getActionFrameCount();
 }
 
-void Actor::turn() {
-	int range = rand() % (DIRECTIONS - 3) + 2;
+void Actor::turn() noexcept {
+	const int range = rand() % (DIRECTIONS - 3) + 2;
 	m_direction = (m_direction + range) % DIRECTIONS;
 }
 
-void Actor::setRegion(int width, int height) {
-
-	int x = width > INIT_WIDTH ? int((width - INIT_WIDTH) / 2) : 0;
-	int y = height > INIT_HEIGHT ? int((height - INIT_HEIGHT) / 2) : 0;
-
-	region.left = x;
-	region.top = y;
-}
-
-bool Actor::atFront(const Actor* actor1, const Actor* actor2) {
-	float dx = actor2->m_position.x - actor1->m_position.x;
-	float dy = actor2->m_position.y - actor1->m_position.y;
-
-	switch (actor1->m_direction) {
-	case 0:
-		return dy > abs(dx);
-	case 1:
-		return dx > 0 && dy > 0;
-	case 2:
-		return dx > abs(dy);
-	case 3:
-		return dx > 0 and dy < 0;
-	case 4:
-		return -dy > abs(dx);
-	case 5:
-		return dx < 0 and dy < 0;
-	case 6:
-		return -dx > abs(dy);
-	case 7:
-		return dx < 0 and dy > 0;
-	default:
-		return false;
-	}
-}
-
-
-void Actor::attack(Actor* actor1, Actor* actor2) {
-	actor1->m_battle = true;
-	actor1->m_battle_timer = 0;
-
-	actor2->m_battle = true;
-	actor2->m_battle_timer = 0;
-
-	actor2->m_hp--;
-
-	// cout << fmt::format("{}->{}  {}  {}", actor1->id, actor2->id, actor2->hp, actor2->m_hp) << endl;
-}
-
-
-int Actor::genActionCycle() {
+int Actor::genActionCycle() noexcept {
 	return rand() % (MAX_ACTION_CYCLE - MIN_ACTION_CYCLE) + MIN_ACTION_CYCLE;
 }
 
-int Actor::genBattleCycle() {
+int Actor::genBattleCycle() noexcept {
 	return rand() % (MAX_BATTLE_CYCLE - MIN_BATTLE_CYCLE) + MIN_BATTLE_CYCLE;
 }
 
-float Actor::genSpeed() {
-	float speed = rand() % int(MAX_RUN_SPEED * 100) / 100.0f;
+float Actor::genSpeed() noexcept {
+	float speed = rand() % narrow_cast<int>(MAX_RUN_SPEED * 100) / 100.0f;
 
 	if (speed < MAX_STOP_SPEED) {
 		speed = 0;
@@ -213,17 +156,17 @@ float Actor::genSpeed() {
 }
 
 sf::Vector2f Actor::genPosition() {
-	float x = float(rand() % INIT_WIDTH);
-	float y = float(rand() % INIT_HEIGHT);
+	const float x = narrow_cast<float>(rand() % INIT_WIDTH);
+	const float y = narrow_cast<float>(rand() % INIT_HEIGHT);
 
 	return sf::Vector2f(x, y);
 }
 
-int Actor::genDirection() {
-	int left = region.left;
-	int top = region.top;
-	int right = region.width + region.left;
-	int bottom = region.height + region.top;
+int Actor::genDirection() noexcept {
+	const int left = region.left;
+	const int top = region.top;
+	const int right = region.width + region.left;
+	const int bottom = region.height + region.top;
 
 	if (m_position.x < left && m_position.y < top) return 1;
 	if (m_position.x < left && m_position.y > bottom) return 3;
@@ -238,18 +181,18 @@ int Actor::genDirection() {
 	return rand() % DIRECTIONS;
 }
 
-int Actor::genAction() {
+int Actor::genAction() noexcept {
 
 	int action_id = m_action_id;
 
 	if (m_speed > MAX_WALK_SPEED) {
-		action_id = RUN_ACTIONS[ rand() % RUN_COUNT ];
+		action_id = RUN_ACTIONS.at(rand() % RUN_COUNT);
 	}
 	else if (m_speed > MAX_STOP_SPEED) {
-		action_id = WALK_ACTIONS[rand() % WALK_COUNT];
+		action_id = WALK_ACTIONS.at(rand() % WALK_COUNT);
 	}
 	else {
-		action_id = STOP_ACTIONS[rand() % STOP_COUNT];
+		action_id = STOP_ACTIONS.at(rand() % STOP_COUNT);
 	}
 
 	if (m_action_id == action_id) {
@@ -269,10 +212,10 @@ int Actor::getActionFrameCount() {
 	return mp_action_set->getAction(m_action_id)->frames;
 }
 
-int Actor::getScreenDirection(int direction) {
+constexpr int Actor::getScreenDirection(int direction) noexcept {
 	return (DIRECTIONS + INIT_DIRECTION - direction) % DIRECTIONS;
 }
 
-int Actor::getTextureDirection(int direction) {
+constexpr int Actor::getTextureDirection(int direction) noexcept {
 	return (DIRECTIONS + INIT_DIRECTION - direction) % DIRECTIONS;
 }

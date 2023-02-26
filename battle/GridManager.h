@@ -4,16 +4,13 @@
 #include "ActorManager.h"
 #include "LGrid.h"
 
-using namespace std;
-
 const sf::Color LRECT_COLOR = sf::Color(128, 0, 0, 50);
 const sf::Color TRECT_COLOR = sf::Color(128, 0, 0, 50);
 
 class GridManager
 {
 public:
-	GridManager();
-	~GridManager();
+	GridManager() = default;
 
 	static void init();
 	static void init(bool show_rects);
@@ -36,8 +33,9 @@ private:
 		LCELL_WIDTH, LCELL_HEIGHT, TCELL_WIDTH, TCELL_HEIGHT,
 		0.f, 0.f, GRID_WIDTH, GRID_HEIGHT
 	);
-	static inline vector<sf::RectangleShape*> lrects = vector<sf::RectangleShape*>();
-	static inline vector<sf::RectangleShape*> trects = vector<sf::RectangleShape*>();
+
+	static inline vector<unique_ptr<sf::RectangleShape>> lrects;
+	static inline vector<unique_ptr<sf::RectangleShape>> trects;
 
 	static inline bool m_show_rects = true;
 };

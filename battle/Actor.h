@@ -6,29 +6,27 @@
 #include "TextureManager.h"
 #include "ActionManager.h"
 
-using namespace std;
+constexpr int DIRECTIONS = 8;
+constexpr int INIT_DIRECTION = 6;
 
-const int DIRECTIONS = 8;
-const int INIT_DIRECTION = 6;
+constexpr float MAX_RUN_SPEED = 2.0f;
+constexpr float MAX_WALK_SPEED = 1.0f;
+constexpr float MAX_STOP_SPEED = 0.5f;
 
-const float MAX_RUN_SPEED = 2.0f;
-const float MAX_WALK_SPEED = 1.0f;
-const float MAX_STOP_SPEED = 0.5f;
+constexpr int FRAME_CYCLE = 100;
+constexpr int MIN_ACTION_CYCLE = 1000;
+constexpr int MAX_ACTION_CYCLE = 5000;
 
-const int FRAME_CYCLE = 100;
-const int MIN_ACTION_CYCLE = 1000;
-const int MAX_ACTION_CYCLE = 5000;
+constexpr int MIN_BATTLE_CYCLE = 500;
+constexpr int MAX_BATTLE_CYCLE = 1000;
 
-const int MIN_BATTLE_CYCLE = 500;
-const int MAX_BATTLE_CYCLE = 1000;
-
-const int MAX_HP = 999;
+constexpr int MAX_HP = 999;
 
 const string HP_FONT = "Lato";
-const int HP_FONT_SIZE = 16;
+constexpr int HP_FONT_SIZE = 16;
 const sf::Color HP_COLOR = sf::Color::Red;
 
-const float SQR = 0.7071f;
+constexpr float SQR = 0.7071f;
 
 const array<sf::Vector2f, DIRECTIONS> VECTORS = {
     sf::Vector2f(0.0,   1.0),   // 0
@@ -55,35 +53,29 @@ enum ACTION {
     DEFENCE = 10
 };
 
-const int RUN_COUNT = 2;
-const int WALK_COUNT = 2;
-const int STOP_COUNT = 5;
+constexpr int RUN_COUNT = 2;
+constexpr int WALK_COUNT = 2;
+constexpr int STOP_COUNT = 5;
 
-const array<ACTION, RUN_COUNT> RUN_ACTIONS = { ACTION::RUN, ACTION::ADVANCE };
-const array<ACTION, WALK_COUNT> WALK_ACTIONS = { ACTION::WALK, ACTION::JUMP };
-const array<ACTION, STOP_COUNT> STOP_ACTIONS = {
+constexpr array<ACTION, RUN_COUNT> RUN_ACTIONS = { ACTION::RUN, ACTION::ADVANCE };
+constexpr array<ACTION, WALK_COUNT> WALK_ACTIONS = { ACTION::WALK, ACTION::JUMP };
+constexpr array<ACTION, STOP_COUNT> STOP_ACTIONS = {
     ACTION::STAND, ACTION::ATTACK, ACTION::HIT, ACTION::REST, ACTION::DEFENCE };
 
 class Actor
 {
 public:
-    Actor();
-    Actor(int type);
-    Actor(string name);
+    Actor() = default;
 
     void init(int id);
     void init(string name);
-    void random();
+    void random() noexcept;
     void play(sf::Time elapsed);
     void step();
-    void turn();
+    void turn() noexcept;
 
-    static void setRegion(int width, int height);
-    static bool atFront(const Actor* actor1, const Actor* actor2);
-    static void attack(Actor* actor1, Actor* actor2);
-
-    sf::Sprite* sprite;
-    sf::Text* text;
+    unique_ptr<sf::Sprite> sprite;
+    unique_ptr<sf::Text> text;
 
     const int& id = m_id;
     const int& type = m_type;
@@ -93,6 +85,7 @@ public:
     const sf::Vector2f& position = m_position;
     const sf::Vector2f& prev_position = m_prev_position;
 
+    friend class ActorManager;
 
 private:
 
@@ -105,50 +98,50 @@ private:
     int getActionFrameCount();
 
     sf::Vector2f genPosition();
-    int genActionCycle();
-    int genBattleCycle();
-    float genSpeed();
-    int genDirection();
-    int genAction();
+    int genActionCycle() noexcept;
+    int genBattleCycle() noexcept;
+    float genSpeed() noexcept;
+    int genDirection() noexcept;
+    int genAction() noexcept;
 
-    static int getScreenDirection(int direction);
-    static int getTextureDirection(int direction);
+    static constexpr int getScreenDirection(int direction) noexcept;
+    static constexpr int getTextureDirection(int direction) noexcept;
 
-    int m_id;
-    int m_type;
-    string m_name;
+    int m_id{};
+    int m_type{};
+    string m_name{};
 
-    int m_hp;
+    int m_hp{};
 
-    int m_frame_timer;
-    int m_frame_step;
+    int m_frame_timer{};
+    int m_frame_step{};
 
-    int m_action_cycle;
-    int m_action_timer;
+    int m_action_cycle{};
+    int m_action_timer{};
 
-    int m_battle_cycle;
-    int m_battle_timer;
+    int m_battle_cycle{};
+    int m_battle_timer{};
 
     sf::Vector2i m_frame;
     sf::IntRect m_area;
 
-    ActionSet* mp_action_set;
-    sf::Texture* mp_texture;
+    ActionSet* mp_action_set = nullptr;
+    sf::Texture* mp_texture = nullptr;
 
     sf::Vector2f m_position;
     sf::Vector2f m_prev_position;
 
-    float m_speed;
+    float m_speed{};
 
-    int m_action_id;
-    int m_direction;
+    int m_action_id{};
+    int m_direction{};
 
-    bool m_move = false;
-    bool m_change = false;
-    bool m_battle = false;
+    bool m_move{};
+    bool m_change{};
+    bool m_battle{};
 
-    Actor* m_target;
-    vector<Actor*> m_enemies;
+    unique_ptr<Actor> m_target;
+    vector<unique_ptr<Actor>> m_enemies;
 
     static inline sf::IntRect region = sf::IntRect(0, 0, INIT_WIDTH, INIT_HEIGHT);
 };

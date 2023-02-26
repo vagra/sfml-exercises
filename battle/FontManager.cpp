@@ -1,9 +1,5 @@
 #include "FontManager.h"
 
-FontManager::FontManager()
-{
-}
-
 void FontManager::init() {
 
     cout << "init font manager:" << endl;
@@ -15,18 +11,18 @@ void FontManager::init() {
     cout << "init font manager done." << endl << endl;
 }
 
-int FontManager::getCount() {
-    return (int)fonts.size();
+int FontManager::getCount() noexcept {
+    return narrow_cast<int>(fonts.size());
 }
 
-const vector<string>& FontManager::getNames() {
+vector<string>& FontManager::getNames() noexcept {
     return names;
 }
 
 sf::Font* FontManager::getFont(string name)
 {
     if (fonts.find(name) != fonts.end()) {
-        return fonts[name];
+        return fonts[name].get();
     }
     else {
         return nullptr;
@@ -40,20 +36,21 @@ sf::Font* FontManager::getFont(int index)
 
 sf::Font* FontManager::loadFont(string name, string path)
 {
-    sf::Font* pFont = new sf::Font();
+    auto font = make_unique<sf::Font>();
 
-    if (!pFont->loadFromFile(path))
+    if (!font->loadFromFile(path))
     {
         cout << fmt::format("error when load font file: ", name) << endl;
 
-        delete pFont;
+        font.reset();
         return nullptr;
     }
 
-    fonts[name] = pFont;
+    fonts[name] = move(font);
 
     names.push_back(name);
-    return fonts[name];
+
+    return fonts[name].get();
 }
 
 void FontManager::listFiles() {
@@ -101,17 +98,14 @@ void FontManager::printMap() {
 }
 
 void FontManager::printList() {
+    string file_path = "";
+    sf::Font* font = nullptr;
+
     for (auto const& file_name : names) {
-        string file_path = files[file_name];
-        sf::Font* font = fonts[file_name];
+        file_path = files[file_name];
+        font = fonts[file_name].get();
+        assert(font);
         cout << fmt::format("{}: {}\t\t{}",
             file_name, font->getInfo().family, file_path) << endl;
-    }
-}
-
-FontManager::~FontManager()
-{
-    for (auto const& [name, pointer] : fonts) {
-        delete pointer;
     }
 }

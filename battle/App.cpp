@@ -1,9 +1,5 @@
 #include "App.h"
 
-App::App() {
-    init();
-}
-
 void App::init() {
 
     FontManager::init();
@@ -58,9 +54,9 @@ void App::run() {
 }
 
 void App::onResize() {
-    sf::Vector2f win = static_cast<sf::Vector2f>(window.getSize());
+    const sf::Vector2f win = static_cast<sf::Vector2f>(window.getSize());
 
-    Actor::setRegion(int(win.x), int(win.y));
+    ActorManager::setRegion(narrow_cast<int>(win.x), narrow_cast<int>(win.y));
 
     sf::View view = window.getDefaultView();
     view.setCenter(win / 2.f);
@@ -69,7 +65,7 @@ void App::onResize() {
     window.setView(view);
 }
 
-void App::onKeyboard() {
+void App::onKeyboard() noexcept {
 
     
 }
@@ -81,8 +77,7 @@ void App::initWindow() {
 }
 
 void App::initText() {
-    sf::Font* font = FontManager::getFont(GUI_FONT);
-    text.setFont(*font);
+    text.setFont(*FontManager::getFont(GUI_FONT));
     text.setCharacterSize(GUI_FONT_SIZE);
     text.setFillColor(GUI_COLOR);
 }
@@ -92,6 +87,6 @@ void App::drawText() {
 }
 
 void App::updateText(sf::Time elapsed) {
-    int fps = int(1 / elapsed.asSeconds());
+    int fps = narrow_cast<int>(1 / elapsed.asSeconds());
     text.setString(fmt::format("Actors: {}\nFPS: {}", MAX, fps));
 }

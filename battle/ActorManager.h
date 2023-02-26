@@ -3,27 +3,24 @@
 #include "globals.h"
 #include "Actor.h"
 
-using namespace std;
-
 class ActorManager
 {
 public:
-	ActorManager();
-	~ActorManager();
+	ActorManager() = default;
 
 	static void init();
-
 	static void update(sf::Time elapsed);
-
 	static void draw(sf::RenderWindow& window);
 
-	static int getCount();
+	static int getCount() noexcept;
+	static int genID() noexcept;
+	static Actor* getActor(int index) noexcept;
 
-	static int genID();
+	static void setRegion(int width, int height) noexcept;
+	static bool atFront(const Actor* actor1, const Actor* actor2) noexcept;
+	static void attack(Actor* actor1, Actor* actor2) noexcept;
 
-	static Actor* getActor(int index);
-
-	static inline vector<Actor*> actors;
+	static inline vector<unique_ptr<Actor>> actors;
 
 private:
 

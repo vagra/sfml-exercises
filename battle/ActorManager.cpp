@@ -1,9 +1,5 @@
 #include "ActorManager.h"
 
-ActorManager::ActorManager()
-{
-}
-
 void ActorManager::init() {
 
     cout << "init actor manager:" << endl;
@@ -27,18 +23,18 @@ void ActorManager::draw(sf::RenderWindow& window) {
     }
 }
 
-int ActorManager::getCount() {
-    return (int)actors.size();
+int ActorManager::getCount() noexcept {
+    return narrow_cast<int>(actors.size());
 }
 
-int ActorManager::genID() {
+int ActorManager::genID() noexcept {
     counter++;
     return counter;
 }
 
-Actor* ActorManager::getActor(int index)
+Actor* ActorManager::getActor(int index) noexcept
 {
-    return actors[index];
+    return actors.at(index).get();
 }
 
 void ActorManager::makeActors() {
@@ -46,13 +42,16 @@ void ActorManager::makeActors() {
 
     actors.clear();
 
+    int type = 0;
+
     for (int i = 0; i < MAX; i++) {
 
-        int type = rand() % ACTOR_TYPES;
+        type = rand() % ACTOR_TYPES;
 
-        Actor* actor = new Actor(type);
+        auto actor = make_unique<Actor>();
+		actor->init(type);
 
-        actors.push_back(actor);
+        actors.push_back(move(actor));
     }
 
     cout << fmt::format("\t{} actors ready.", getCount()) << endl;
@@ -68,9 +67,50 @@ void ActorManager::print() {
 }
 
 
-ActorManager::~ActorManager()
-{
-    for (auto const& actor : actors) {
-        delete actor;
-    }
+void ActorManager::setRegion(int width, int height) noexcept {
+
+	const int x = width > INIT_WIDTH ? int((width - INIT_WIDTH) / 2) : 0;
+	const int y = height > INIT_HEIGHT ? int((height - INIT_HEIGHT) / 2) : 0;
+
+	Actor::region.left = x;
+	Actor::region.top = y;
+}
+
+bool ActorManager::atFront(const Actor* actor1, const Actor* actor2) noexcept {
+	const float dx = actor2->m_position.x - actor1->m_position.x;
+	const float dy = actor2->m_position.y - actor1->m_position.y;
+
+	switch (actor1->m_direction) {
+	case 0:
+		return dy > abs(dx);
+	case 1:
+		return dx > 0 && dy > 0;
+	case 2:
+		return dx > abs(dy);
+	case 3:
+		return dx > 0 and dy < 0;
+	case 4:
+		return -dy > abs(dx);
+	case 5:
+		return dx < 0 and dy < 0;
+	case 6:
+		return -dx > abs(dy);
+	case 7:
+		return dx < 0 and dy > 0;
+	default:
+		return false;
+	}
+}
+
+
+void ActorManager::attack(Actor* actor1, Actor* actor2) noexcept {
+	actor1->m_battle = true;
+	actor1->m_battle_timer = 0;
+
+	actor2->m_battle = true;
+	actor2->m_battle_timer = 0;
+
+	actor2->m_hp--;
+
+	// cout << fmt::format("{}->{}  {}  {}", actor1->id, actor2->id, actor2->hp, actor2->m_hp) << endl;
 }
