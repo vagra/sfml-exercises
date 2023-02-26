@@ -31,9 +31,10 @@ if touch other types actor, attack.
 
 - **library**
   - [sfml](https://github.com/SFML/SFML)
+  - [ms-gsl](https://github.com/microsoft/GSL)
   - [fmt](https://github.com/fmtlib/fmt)
   - [rapidcsv](https://github.com/d99kris/rapidcsv)
-  - [ms-gsl](https://github.com/microsoft/GSL)
+
 
 - **collision detection**
   - [Dragon Energy@stackoverflow](https://stackoverflow.com/questions/41946007)
