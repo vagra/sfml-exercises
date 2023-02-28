@@ -40,27 +40,27 @@ void Actor::init() {
 }
 
 void Actor::initSprite() {
-	sprite.reset();
+	m_sprite.reset();
 
-	sprite = make_unique<sf::Sprite>();
+	m_sprite = make_unique<sf::Sprite>();
 
-	sprite->setTexture(*mp_texture);
-	sprite->setScale(SCALE, SCALE);
-	sprite->setOrigin(ORIGIN_X, ORIGIN_Y);
-	sprite->setPosition(m_position);
+	m_sprite->setTexture(*mp_texture);
+	m_sprite->setScale(SCALE, SCALE);
+	m_sprite->setOrigin(ORIGIN_X, ORIGIN_Y);
+	m_sprite->setPosition(m_position);
 }
 
 void Actor::initText() {
-	text.reset();
+	m_text.reset();
 
-	text = make_unique<sf::Text>();
+	m_text = make_unique<sf::Text>();
 
-	text->setFont(*FontManager::getFont(HP_FONT));
-	text->setCharacterSize(HP_FONT_SIZE);
-	text->setFillColor(HP_COLOR);
-	text->setString(to_string(m_hp));
-	text->setOrigin(0, ORIGIN_Y);
-	text->setPosition(m_position);
+	m_text->setFont(*FontManager::getFont(HP_FONT));
+	m_text->setCharacterSize(HP_FONT_SIZE);
+	m_text->setFillColor(HP_COLOR);
+	m_text->setString(to_string(m_hp));
+	m_text->setOrigin(0, ORIGIN_Y);
+	m_text->setPosition(m_position);
 }
 
 void Actor::random() noexcept {
@@ -89,7 +89,7 @@ void Actor::play(sf::Time elapsed) {
 	}
 
 	if (m_battle) {
-		text->setString(to_string(m_hp));
+		m_text->setString(to_string(m_hp));
 	}
 
 	if (m_action_timer >= m_action_cycle) {
@@ -106,12 +106,12 @@ void Actor::play(sf::Time elapsed) {
 	if (m_move) {
 		const sf::Vector2f offset = VECTORS.at(m_direction) * m_speed;
 
-		sprite->move(offset);
-		text->move(offset);
+		m_sprite->move(offset);
+		m_text->move(offset);
 	}
 
 	m_prev_position = m_position;
-	m_position = sprite->getPosition();
+	m_position = m_sprite->getPosition();
 }
 
 void Actor::step() {
@@ -123,7 +123,7 @@ void Actor::step() {
 	m_area.left = m_frame.x * FRAME_WIDTH;
 	m_area.top = m_frame.y * FRAME_HEIGHT;
 
-	sprite->setTextureRect(m_area);
+	m_sprite->setTextureRect(m_area);
 
 	m_frame_step = (m_frame_step + 1) % getActionFrameCount();
 }
@@ -133,33 +133,19 @@ void Actor::turn() noexcept {
 	m_direction = (m_direction + range) % DIRECTIONS;
 }
 
+sf::Vector2f Actor::genPosition() {
+	const float x = narrow_cast<float>(rand() % INIT_WIDTH);
+	const float y = narrow_cast<float>(rand() % INIT_HEIGHT);
+
+	return sf::Vector2f(x, y);
+}
+
 int Actor::genActionCycle() noexcept {
 	return rand() % (MAX_ACTION_CYCLE - MIN_ACTION_CYCLE) + MIN_ACTION_CYCLE;
 }
 
 int Actor::genBattleCycle() noexcept {
 	return rand() % (MAX_BATTLE_CYCLE - MIN_BATTLE_CYCLE) + MIN_BATTLE_CYCLE;
-}
-
-float Actor::genSpeed() noexcept {
-	float speed = rand() % narrow_cast<int>(MAX_RUN_SPEED * 100) / 100.0f;
-
-	if (speed < MAX_STOP_SPEED) {
-		speed = 0;
-		m_move = false;
-	} 
-	else {
-		m_move = true;
-	}
-
-	return speed;
-}
-
-sf::Vector2f Actor::genPosition() {
-	const float x = narrow_cast<float>(rand() % INIT_WIDTH);
-	const float y = narrow_cast<float>(rand() % INIT_HEIGHT);
-
-	return sf::Vector2f(x, y);
 }
 
 int Actor::genDirection() noexcept {
@@ -203,6 +189,19 @@ int Actor::genAction() noexcept {
 	return action_id;
 }
 
+float Actor::genSpeed() noexcept {
+	float speed = rand() % narrow_cast<int>(MAX_RUN_SPEED * 100) / 100.0f;
+
+	if (speed < MAX_STOP_SPEED) {
+		speed = 0;
+		m_move = false;
+	}
+	else {
+		m_move = true;
+	}
+
+	return speed;
+}
 
 int Actor::getActionStartFrame() {
 	return mp_action_set->getAction(m_action_id)->start;

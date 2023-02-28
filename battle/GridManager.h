@@ -10,8 +10,6 @@ const sf::Color TRECT_COLOR = sf::Color(128, 0, 0, 50);
 class GridManager
 {
 public:
-	GridManager() = default;
-
 	static void init();
 	static void init(bool show_rects);
 	static void update();

@@ -29,7 +29,7 @@ void GridManager::draw(sf::RenderWindow& window) {
 
 void GridManager::initActors() {
 
-    for (auto& actor : ActorManager::actors)
+    for (auto& actor : ActorManager::getActors())
     {
         lgrid_insert(mp_grid, actor->id,
             actor->position.x, actor->position.y, AGENT_HALFW, AGENT_HALFH
@@ -43,7 +43,9 @@ void GridManager::updateActors() {
 
     SmallList<int> ids;
 
-    for (auto& actor : ActorManager::actors)
+    Actor* other = nullptr;
+
+    for (auto& actor : ActorManager::getActors())
     {
         lgrid_move(mp_grid, actor->id,
             actor->prev_position.x, actor->prev_position.y,
@@ -61,7 +63,8 @@ void GridManager::updateActors() {
         }
 
         for (int i = 0; i < ids.size(); i++) {
-            Actor* other = ActorManager::getActor(ids[i]);
+            other = ActorManager::getActor(ids[i]);
+
             if (ActorManager::atFront(actor.get(), other)) {
                 if (actor->type != other->type) {
                     ActorManager::attack(actor.get(), other);
@@ -120,6 +123,7 @@ void GridManager::updateRects() {
             lcell->rect[2] - lcell->rect[0],
             lcell->rect[3] - lcell->rect[1]
         ));
+
         lrects.at(i)->setPosition(sf::Vector2(
             lcell->rect[0], lcell->rect[1]
         ));
@@ -147,10 +151,12 @@ void GridManager::initLRects() {
         lcell = &mp_grid->loose.cells[i];
 
         auto lrect = make_unique<sf::RectangleShape>();
-        lrect->setSize(sf::Vector2(lcell->rect[2] - lcell->rect[0], lcell->rect[3] - lcell->rect[1]));
-        lrect->setPosition(sf::Vector2(
-            lcell->rect[0], lcell->rect[1]
-        ));
+        lrect->setSize(
+            sf::Vector2(lcell->rect[2] - lcell->rect[0], lcell->rect[3] - lcell->rect[1])
+        );
+        lrect->setPosition(
+            sf::Vector2(lcell->rect[0], lcell->rect[1])
+        );
         lrect->setFillColor(sf::Color::Transparent);
         lrect->setOutlineColor(LRECT_COLOR);
         lrect->setOutlineThickness(1.f);

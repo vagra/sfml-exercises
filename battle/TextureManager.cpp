@@ -24,26 +24,33 @@ sf::Texture* TextureManager::getTexture(string name)
     if (textures.find(name) != textures.end()) {
         return textures[name].get();
     }
-    else {
-        return nullptr;
-    }
+    
+    throw runtime_error(
+        fmt::format("texture with name of {} not exist.", name)
+    );
 }
 
 sf::Texture* TextureManager::getTexture(int index)
 {
+    assert(index < names.size());
     return getTexture(names.at(index));
 }
 
 sf::Texture* TextureManager::loadTexture(string name, string path)
 {
+    if (textures.find(name) != textures.end()) {
+        return textures[name].get();
+    }
+
     auto texture = make_unique<sf::Texture>();
 
     if (!texture->loadFromFile(path))
     {
-        cout << fmt::format("error when load texture file: ", name) << endl;
-
         texture.reset();
-        return nullptr;
+        
+        throw runtime_error(
+            fmt::format("texture file {} not exist.", path)
+        );
     }
 
     textures[name] = move(texture);

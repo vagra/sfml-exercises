@@ -5,8 +5,6 @@
 class FontManager
 {
 public:
-    FontManager() = default;
-
     static void init();
 
     static int getCount() noexcept;

@@ -19,8 +19,6 @@ const sf::String APP_NAME = L"战斗";
 class App
 {
 public:
-	App() = default;
-
 	void init();
 	void run();
 

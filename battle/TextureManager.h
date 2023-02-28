@@ -5,8 +5,6 @@
 class TextureManager
 {
 public:
-    TextureManager() = default;
-
     static void init();
 
     static int getCount() noexcept;

@@ -38,13 +38,15 @@ ActionSet* ActionManager::getActionSet(string name)
     if (action_sets.find(name) != action_sets.end()) {
         return action_sets[name].get();
     }
-    else {
-        return nullptr;
-    }
+
+    throw runtime_error(
+        fmt::format("action set with name of {} not exist.", name)
+    );
 }
 
 ActionSet* ActionManager::getActionSet(int index)
 {
+    assert(index < names.size());
     return getActionSet(names.at(index));
 }
 

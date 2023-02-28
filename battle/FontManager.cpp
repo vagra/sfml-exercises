@@ -24,26 +24,33 @@ sf::Font* FontManager::getFont(string name)
     if (fonts.find(name) != fonts.end()) {
         return fonts[name].get();
     }
-    else {
-        return nullptr;
-    }
+
+    throw runtime_error(
+        fmt::format("font with name of {} not exist.", name)
+    );
 }
 
 sf::Font* FontManager::getFont(int index)
 {
+    assert(index < names.size());
     return getFont(names.at(index));
 }
 
 sf::Font* FontManager::loadFont(string name, string path)
 {
+    if (fonts.find(name) != fonts.end()) {
+        return fonts[name].get();
+    }
+
     auto font = make_unique<sf::Font>();
 
     if (!font->loadFromFile(path))
     {
-        cout << fmt::format("error when load font file: ", name) << endl;
-
         font.reset();
-        return nullptr;
+
+        throw runtime_error(
+            fmt::format("font file {} not exist.", path)
+        );
     }
 
     fonts[name] = move(font);

@@ -65,7 +65,6 @@ constexpr array<ACTION, STOP_COUNT> STOP_ACTIONS = {
 class Actor
 {
 public:
-    Actor() = default;
 
     void init(int id);
     void init(string name);
@@ -74,16 +73,18 @@ public:
     void step();
     void turn() noexcept;
 
-    unique_ptr<sf::Sprite> sprite;
-    unique_ptr<sf::Text> text;
-
     const int& id = m_id;
     const int& type = m_type;
     const string& name = m_name;
     const int& hp = m_hp;
+
     const bool& battle = m_battle;
+
     const sf::Vector2f& position = m_position;
     const sf::Vector2f& prev_position = m_prev_position;
+
+    const unique_ptr<sf::Sprite>& sprite = m_sprite;
+    const unique_ptr<sf::Text>& text = m_text;
 
     friend class ActorManager;
 
@@ -100,9 +101,9 @@ private:
     sf::Vector2f genPosition();
     int genActionCycle() noexcept;
     int genBattleCycle() noexcept;
-    float genSpeed() noexcept;
     int genDirection() noexcept;
     int genAction() noexcept;
+    float genSpeed() noexcept;
 
     static constexpr int getScreenDirection(int direction) noexcept;
     static constexpr int getTextureDirection(int direction) noexcept;
@@ -110,7 +111,6 @@ private:
     int m_id{};
     int m_type{};
     string m_name{};
-
     int m_hp{};
 
     int m_frame_timer{};
@@ -122,26 +122,29 @@ private:
     int m_battle_cycle{};
     int m_battle_timer{};
 
-    sf::Vector2i m_frame;
-    sf::IntRect m_area;
-
-    ActionSet* mp_action_set = nullptr;
-    sf::Texture* mp_texture = nullptr;
-
-    sf::Vector2f m_position;
-    sf::Vector2f m_prev_position;
-
-    float m_speed{};
-
     int m_action_id{};
     int m_direction{};
+
+    float m_speed{};
 
     bool m_move{};
     bool m_change{};
     bool m_battle{};
 
-    unique_ptr<Actor> m_target;
-    vector<unique_ptr<Actor>> m_enemies;
+    sf::Vector2i m_frame;
+    sf::IntRect m_area;
+
+    sf::Vector2f m_position;
+    sf::Vector2f m_prev_position;
+
+    unique_ptr<sf::Sprite> m_sprite;
+    unique_ptr<sf::Text> m_text;
+
+    ActionSet* mp_action_set = nullptr;
+    sf::Texture* mp_texture = nullptr;
+
+    Actor* m_target = nullptr;
+    vector<Actor*> m_enemies;
 
     static inline sf::IntRect region = sf::IntRect(0, 0, INIT_WIDTH, INIT_HEIGHT);
 };

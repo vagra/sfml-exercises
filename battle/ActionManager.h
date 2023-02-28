@@ -21,8 +21,6 @@ struct ActionSet
 
 class ActionManager {
 public:
-	ActionManager() = default;
-
 	static void init();
 
 	static int getCount() noexcept;

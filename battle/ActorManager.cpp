@@ -1,5 +1,6 @@
 #include "ActorManager.h"
 
+
 void ActorManager::init() {
 
     cout << "init actor manager:" << endl;
@@ -32,9 +33,13 @@ int ActorManager::genID() noexcept {
     return counter;
 }
 
-Actor* ActorManager::getActor(int index) noexcept
-{
+Actor* ActorManager::getActor(int index) noexcept {
+	assert(index < actors.size());
     return actors.at(index).get();
+}
+
+const vector<unique_ptr<Actor>>& ActorManager::getActors() noexcept {
+	return actors;
 }
 
 void ActorManager::makeActors() {
