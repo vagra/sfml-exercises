@@ -21,6 +21,8 @@ constexpr int MIN_BATTLE_CYCLE = 500;
 constexpr int MAX_BATTLE_CYCLE = 1000;
 
 constexpr int MAX_HP = 999;
+constexpr int MIN_HIT = 1;
+constexpr int MAX_HIT = 10;
 
 const string HP_FONT = "Lato";
 constexpr int HP_FONT_SIZE = 16;
@@ -39,28 +41,19 @@ const array<sf::Vector2f, DIRECTIONS> VECTORS = {
     sf::Vector2f(-SQR,  SQR)    // 7
 };
 
-enum ACTION {
-    WALK = 0,
-    RUN = 1,
-    SIT = 2,
-    FAIL = 3,
-    STAND = 4,
-    ADVANCE = 5,
-    ATTACK = 6,
-    HIT = 7,
-    JUMP = 8,
-    REST = 9,
-    DEFENCE = 10
+enum STATUS {
+    NORMAL = 0,
+    BATTLE = 1,
+    DIED = 2
 };
 
-constexpr int RUN_COUNT = 2;
-constexpr int WALK_COUNT = 2;
-constexpr int STOP_COUNT = 5;
-
-constexpr array<ACTION, RUN_COUNT> RUN_ACTIONS = { ACTION::RUN, ACTION::ADVANCE };
-constexpr array<ACTION, WALK_COUNT> WALK_ACTIONS = { ACTION::WALK, ACTION::JUMP };
-constexpr array<ACTION, STOP_COUNT> STOP_ACTIONS = {
-    ACTION::STAND, ACTION::ATTACK, ACTION::HIT, ACTION::REST, ACTION::DEFENCE };
+constexpr array<ACTION, 2> RUN_ACTIONS = { ACTION::RUN, ACTION::ADVANCE };
+constexpr array<ACTION, 2> WALK_ACTIONS = { ACTION::WALK, ACTION::WALK };
+constexpr array<ACTION, 2> STAND_ACTIONS = { ACTION::STAND, ACTION::REST };
+constexpr ACTION ATTACK_ACTION = ACTION::ATTACK;
+constexpr ACTION HIT_ACTION = ACTION::HIT;
+constexpr ACTION DEFENCE_ACTION = ACTION::DEFENCE;
+constexpr ACTION DIE_ACTION = ACTION::DIE;
 
 class Actor
 {
@@ -72,13 +65,21 @@ public:
     void play(sf::Time elapsed);
     void step();
     void turn() noexcept;
+    void battle();
+    void hit();
+    void attack();
+    void die();
+
+    bool isMoving() noexcept;
+    bool isAliving() noexcept;
+    bool isFighting() noexcept;
 
     const int& id = m_id;
     const int& type = m_type;
     const string& name = m_name;
     const int& hp = m_hp;
 
-    const bool& battle = m_battle;
+    const STATUS& status = m_status;
 
     const sf::Vector2f& position = m_position;
     const sf::Vector2f& prev_position = m_prev_position;
@@ -127,9 +128,9 @@ private:
 
     float m_speed{};
 
-    bool m_move{};
     bool m_change{};
-    bool m_battle{};
+    
+    STATUS m_status{};
 
     sf::Vector2i m_frame;
     sf::IntRect m_area;
@@ -143,8 +144,8 @@ private:
     ActionSet* mp_action_set = nullptr;
     sf::Texture* mp_texture = nullptr;
 
-    Actor* m_target = nullptr;
-    vector<Actor*> m_enemies;
+    set<int> m_enemy_ids;
+    queue<int> m_hits;
 
     static inline sf::IntRect region = sf::IntRect(0, 0, INIT_WIDTH, INIT_HEIGHT);
 };

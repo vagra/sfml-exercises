@@ -26,6 +26,8 @@ private:
 
 	static void print();
 
+	static int genHit() noexcept;
+
 	static int inline counter = -1;
 
 	static inline vector<unique_ptr<Actor>> actors;

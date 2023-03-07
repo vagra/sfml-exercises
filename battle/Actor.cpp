@@ -28,6 +28,7 @@ void Actor::init() {
 	m_prev_position = m_position;
 
 	m_hp = MAX_HP;
+	m_status = STATUS::NORMAL;
 	m_battle_cycle = genBattleCycle();
 	m_battle_timer = 0;
 
@@ -77,6 +78,10 @@ void Actor::random() noexcept {
 
 void Actor::play(sf::Time elapsed) {
 
+	if (m_status == STATUS::DIED) {
+		return;
+	}
+
 	const int ms = elapsed.asMilliseconds();
 
 	m_frame_timer += ms;
@@ -85,10 +90,10 @@ void Actor::play(sf::Time elapsed) {
 
 	if (m_battle_timer >= m_battle_cycle) {
 		m_battle_timer = 0;
-		m_battle = false;
+		attack();
 	}
 
-	if (m_battle) {
+	if (isFighting()) {
 		m_text->setString(to_string(m_hp));
 	}
 
@@ -103,7 +108,7 @@ void Actor::play(sf::Time elapsed) {
 		step();
 	}
 
-	if (m_move) {
+	if (isMoving()) {
 		const sf::Vector2f offset = VECTORS.at(m_direction) * m_speed;
 
 		m_sprite->move(offset);
@@ -131,6 +136,68 @@ void Actor::step() {
 void Actor::turn() noexcept {
 	const int range = rand() % (DIRECTIONS - 3) + 2;
 	m_direction = (m_direction + range) % DIRECTIONS;
+}
+
+void Actor::battle() {
+	hit();
+
+	if (m_hp <= 0) {
+		m_hp = 0;
+		die();
+		step();
+
+		return;
+	}
+
+	attack();
+
+	step();
+}
+
+void Actor::hit() {
+
+	if (m_hits.empty()) {
+		return;
+	}
+
+	do {
+		m_hp -= m_hits.front();
+		m_hits.pop();
+	} while (!m_hits.empty());
+
+	m_action_id = HIT_ACTION;
+
+	m_status = STATUS::BATTLE;
+}
+
+void Actor::attack() {
+	if (m_enemy_ids.empty()) {
+		return;
+	}
+
+	m_speed = 0.f;
+	m_action_id = DIE_ACTION;
+
+	m_status = STATUS::BATTLE;
+}
+
+void Actor::die() {
+	m_speed = 0.f;
+	m_action_id = DIE_ACTION;
+
+	m_status = STATUS::DIED;
+}
+
+bool Actor::isMoving() noexcept {
+	return m_speed > 0.f;
+}
+
+bool Actor::isAliving() noexcept {
+	return m_status != STATUS::DIED;
+}
+
+bool Actor::isFighting() noexcept {
+	return m_status == STATUS::BATTLE;
 }
 
 sf::Vector2f Actor::genPosition() {
@@ -172,13 +239,13 @@ int Actor::genAction() noexcept {
 	int action_id = m_action_id;
 
 	if (m_speed > MAX_WALK_SPEED) {
-		action_id = RUN_ACTIONS.at(rand() % RUN_COUNT);
+		action_id = RUN_ACTIONS.at(m_status);
 	}
 	else if (m_speed > MAX_STOP_SPEED) {
-		action_id = WALK_ACTIONS.at(rand() % WALK_COUNT);
+		action_id = WALK_ACTIONS.at(m_status);
 	}
 	else {
-		action_id = STOP_ACTIONS.at(rand() % STOP_COUNT);
+		action_id = STAND_ACTIONS.at(m_status);
 	}
 
 	if (m_action_id == action_id) {
@@ -190,14 +257,11 @@ int Actor::genAction() noexcept {
 }
 
 float Actor::genSpeed() noexcept {
+
 	float speed = rand() % narrow_cast<int>(MAX_RUN_SPEED * 100) / 100.0f;
 
 	if (speed < MAX_STOP_SPEED) {
-		speed = 0;
-		m_move = false;
-	}
-	else {
-		m_move = true;
+		speed = 0.f;
 	}
 
 	return speed;

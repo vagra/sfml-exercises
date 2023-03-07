@@ -109,13 +109,22 @@ bool ActorManager::atFront(const Actor* actor1, const Actor* actor2) noexcept {
 
 
 void ActorManager::attack(Actor* actor1, Actor* actor2) noexcept {
-	actor1->m_battle = true;
+	actor1->m_status = STATUS::BATTLE;
 	actor1->m_battle_timer = 0;
 
-	actor2->m_battle = true;
+	actor2->m_status = STATUS::BATTLE;
 	actor2->m_battle_timer = 0;
 
-	actor2->m_hp--;
+	int hit = genHit();
+
+	actor2->m_hits.push(hit);
+
+	actor1->m_enemy_ids.insert(actor2->id);
+	actor2->m_enemy_ids.insert(actor1->id);
 
 	// cout << fmt::format("{}->{}  {}  {}", actor1->id, actor2->id, actor2->hp, actor2->m_hp) << endl;
+}
+
+int ActorManager::genHit() noexcept {
+	return rand() % (MAX_HIT - MIN_HIT) + MIN_HIT;
 }

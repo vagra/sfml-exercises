@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iostream>
 #include <filesystem>
+#include <set>
+#include <queue>
 #include <unordered_map>
 #include <cmath>
 #include <array>
@@ -20,7 +22,7 @@ constexpr int INIT_WIDTH = 800;
 constexpr int INIT_HEIGHT = 800;
 
 constexpr int ACTOR_TYPES = 8;
-constexpr int ACTIONS = 11;
+constexpr int ACTIONS = 12;
 
 constexpr int MAX = 1000;
 
