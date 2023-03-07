@@ -108,14 +108,14 @@ bool ActorManager::atFront(const Actor* actor1, const Actor* actor2) noexcept {
 }
 
 
-void ActorManager::attack(Actor* actor1, Actor* actor2) noexcept {
+void ActorManager::attack(Actor* actor1, Actor* actor2) {
 	actor1->m_status = STATUS::BATTLE;
 	actor1->m_battle_timer = 0;
 
 	actor2->m_status = STATUS::BATTLE;
 	actor2->m_battle_timer = 0;
 
-	int hit = genHit();
+	const int hit = genHit();
 
 	actor2->m_hits.push(hit);
 

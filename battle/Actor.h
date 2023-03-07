@@ -66,9 +66,9 @@ public:
     void step();
     void turn() noexcept;
     void battle();
-    void hit();
-    void attack();
-    void die();
+    void hit() noexcept;
+    void attack() noexcept;
+    void die() noexcept;
 
     bool isMoving() noexcept;
     bool isAliving() noexcept;

@@ -14,6 +14,7 @@
 #include <fmt/core.h>
 
 #include <rapidcsv.h>
+#include <machine.hpp>
 
 using namespace std;
 using namespace gsl;

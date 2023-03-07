@@ -117,12 +117,16 @@
     <ClCompile Include="LGrid.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="States.cpp" />
+    <ClCompile Include="FSM.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="ActionManager.cpp" />
     <ClCompile Include="ActorManager.cpp" />
     <ClCompile Include="battle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Action.h" />
+    <ClInclude Include="Context.h" />
     <ClInclude Include="FontManager.h" />
     <ClInclude Include="GridManager.h" />
     <ClInclude Include="SmallList.h" />
@@ -130,6 +134,8 @@
     <ClInclude Include="LGrid.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="App.h" />
+    <ClInclude Include="States.h" />
+    <ClInclude Include="FSM.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="ActionManager.h" />
     <ClInclude Include="ActorManager.h" />

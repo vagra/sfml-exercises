@@ -154,7 +154,7 @@ void Actor::battle() {
 	step();
 }
 
-void Actor::hit() {
+void Actor::hit() noexcept {
 
 	if (m_hits.empty()) {
 		return;
@@ -170,7 +170,7 @@ void Actor::hit() {
 	m_status = STATUS::BATTLE;
 }
 
-void Actor::attack() {
+void Actor::attack() noexcept {
 	if (m_enemy_ids.empty()) {
 		return;
 	}
@@ -181,7 +181,7 @@ void Actor::attack() {
 	m_status = STATUS::BATTLE;
 }
 
-void Actor::die() {
+void Actor::die() noexcept {
 	m_speed = 0.f;
 	m_action_id = DIE_ACTION;
 
