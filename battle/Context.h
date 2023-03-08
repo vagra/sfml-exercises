@@ -4,7 +4,9 @@
 #include "Action.h"
 
 struct Context {
-	Action* action = nullptr;
+	int actor_type{};
+	ACTION action{};
+	int frames{};
 	int timer{};
 	int step{};
 	int direction{};

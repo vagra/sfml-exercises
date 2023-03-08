@@ -13,6 +13,9 @@ public:
 	static ActionSet* getActionSet(string name);
 	static ActionSet* getActionSet(int index);
 
+	static Action* getAction(string action_set_name, string action_name);
+	static Action* getAction(int action_set_index, int action_index);
+
 	static int getActionSetIndex(string name);
 	static string getActionSetName(int index);
 

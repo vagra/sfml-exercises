@@ -1,21 +1,5 @@
 #include "ActionManager.h"
 
-Action* ActionSet::getAction(string name)
-{
-    if (actions.find(name) != actions.end()) {
-        return actions[name].get();
-    }
-    else {
-        return nullptr;
-    }
-}
-
-Action* ActionSet::getAction(int index)
-{
-    return getAction(names.at(index));
-}
-
-
 void ActionManager::init() {
 
     cout << "init action manager:" << endl;
@@ -48,6 +32,14 @@ ActionSet* ActionManager::getActionSet(int index)
 {
     assert(index < names.size());
     return getActionSet(names.at(index));
+}
+
+Action* ActionManager::getAction(string action_set_name, string action_name) {
+    return getActionSet(action_set_name)->getAction(action_name);
+}
+
+Action* ActionManager::getAction(int action_set_index, int action_index) {
+    return getActionSet(action_set_index)->getAction(action_index);
 }
 
 int ActionManager::getActionSetIndex(string name) {
@@ -86,7 +78,6 @@ int ActionManager::getActionIndex(string action_name) {
 string ActionManager::getActionName(int action_index) {
     return action_names.at(action_index);
 }
-
 
 void ActionManager::loadActions() {
     cout << "from csv load actions to action manager...";

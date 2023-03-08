@@ -5,6 +5,8 @@
 #include "FontManager.h"
 #include "TextureManager.h"
 #include "ActionManager.h"
+#include "FSM.h"
+#include "States.h"
 
 constexpr int DIRECTIONS = 8;
 constexpr int INIT_DIRECTION = 6;
@@ -95,6 +97,9 @@ private:
 
     void initSprite();
     void initText();
+    void initFSM();
+
+    void printFSM();
 
     int getActionStartFrame();
     int getActionFrameCount();
@@ -146,6 +151,9 @@ private:
 
     set<int> m_enemy_ids;
     queue<int> m_hits;
+
+    Context m_context{};
+    FSM::Instance m_fsm{m_context};
 
     static inline sf::IntRect region = sf::IntRect(0, 0, INIT_WIDTH, INIT_HEIGHT);
 };

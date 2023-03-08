@@ -3,26 +3,31 @@
 #include "globals.h"
 #include "Context.h"
 
-using M = hfsm2::MachineT<hfsm2::Config::ContextT<Context>>;
+using Config = hfsm2::Config::ContextT<Context>;
+
+using M = hfsm2::MachineT<Config>;
+
+#define S(s) struct s
 
 using FSM = M::PeerRoot<
-	struct Alive,
-	M::Composite<struct Patrol,
-	struct Stand,
-	struct Sit,
-	struct Walk,
-	struct Run
+	M::Composite<S(Alive),
+		M::Composite<S(Patrol),
+			S(Stand),
+			S(Walk),
+			S(Run),
+			S(Sit)
+		>,
+		M::Composite<S(Battle),
+			S(Rest),
+			S(Advance),
+			S(Attack),
+			S(Hit),
+			S(Defence),
+			S(Jump),
+			S(Fail)
+		>
 	>,
-	M::Composite<struct Battle,
-	struct Advance,
-	struct Attack,
-	struct Hit,
-	struct Defence,
-	struct Jump,
-	struct Rest,
-	struct Fail
-	>,
-	struct Died
+	S(Died)
 >;
 
-
+#undef S

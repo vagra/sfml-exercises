@@ -33,3 +33,18 @@ enum ACTION {
 	REST = 10,
 	DEFENCE = 11
 };
+
+const array<string, ACTIONS> ACTION_NAMES = {
+	"walk",
+	"run",
+	"sit",
+	"die",
+	"fail",
+	"stand",
+	"advance",
+	"attack",
+	"hit",
+	"jump",
+	"rest",
+	"defence"
+};

@@ -36,9 +36,15 @@ void Actor::init() {
 
 	initSprite();
 	initText();
+	initFSM();
 	
 	step();
+
+	
+	
 }
+
+
 
 void Actor::initSprite() {
 	m_sprite.reset();
@@ -64,6 +70,20 @@ void Actor::initText() {
 	m_text->setPosition(m_position);
 }
 
+void Actor::initFSM() {
+	m_fsm.context().actor_type = m_type;
+
+	printFSM();
+}
+
+void Actor::printFSM() {
+	const ACTION action = m_fsm.context().action;
+	if (action && action >=0 && action < ACTIONS) {
+		cout << m_type << "  "
+			<< ActionManager::getActionName(action) << endl;
+	}
+}
+
 void Actor::random() noexcept {
 	m_frame_timer = 0;
 	m_frame_step = 0;
@@ -74,7 +94,6 @@ void Actor::random() noexcept {
 	m_direction = genDirection();
 	m_action_id = genAction();
 }
-
 
 void Actor::play(sf::Time elapsed) {
 
@@ -106,6 +125,8 @@ void Actor::play(sf::Time elapsed) {
 		m_frame_timer = m_frame_timer % FRAME_CYCLE;
 		m_change = false;
 		step();
+
+		m_fsm.update();
 	}
 
 	if (isMoving()) {

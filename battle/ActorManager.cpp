@@ -43,7 +43,7 @@ const vector<unique_ptr<Actor>>& ActorManager::getActors() noexcept {
 }
 
 void ActorManager::makeActors() {
-    cout << "make actors with texture, actions and sprite...";
+    cout << "make actors with texture, actions and sprite..." << endl;
 
     actors.clear();
 
@@ -59,7 +59,7 @@ void ActorManager::makeActors() {
         actors.push_back(move(actor));
     }
 
-    cout << fmt::format("\t{} actors ready.", getCount()) << endl;
+    cout << fmt::format("{} actors ready.", getCount()) << endl;
 
     // print();
 }
