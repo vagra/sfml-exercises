@@ -94,7 +94,7 @@ void GridManager::drawActors(sf::RenderWindow& window) {
             actor = ActorManager::getActor(elt->id);
 
             window.draw(*actor->sprite);
-            if (actor->isFighting()) {
+            if (actor->isBeaten()) {
                 window.draw(*actor->text);
             }
 

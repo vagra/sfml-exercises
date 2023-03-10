@@ -105,7 +105,7 @@ void Actor::play(sf::Time elapsed) {
 void Actor::step() {
 	const int direction = getScreenDirection(m_direction);
 
-	m_frame.x = getActionStartFrame() + m_fsm.context().frame;
+	m_frame.x = getStartFrame() + getCurrentFrame();
 	m_frame.y = direction;
 
 	m_area.left = m_frame.x * FRAME_WIDTH;
@@ -162,12 +162,8 @@ bool Actor::isMoving() noexcept {
 	return m_fsm.context().speed > 0;
 }
 
-bool Actor::isAliving() noexcept {
-	return m_fsm.isActive<Alive>();
-}
-
-bool Actor::isFighting() noexcept {
-	return m_fsm.isActive<Battle>();
+bool Actor::isBeaten() noexcept {
+	return m_fsm.isActive<Beaten>();
 }
 
 sf::Vector2f Actor::genPosition() {
@@ -196,12 +192,12 @@ int Actor::genDirection() noexcept {
 	return rand() % DIRECTIONS;
 }
 
-int Actor::getActionStartFrame() {
+int Actor::getStartFrame() {
 	return mp_action_set->getAction(m_fsm.context().action)->start;
 }
 
-int Actor::getActionFrameCount() {
-	return mp_action_set->getAction(m_fsm.context().action)->frames;
+int Actor::getCurrentFrame() {
+	return min(m_fsm.context().frames - 1, m_fsm.context().frame);
 }
 
 sf::Vector2f Actor::getOffset() {

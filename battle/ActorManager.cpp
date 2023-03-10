@@ -111,9 +111,12 @@ bool ActorManager::atFront(const Actor* actor1, const Actor* actor2) noexcept {
 void ActorManager::attack(Actor* actor1, Actor* actor2) {
 	actor1->m_fsm.changeTo<Attack>();
 
-	actor2->m_fsm.changeTo<Hit>();
-
 	const int hit = genHit();
+	const int stiffs = ActionManager::getAction(
+		actor1->m_type, ACTION::ATTACK
+	)->frames;
+
+	actor2->m_fsm.react(Attacked{hit, stiffs});
 
 	actor2->m_hits.push(hit);
 

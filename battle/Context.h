@@ -19,29 +19,40 @@ struct Context {
 	string action_name{};
 	int frames{};
 	int frame{};
+	int stiffs{};
+	int hits{};
 	int rounds{};
 	int round{};
 	int speed{};
 	bool end{};
 
-	void init(ACTION action_id) {
+	void init(ACTION action_id, bool once = false, bool dodge = true) {
 		action = action_id;
 		action_name = ActionManager::getActionName(action_id);
 
 		frames = ActionManager::getAction(actor_type, action_id)->frames;
 		frame = 0;
 
-		rounds = rand() % (MAX_ROUNDS + 1 - MIN_ROUNDS) + MIN_ROUNDS;
+		if (once) {
+			rounds = 1;
+		}
+		else {
+			rounds = rand() % (MAX_ROUNDS + 1 - MIN_ROUNDS) + MIN_ROUNDS;
+		}
 		round = 0;
+
+		if (dodge) {
+			hits = 0;
+		}
 
 		end = false;
 		
 		// cout << fmt::format("{} -> {}: {}*{}  {}", actor_id, action_name, frames, rounds, speed) << endl;
 	}
 
-	void step() noexcept {
+	void step(bool dodge = true) noexcept {
 		frame++;
-		if (frame >= frames) {
+		if (dodge && frame >= frames) {
 			frame = 0;
 			round++;
 			if (round >= rounds) {
@@ -49,6 +60,19 @@ struct Context {
 				end = true;
 			}
 		}
+		else if (frame >= stiffs) {
+			frame = 0;
+			round++;
+			if (round >= rounds) {
+				round = 0;
+				end = true;
+			}
+		}
+	}
+
+	void attacked(int hits, int stiffs) noexcept {
+		hits = -hits;
+		stiffs = stiffs;
 	}
 
 	void slow() noexcept {

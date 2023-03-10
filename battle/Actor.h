@@ -50,8 +50,8 @@ public:
     void die() noexcept;
 
     bool isMoving() noexcept;
-    bool isAliving() noexcept;
-    bool isFighting() noexcept;
+    bool isBeaten() noexcept;
+
 
     const int& id = m_id;
     const int& type = m_type;
@@ -74,8 +74,8 @@ private:
     void initText();
     void initFSM();
 
-    int getActionStartFrame();
-    int getActionFrameCount();
+    int getStartFrame();
+    int getCurrentFrame();
 
     sf::Vector2f getOffset();
 

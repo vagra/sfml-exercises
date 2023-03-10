@@ -10,24 +10,20 @@ using M = hfsm2::MachineT<Config>;
 #define S(s) struct s
 
 using FSM = M::PeerRoot<
-	M::Composite<S(Alive),
-		M::Composite<S(Patrol),
-			S(Stand),
-			S(Walk),
-			S(Run),
-			S(Sit)
-		>,
-		M::Composite<S(Battle),
-			S(Rest),
-			S(Advance),
-			S(Attack),
-			S(Hit),
-			S(Defence),
-			S(Jump),
-			S(Fail)
-		>
-	>,
-	S(Died)
->;
+				M::Composite<S(Patrol),
+					S(Stand),
+					S(Rest),
+					S(Walk),
+					S(Advance),
+					S(Run)
+				>,
+				S(Attack),
+				M::Composite<S(Beaten),
+					S(Hit),
+					S(Defence),
+					S(Jump)
+				>,
+				S(Died)
+			>;
 
 #undef S

@@ -8,11 +8,15 @@
 #include "ActionManager.h"
 
 
-struct Alive : FSM::State{
-	void enter(Control& control) {
-		// cout << "-> alive" << endl;
-	}
+// Events
+
+struct Attacked {
+	int hits{};
+	int stiffs{};
 };
+
+
+// Status
 
 struct Patrol : FSM::State {
 	void enter(Control& control) {
@@ -21,6 +25,8 @@ struct Patrol : FSM::State {
 };
 
 struct Stand : FSM::State {
+	using FSM::State::react;
+
 	void enter(Control& control) {
 		control.context().init(ACTION::STAND);
 		control.context().stand();
@@ -32,21 +38,37 @@ struct Stand : FSM::State {
 			control.succeed();
 		}
 	}
+
+	void react(const Attacked& attack, FullControl& control) {
+		control.context().attacked(attack.hits, attack.stiffs);
+		control.changeTo<Beaten>();
+	}
 };
 
-struct Sit : FSM::State {
+struct Rest : FSM::State {
+	using FSM::State::react;
+
 	void enter(Control& control) {
-		control.context().init(ACTION::SIT);
+		control.context().init(ACTION::REST);
 		control.context().stand();
 	}
 
 	void update(FullControl& control) {
 		control.context().step();
+		if (control.context().end) {
+			control.succeed();
+		}
+	}
 
+	void react(const Attacked& attack, FullControl& control) {
+		control.context().attacked(attack.hits, attack.stiffs);
+		control.changeTo<Beaten>();
 	}
 };
 
 struct Walk : FSM::State {
+	using FSM::State::react;
+
 	void enter(Control& control) {
 		control.context().init(ACTION::WALK);
 		control.context().slow();
@@ -58,9 +80,37 @@ struct Walk : FSM::State {
 			control.succeed();
 		}
 	}
+
+	void react(const Attacked& attack, FullControl& control) {
+		control.context().attacked(attack.hits, attack.stiffs);
+		control.changeTo<Beaten>();
+	}
+};
+
+struct Advance : FSM::State {
+	using FSM::State::react;
+
+	void enter(Control& control) {
+		control.context().init(ACTION::ADVANCE);
+		control.context().slow();
+	}
+
+	void update(FullControl& control) {
+		control.context().step();
+		if (control.context().end) {
+			control.succeed();
+		}
+	}
+
+	void react(const Attacked& attack, FullControl& control) {
+		control.context().attacked(attack.hits, attack.stiffs);
+		control.changeTo<Beaten>();
+	}
 };
 
 struct Run : FSM::State {
+	using FSM::State::react;
+
 	void enter(Control& control) {
 		control.context().init(ACTION::RUN);
 		control.context().fast();
@@ -72,88 +122,73 @@ struct Run : FSM::State {
 			control.succeed();
 		}
 	}
+
+	void react(const Attacked& attack, FullControl& control) {
+		control.context().attacked(attack.hits, attack.stiffs);
+		control.changeTo<Beaten>();
+	}
 };
 
-struct Battle : FSM::State {
+
+struct Attack : FSM::State {
+	void enter(Control& control) {
+		control.context().init(ACTION::ATTACK, true);
+		control.context().stand();
+	}
+
+	void update(FullControl& control) {
+		control.context().step();
+		if (control.context().end) {
+			control.succeed();
+		}
+	}
+};
+
+struct Beaten : FSM::State {
 	void enter(Control& control) {
 		// cout << "-> battle" << endl;
 	}
 };
 
-struct Advance : FSM::State {
-	void enter(Control& control) {
-		control.context().init(ACTION::ADVANCE);
-		control.context().slow();
-	}
-
-	void update(FullControl& control) {
-		control.context().step();
-	}
-};
-
-struct Attack : FSM::State {
-	void enter(Control& control) {
-		control.context().init(ACTION::ATTACK);
-		control.context().stand();
-	}
-
-	void update(FullControl& control) {
-		control.context().step();
-	}
-};
-
 struct Hit : FSM::State {
 	void enter(Control& control) {
-		control.context().init(ACTION::HIT);
+		control.context().init(ACTION::HIT, true, false);
 		control.context().stand();
 	}
 
 	void update(FullControl& control) {
-		control.context().step();
+		control.context().step(false);
+		if (control.context().end) {
+			control.succeed();
+		}
 	}
 };
 
 struct Defence : FSM::State {
 	void enter(Control& control) {
-		control.context().init(ACTION::DEFENCE);
+		control.context().init(ACTION::DEFENCE, true, true);
 		control.context().stand();
 	}
 
 	void update(FullControl& control) {
-		control.context().step();
+		control.context().step(true);
+		if (control.context().end) {
+			control.succeed();
+		}
 	}
 };
 
 struct Jump : FSM::State {
 	void enter(Control& control) {
-		control.context().init(ACTION::JUMP);
+		control.context().init(ACTION::JUMP, true, true);
 		control.context().stand();
 	}
 
 	void update(FullControl& control) {
-		control.context().step();
-	}
-};
-
-struct Rest : FSM::State {
-	void enter(Control& control) {
-		control.context().init(ACTION::REST);
-		control.context().stand();
-	}
-
-	void update(FullControl& control) {
-		control.context().step();
-	}
-};
-
-struct Fail : FSM::State {
-	void enter(Control& control) {
-		control.context().init(ACTION::FAIL);
-		control.context().stand();
-	}
-
-	void update(FullControl& control) {
-		control.context().step();
+		control.context().step(true);
+		if (control.context().end) {
+			control.succeed();
+		}
 	}
 };
 
@@ -164,6 +199,6 @@ struct Died : FSM::State {
 	}
 
 	void update(FullControl& control) {
-		control.context().step();
+		
 	}
 };
