@@ -17,5 +17,6 @@
 
 ## battle
 - [x] if hit the enemy then attack.
-- [ ] add finite state machine for actions.
-- [ ] play attack/hit animation when battle.
+- [x] add finite state machine for actions.
+- [x] play attack/hit animation when battle.
+- [ ] using more atcions.

@@ -118,7 +118,6 @@
     <ClCompile Include="LGrid.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="States.cpp" />
     <ClCompile Include="FSM.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="ActionManager.cpp" />

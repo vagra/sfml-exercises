@@ -21,7 +21,7 @@ using z change actor, x change action, arrow key change direction and move.
 ![viewer](https://github.com/vagra/sfml-exercises/blob/1107838bcdff3457f61cadcff6c46eab549f4e21/assets/screenshots/viewer.png)
 
 ### battle
-if touch other types actor, attack.
+if touch other types actor, attack. using Hierarchical Finite State Machine
 ![battle](https://github.com/vagra/sfml-exercises/blob/986d94814e754d3b17af461f4f8cb49691740146/assets/screenshots/battle.png)
 
 ## thanks for
@@ -31,6 +31,7 @@ if touch other types actor, attack.
 
 - **library**
   - [sfml](https://github.com/SFML/SFML)
+  - [hfsm2](https://github.com/andrew-gresyk/HFSM2)
   - [ms-gsl](https://github.com/microsoft/GSL)
   - [fmt](https://github.com/fmtlib/fmt)
   - [rapidcsv](https://github.com/d99kris/rapidcsv)

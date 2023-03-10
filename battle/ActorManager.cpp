@@ -109,11 +109,9 @@ bool ActorManager::atFront(const Actor* actor1, const Actor* actor2) noexcept {
 
 
 void ActorManager::attack(Actor* actor1, Actor* actor2) {
-	actor1->m_status = STATUS::BATTLE;
-	actor1->m_battle_timer = 0;
+	actor1->m_fsm.changeTo<Attack>();
 
-	actor2->m_status = STATUS::BATTLE;
-	actor2->m_battle_timer = 0;
+	actor2->m_fsm.changeTo<Hit>();
 
 	const int hit = genHit();
 
@@ -121,8 +119,6 @@ void ActorManager::attack(Actor* actor1, Actor* actor2) {
 
 	actor1->m_enemy_ids.insert(actor2->id);
 	actor2->m_enemy_ids.insert(actor1->id);
-
-	// cout << fmt::format("{}->{}  {}  {}", actor1->id, actor2->id, actor2->hp, actor2->m_hp) << endl;
 }
 
 int ActorManager::genHit() noexcept {

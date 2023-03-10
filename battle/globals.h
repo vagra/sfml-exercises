@@ -14,6 +14,9 @@
 #include <fmt/core.h>
 
 #include <rapidcsv.h>
+
+#define HFSM2_ENABLE_UTILITY_THEORY
+#define HFSM2_ENABLE_PLANS
 #include <machine.hpp>
 
 using namespace std;
@@ -25,7 +28,7 @@ constexpr int INIT_HEIGHT = 800;
 constexpr int ACTOR_TYPES = 8;
 constexpr int ACTIONS = 12;
 
-constexpr int MAX = 2;
+constexpr int MAX = 100;
 
 constexpr int FRAME_WIDTH = 80;
 constexpr int FRAME_HEIGHT = 80;

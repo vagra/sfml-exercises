@@ -28,9 +28,6 @@ void Actor::init() {
 	m_prev_position = m_position;
 
 	m_hp = MAX_HP;
-	m_status = STATUS::NORMAL;
-	m_battle_cycle = genBattleCycle();
-	m_battle_timer = 0;
 
 	random();
 
@@ -40,8 +37,6 @@ void Actor::init() {
 	
 	step();
 
-	
-	
 }
 
 
@@ -71,66 +66,33 @@ void Actor::initText() {
 }
 
 void Actor::initFSM() {
+	m_fsm.context().actor_id = m_id;
 	m_fsm.context().actor_type = m_type;
-
-	printFSM();
-}
-
-void Actor::printFSM() {
-	const ACTION action = m_fsm.context().action;
-	if (action && action >=0 && action < ACTIONS) {
-		cout << m_type << "  "
-			<< ActionManager::getActionName(action) << endl;
-	}
 }
 
 void Actor::random() noexcept {
-	m_frame_timer = 0;
-	m_frame_step = 0;
-	m_action_timer = 0;
-
-	m_action_cycle = genActionCycle();
-	m_speed = genSpeed();
 	m_direction = genDirection();
-	m_action_id = genAction();
 }
 
 void Actor::play(sf::Time elapsed) {
 
-	if (m_status == STATUS::DIED) {
-		return;
-	}
-
 	const int ms = elapsed.asMilliseconds();
 
 	m_frame_timer += ms;
-	m_action_timer += ms;
-	m_battle_timer += ms;
 
-	if (m_battle_timer >= m_battle_cycle) {
-		m_battle_timer = 0;
-		attack();
-	}
-
-	if (isFighting()) {
-		m_text->setString(to_string(m_hp));
-	}
-
-	if (m_action_timer >= m_action_cycle) {
-		m_action_timer = 0;
-		random();
-	}
-
-	if (m_frame_timer >= FRAME_CYCLE || m_change) {
+	if (m_frame_timer >= FRAME_CYCLE) {
 		m_frame_timer = m_frame_timer % FRAME_CYCLE;
-		m_change = false;
 		step();
 
 		m_fsm.update();
+		if (m_fsm.context().end) {
+			m_direction = genDirection();
+			m_fsm.randomize<Patrol>();
+		}
 	}
 
 	if (isMoving()) {
-		const sf::Vector2f offset = VECTORS.at(m_direction) * m_speed;
+		const sf::Vector2f offset = getOffset();
 
 		m_sprite->move(offset);
 		m_text->move(offset);
@@ -143,15 +105,13 @@ void Actor::play(sf::Time elapsed) {
 void Actor::step() {
 	const int direction = getScreenDirection(m_direction);
 
-	m_frame.x = getActionStartFrame() + m_frame_step;
+	m_frame.x = getActionStartFrame() + m_fsm.context().frame;
 	m_frame.y = direction;
 
 	m_area.left = m_frame.x * FRAME_WIDTH;
 	m_area.top = m_frame.y * FRAME_HEIGHT;
 
 	m_sprite->setTextureRect(m_area);
-
-	m_frame_step = (m_frame_step + 1) % getActionFrameCount();
 }
 
 void Actor::turn() noexcept {
@@ -186,39 +146,28 @@ void Actor::hit() noexcept {
 		m_hits.pop();
 	} while (!m_hits.empty());
 
-	m_action_id = HIT_ACTION;
-
-	m_status = STATUS::BATTLE;
 }
 
 void Actor::attack() noexcept {
 	if (m_enemy_ids.empty()) {
 		return;
 	}
-
-	m_speed = 0.f;
-	m_action_id = DIE_ACTION;
-
-	m_status = STATUS::BATTLE;
 }
 
 void Actor::die() noexcept {
-	m_speed = 0.f;
-	m_action_id = DIE_ACTION;
-
-	m_status = STATUS::DIED;
+	
 }
 
 bool Actor::isMoving() noexcept {
-	return m_speed > 0.f;
+	return m_fsm.context().speed > 0;
 }
 
 bool Actor::isAliving() noexcept {
-	return m_status != STATUS::DIED;
+	return m_fsm.isActive<Alive>();
 }
 
 bool Actor::isFighting() noexcept {
-	return m_status == STATUS::BATTLE;
+	return m_fsm.isActive<Battle>();
 }
 
 sf::Vector2f Actor::genPosition() {
@@ -226,14 +175,6 @@ sf::Vector2f Actor::genPosition() {
 	const float y = narrow_cast<float>(rand() % INIT_HEIGHT);
 
 	return sf::Vector2f(x, y);
-}
-
-int Actor::genActionCycle() noexcept {
-	return rand() % (MAX_ACTION_CYCLE - MIN_ACTION_CYCLE) + MIN_ACTION_CYCLE;
-}
-
-int Actor::genBattleCycle() noexcept {
-	return rand() % (MAX_BATTLE_CYCLE - MIN_BATTLE_CYCLE) + MIN_BATTLE_CYCLE;
 }
 
 int Actor::genDirection() noexcept {
@@ -255,46 +196,18 @@ int Actor::genDirection() noexcept {
 	return rand() % DIRECTIONS;
 }
 
-int Actor::genAction() noexcept {
-
-	int action_id = m_action_id;
-
-	if (m_speed > MAX_WALK_SPEED) {
-		action_id = RUN_ACTIONS.at(m_status);
-	}
-	else if (m_speed > MAX_STOP_SPEED) {
-		action_id = WALK_ACTIONS.at(m_status);
-	}
-	else {
-		action_id = STAND_ACTIONS.at(m_status);
-	}
-
-	if (m_action_id == action_id) {
-		m_frame_step = 0;
-		m_change = true;
-	}
-
-	return action_id;
-}
-
-float Actor::genSpeed() noexcept {
-
-	float speed = rand() % narrow_cast<int>(MAX_RUN_SPEED * 100) / 100.0f;
-
-	if (speed < MAX_STOP_SPEED) {
-		speed = 0.f;
-	}
-
-	return speed;
-}
-
 int Actor::getActionStartFrame() {
-	return mp_action_set->getAction(m_action_id)->start;
+	return mp_action_set->getAction(m_fsm.context().action)->start;
 }
 
 int Actor::getActionFrameCount() {
-	return mp_action_set->getAction(m_action_id)->frames;
+	return mp_action_set->getAction(m_fsm.context().action)->frames;
 }
+
+sf::Vector2f Actor::getOffset() {
+	return VECTORS.at(m_direction) * (m_fsm.context().speed / 10.f);
+}
+
 
 constexpr int Actor::getScreenDirection(int direction) noexcept {
 	return (DIRECTIONS + INIT_DIRECTION - direction) % DIRECTIONS;

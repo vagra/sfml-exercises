@@ -4,6 +4,8 @@ project (battle)
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
     LGrid.cpp
+    Action.cpp
+    FSM.cpp
     Actor.cpp
     App.cpp
     FontManager.cpp
