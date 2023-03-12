@@ -21,3 +21,4 @@
 - [x] play attack/hit animation when battle.
 - [x] using more atcions.
 - [ ] if defend or jump, not minus hp.
+- [ ] If dead, no collision handling.
