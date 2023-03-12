@@ -17,11 +17,15 @@ using FSM = M::PeerRoot<
 					S(Advance),
 					S(Run)
 				>,
-				S(Attack),
-				M::Random<S(Attacked),
-					S(Injure),
-					S(Defend),
-					S(Jump)
+				M::Composite<S(Battle),
+					S(Standby),
+					S(Attack),
+					M::Random<S(Attacked),
+						S(Injure),
+						S(Defend),
+						S(Jump)
+					>,
+					S(Stiff)
 				>,
 				S(Death)
 			>;

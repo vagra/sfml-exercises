@@ -29,7 +29,7 @@ void Actor::init() {
 
 	m_hp = MAX_HP;
 
-	random();
+	m_direction = genDirection();
 
 	initSprite();
 	initText();
@@ -38,8 +38,6 @@ void Actor::init() {
 	step();
 
 }
-
-
 
 void Actor::initSprite() {
 	m_sprite.reset();
@@ -70,10 +68,6 @@ void Actor::initFSM() {
 	m_fsm.context().actor_type = m_type;
 }
 
-void Actor::random() noexcept {
-	m_direction = genDirection();
-}
-
 void Actor::play(sf::Time elapsed) {
 
 	const int ms = elapsed.asMilliseconds();
@@ -84,14 +78,30 @@ void Actor::play(sf::Time elapsed) {
 		m_frame_timer = m_frame_timer % FRAME_CYCLE;
 		step();
 
+		if (!isAlive()) {
+			return;
+		}
+
 		m_fsm.update();
-		if (m_fsm.context().end) {
-			m_direction = genDirection();
-			m_fsm.changeTo<Patrol>();
+
+		if (inBattle()) {
+			if (!m_enemy->isAlive()) {
+				m_enemy = nullptr;
+				m_direction = genDirection();
+				m_fsm.changeTo<Patrol>();
+			} else if (canAttack(m_enemy)) {
+				attack(m_enemy);
+				return;
+			}
+		} else if (inPatrol()) {
+			if (m_fsm.context().end) {
+				m_direction = genDirection();
+				m_fsm.changeTo<Patrol>();
+			}
 		}
 	}
 
-	if (isMoving()) {
+	if (inMoving()) {
 		const sf::Vector2f offset = getOffset();
 
 		m_sprite->move(offset);
@@ -119,52 +129,82 @@ void Actor::turn() noexcept {
 	m_direction = (m_direction + range) % DIRECTIONS;
 }
 
-void Actor::battle() {
-	hit();
+void Actor::attack(not_null<Actor*> enemy) {
+	if (!canAttack(enemy)) {
+		return;
+	}
+	
+	m_enemy = enemy;
+	m_direction = getOpposite(enemy);
+
+	const Combat combat = genCombat();
+
+	m_fsm.changeTo<Attack>();
+
+	enemy->attackedBy(this, combat);
+}
+
+void Actor::die() {
+	m_enemy = nullptr;
+
+	m_fsm.changeTo<Death>();
+}
+
+void Actor::attackedBy(not_null<Actor*> enemy, const Combat combat) {
+	m_enemy = enemy;
+	m_direction = getOpposite(enemy);
+
+	m_hp = max(0, m_hp - combat.hits);
+	m_text->setString(to_string(m_hp));
 
 	if (m_hp <= 0) {
-		m_hp = 0;
 		die();
-		step();
-
 		return;
 	}
 
-	attack();
-
-	step();
+	m_fsm.react(combat);
 }
 
-void Actor::hit() noexcept {
-
-	if (m_hits.empty()) {
-		return;
-	}
-
-	do {
-		m_hp -= m_hits.front();
-		m_hits.pop();
-	} while (!m_hits.empty());
-
-}
-
-void Actor::attack() noexcept {
-	if (m_enemy_ids.empty()) {
-		return;
-	}
-}
-
-void Actor::die() noexcept {
-	
-}
-
-bool Actor::isMoving() noexcept {
+bool Actor::inMoving() noexcept {
 	return m_fsm.context().speed > 0;
 }
 
-bool Actor::isBeaten() noexcept {
+bool Actor::inAttacked() noexcept {
 	return m_fsm.isActive<Attacked>();
 }
+
+bool Actor::isAlive() noexcept {
+	return !m_fsm.isActive<Death>();
+}
+
+bool Actor::inPatrol() {
+	return m_fsm.isActive<Patrol>();
+}
+
+bool Actor::inBattle() {
+	return m_fsm.isActive<Battle>();
+}
+
+bool Actor::canAttack(not_null<Actor*> enemy) {
+	if (abs(position.x - enemy->position.x) > FRAME_WIDTH &&
+		abs(position.x - enemy->position.y) > FRAME_WIDTH) {
+		return false;
+	}
+
+	return (canAttack() && enemy->canBeAttacked());
+}
+
+bool Actor::canAttack() {
+	return (m_fsm.isActive<Patrol>() ||
+		m_fsm.isActive<Standby>() );
+}
+
+bool Actor::canBeAttacked() {
+	return (m_fsm.isActive<Patrol>() ||
+		m_fsm.isActive<Standby>() ||
+		m_fsm.isActive<Stiff>());
+}
+
 
 sf::Vector2f Actor::genPosition() {
 	const float x = narrow_cast<float>(rand() % INIT_WIDTH);
@@ -192,6 +232,14 @@ int Actor::genDirection() noexcept {
 	return rand() % DIRECTIONS;
 }
 
+int Actor::genHit() noexcept {
+	return rand() % (MAX_HIT - MIN_HIT) + MIN_HIT;
+}
+
+Combat Actor::genCombat() {
+	return Combat{genHit(), getStiffs()};
+}
+
 int Actor::getStartFrame() {
 	return mp_action_set->getAction(m_fsm.context().action)->start;
 }
@@ -204,6 +252,28 @@ sf::Vector2f Actor::getOffset() {
 	return VECTORS.at(m_direction) * (m_fsm.context().speed / 10.f);
 }
 
+int Actor::getStiffs() {
+	return ActionManager::getAction(m_type, ACTION::ATTACK)->frames;
+}
+
+int Actor::getOpposite(not_null<Actor*> enemy) noexcept {
+
+	if (m_position.x < enemy->position.x &&
+		m_position.y < enemy->position.y) return 1;
+	if (m_position.x < enemy->position.x &&
+		m_position.y > enemy->position.y) return 3;
+	if (m_position.x > enemy->position.x &&
+		m_position.y > enemy->position.y) return 5;
+	if (m_position.x > enemy->position.x &&
+		m_position.y < enemy->position.y) return 7;
+
+	if (m_position.y < enemy->position.y) return 0;
+	if (m_position.x < enemy->position.x) return 2;
+	if (m_position.y > enemy->position.y) return 4;
+	if (m_position.x > enemy->position.x) return 6;
+	
+	return m_direction;
+}
 
 constexpr int Actor::getScreenDirection(int direction) noexcept {
 	return (DIRECTIONS + INIT_DIRECTION - direction) % DIRECTIONS;

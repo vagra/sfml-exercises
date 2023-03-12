@@ -12,71 +12,149 @@ constexpr int MAX_RUN_SPEED = 20;
 constexpr int MIN_WALK_SPEED = 10;
 constexpr int MAX_WALK_SPEED = 5;
 
+constexpr int ATTACT_STIFFS = 3;
+
+// Events
+
+struct Combat {
+	int hits{};
+	int stiffs{};
+};
+
+// Context
+
 struct Context {
 	int actor_id{};
 	int actor_type{};
 	ACTION action{};
 	string action_name{};
+	int rounds{};
+	int round{};
 	int frames{};
 	int frame{};
 	int stiffs{};
+	int stiff{};
 	int hits{};
-	int rounds{};
-	int round{};
 	int speed{};
 	bool end{};
+	bool standby{};
 
-	void init(ACTION action_id, bool once = false, bool dodge = true) {
+	void attackInit() {
+		action = ACTION::ATTACK;
+		action_name = ActionManager::getActionName(action);
+
+		frames = ActionManager::getAction(actor_type, action)->frames;
+		frame = 0;
+
+		rounds = 1;
+		round = 0;
+
+		stiffs = ATTACT_STIFFS;
+		stiff = 0;
+
+		end = false;
+		standby = false;
+	}
+
+	void defendInit(ACTION action_id, bool dodge = true) {
 		action = action_id;
 		action_name = ActionManager::getActionName(action_id);
 
 		frames = ActionManager::getAction(actor_type, action_id)->frames;
 		frame = 0;
 
-		if (once) {
-			rounds = 1;
-		}
-		else {
-			rounds = rand() % (MAX_ROUNDS + 1 - MIN_ROUNDS) + MIN_ROUNDS;
-		}
+		rounds = 1;
 		round = 0;
 
+		/*
 		if (dodge) {
 			hits = 0;
-		}
+			stiffs = 0;
+		}*/
+		stiff = 0;
 
 		end = false;
-		
-		// cout << fmt::format("{} -> {}: {}*{}  {}", actor_id, action_name, frames, rounds, speed) << endl;
+		standby = false;
 	}
 
-	void step(bool dodge = true) noexcept {
+	void stiffInit() noexcept {
+		rounds = 1;
+		round = 0;
+
+		stiff = 0;
+		end = false;
+		standby = false;
+	}
+
+	void standbyInit() {
+		action = ACTION::REST;
+		action_name = ActionManager::getActionName(action);
+
+		frames = ActionManager::getAction(actor_type, action)->frames;
+		frame = 0;
+
+		end = true;
+		standby = true;
+	}
+
+	void patrolInit(ACTION action_id) {
+		action = action_id;
+		action_name = ActionManager::getActionName(action_id);
+
+		frames = ActionManager::getAction(actor_type, action_id)->frames;
+		frame = 0;
+
+		rounds = rand() % (MAX_ROUNDS + 1 - MIN_ROUNDS) + MIN_ROUNDS;
+		round = 0;
+
+		end = false;
+		standby = false;
+	}
+
+	void deathInit() {
+		action = ACTION::DEATH;
+		action_name = ActionManager::getActionName(action);
+
+		frames = ActionManager::getAction(actor_type, action)->frames;
+		frame = 0;
+
+		end = false;
+		standby = false;
+	}
+
+	void step() noexcept {
 		frame++;
 
-		if (dodge && (frame >= frames)) {
-			frame = 0;
+		if (frame >= frames) {
 			round++;
 			if (round >= rounds) {
-				round = 0;
 				end = true;
+				return;
 			}
-			return;
+			frame = 0;
 		}
+	}
 
-		if (!dodge && (frame >= stiffs)) {
-			frame = 0;
-			round++;
-			if (round >= rounds) {
-				round = 0;
-				end = true;
-			}
+	void stiffStep() noexcept {
+		stiff++;
+
+		if (stiff >= stiffs) {
+			end = true;
 			return;
 		}
 	}
 
-	void attacked(int hits, int stiffs) noexcept {
-		hits = -hits;
-		stiffs = stiffs;
+	void standbyStep() noexcept {
+		frame++;
+
+		if (frame >= frames) {
+			frame = 0;
+		}
+	}
+
+	void attacked(Combat combat) noexcept {
+		hits = combat.hits;
+		stiffs = combat.stiffs;
 	}
 
 	void slow() noexcept {

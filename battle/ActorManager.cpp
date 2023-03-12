@@ -109,21 +109,9 @@ bool ActorManager::atFront(const Actor* actor1, const Actor* actor2) noexcept {
 
 
 void ActorManager::attack(Actor* actor1, Actor* actor2) {
-	actor1->m_fsm.changeTo<Attack>();
+	if ((actor1 == nullptr) || (actor2 == nullptr)) {
+		return;
+	}
 
-	const int hit = genHit();
-	const int stiffs = ActionManager::getAction(
-		actor1->m_type, ACTION::ATTACK
-	)->frames;
-
-	actor2->m_fsm.react(Combat{hit, stiffs});
-
-	actor2->m_hits.push(hit);
-
-	actor1->m_enemy_ids.insert(actor2->id);
-	actor2->m_enemy_ids.insert(actor1->id);
-}
-
-int ActorManager::genHit() noexcept {
-	return rand() % (MAX_HIT - MIN_HIT) + MIN_HIT;
+	actor1->attack(actor2);
 }

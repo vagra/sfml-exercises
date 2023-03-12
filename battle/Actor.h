@@ -15,7 +15,7 @@ constexpr int FRAME_CYCLE = 100;
 
 constexpr int MAX_HP = 999;
 constexpr int MIN_HIT = 1;
-constexpr int MAX_HIT = 10;
+constexpr int MAX_HIT = 100;
 
 const string HP_FONT = "Lato";
 constexpr int HP_FONT_SIZE = 16;
@@ -40,24 +40,34 @@ public:
 
     void init(int id);
     void init(string name);
-    void random() noexcept;
+
     void play(sf::Time elapsed);
     void step();
     void turn() noexcept;
-    void battle();
-    void hit() noexcept;
-    void attack() noexcept;
-    void die() noexcept;
 
-    bool isMoving() noexcept;
-    bool isBeaten() noexcept;
+    void attack(not_null<Actor*> enemy);
 
+    void hit();
+    void die();
+
+    bool inMoving() noexcept;
+    bool inAttacked() noexcept;
+    bool isAlive() noexcept;
+
+    bool inPatrol();
+    bool inBattle();
+    bool canAttack(not_null<Actor*> enemy);
+    bool canAttack();
+    bool canBeAttacked();
+
+    int getOpposite(not_null<Actor*> enemy) noexcept;
 
     const int& id = m_id;
     const int& type = m_type;
     const string& name = m_name;
     const int& hp = m_hp;
 
+    const int& direction = m_direction;
     const sf::Vector2f& position = m_position;
     const sf::Vector2f& prev_position = m_prev_position;
 
@@ -78,9 +88,15 @@ private:
     int getCurrentFrame();
 
     sf::Vector2f getOffset();
+    int getStiffs();
 
     sf::Vector2f genPosition();
     int genDirection() noexcept;
+    int genHit() noexcept;
+
+    Combat genCombat();
+
+    void attackedBy(not_null<Actor*> enemy, const Combat combat);
 
     static constexpr int getScreenDirection(int direction) noexcept;
     static constexpr int getTextureDirection(int direction) noexcept;
@@ -106,8 +122,7 @@ private:
     ActionSet* mp_action_set = nullptr;
     sf::Texture* mp_texture = nullptr;
 
-    set<int> m_enemy_ids;
-    queue<int> m_hits;
+    Actor* m_enemy = nullptr;
 
     Context m_context{};
     FSM::Instance m_fsm{m_context};
