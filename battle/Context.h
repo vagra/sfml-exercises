@@ -52,21 +52,25 @@ struct Context {
 
 	void step(bool dodge = true) noexcept {
 		frame++;
-		if (dodge && frame >= frames) {
+
+		if (dodge && (frame >= frames)) {
 			frame = 0;
 			round++;
 			if (round >= rounds) {
 				round = 0;
 				end = true;
 			}
+			return;
 		}
-		else if (frame >= stiffs) {
+
+		if (!dodge && (frame >= stiffs)) {
 			frame = 0;
 			round++;
 			if (round >= rounds) {
 				round = 0;
 				end = true;
 			}
+			return;
 		}
 	}
 
