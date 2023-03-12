@@ -31,11 +31,9 @@ if touch other types actor, attack. using finite state machine to manage actor a
 
 - **library**
   - [sfml](https://github.com/SFML/SFML)
-  - [hfsm2](https://github.com/andrew-gresyk/HFSM2)
   - [ms-gsl](https://github.com/microsoft/GSL)
   - [fmt](https://github.com/fmtlib/fmt)
   - [rapidcsv](https://github.com/d99kris/rapidcsv)
-
 
 - **collision detection**
   - [Dragon Energy@stackoverflow](https://stackoverflow.com/questions/41946007)
@@ -43,3 +41,5 @@ if touch other types actor, attack. using finite state machine to manage actor a
     - [quadtree](https://github.com/rangercyh/quadtree)
     - [aoi](https://github.com/Lyra-Game/aoi)
 
+- **finite state machine**
+  - [hfsm2](https://github.com/andrew-gresyk/HFSM2)
