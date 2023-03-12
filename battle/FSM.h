@@ -18,12 +18,12 @@ using FSM = M::PeerRoot<
 					S(Run)
 				>,
 				S(Attack),
-				M::Composite<S(Beaten),
-					S(Hit),
-					S(Defence),
+				M::Composite<S(Attacked),
+					S(Injure),
+					S(Defend),
 					S(Jump)
 				>,
-				S(Died)
+				S(Death)
 			>;
 
 #undef S

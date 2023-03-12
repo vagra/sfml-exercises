@@ -1,4 +1,4 @@
-﻿actor,walk,run,sit,die,fail,stand,advance,attack,hit,jump,rest,defence
+﻿actor,walk,run,sit,death,fail,stand,advance,attack,injure,jump,rest,defend
 hero0,8,8,3,1,1,8,8,13,1,4,4,2
 hero1,8,8,3,1,1,8,8,13,3,4,4,2
 hero2,8,8,3,1,1,8,8,10,3,4,4,2

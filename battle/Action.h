@@ -23,28 +23,28 @@ enum ACTION {
 	WALK = 0,
 	RUN = 1,
 	SIT = 2,
-	DIE = 3,
+	DEATH = 3,
 	FAIL = 4,
 	STAND = 5,
 	ADVANCE = 6,
 	ATTACK = 7,
-	HIT = 8,
+	INJURE = 8,
 	JUMP = 9,
 	REST = 10,
-	DEFENCE = 11
+	DEFEND = 11
 };
 
 const array<string, ACTIONS> ACTION_NAMES = {
 	"walk",
 	"run",
 	"sit",
-	"die",
+	"death",
 	"fail",
 	"stand",
 	"advance",
 	"attack",
-	"hit",
+	"injure",
 	"jump",
 	"rest",
-	"defence"
+	"defend"
 };

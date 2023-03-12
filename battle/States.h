@@ -10,7 +10,7 @@
 
 // Events
 
-struct Attacked {
+struct Combat {
 	int hits{};
 	int stiffs{};
 };
@@ -39,9 +39,9 @@ struct Stand : FSM::State {
 		}
 	}
 
-	void react(const Attacked& attack, FullControl& control) {
+	void react(const Combat& attack, FullControl& control) {
 		control.context().attacked(attack.hits, attack.stiffs);
-		control.changeTo<Beaten>();
+		control.changeTo<Attacked>();
 	}
 };
 
@@ -60,9 +60,9 @@ struct Rest : FSM::State {
 		}
 	}
 
-	void react(const Attacked& attack, FullControl& control) {
+	void react(const Combat& attack, FullControl& control) {
 		control.context().attacked(attack.hits, attack.stiffs);
-		control.changeTo<Beaten>();
+		control.changeTo<Attacked>();
 	}
 };
 
@@ -81,9 +81,9 @@ struct Walk : FSM::State {
 		}
 	}
 
-	void react(const Attacked& attack, FullControl& control) {
+	void react(const Combat& attack, FullControl& control) {
 		control.context().attacked(attack.hits, attack.stiffs);
-		control.changeTo<Beaten>();
+		control.changeTo<Attacked>();
 	}
 };
 
@@ -102,9 +102,9 @@ struct Advance : FSM::State {
 		}
 	}
 
-	void react(const Attacked& attack, FullControl& control) {
+	void react(const Combat& attack, FullControl& control) {
 		control.context().attacked(attack.hits, attack.stiffs);
-		control.changeTo<Beaten>();
+		control.changeTo<Attacked>();
 	}
 };
 
@@ -123,9 +123,9 @@ struct Run : FSM::State {
 		}
 	}
 
-	void react(const Attacked& attack, FullControl& control) {
+	void react(const Combat& attack, FullControl& control) {
 		control.context().attacked(attack.hits, attack.stiffs);
-		control.changeTo<Beaten>();
+		control.changeTo<Attacked>();
 	}
 };
 
@@ -144,15 +144,15 @@ struct Attack : FSM::State {
 	}
 };
 
-struct Beaten : FSM::State {
+struct Attacked : FSM::State {
 	void enter(Control& control) {
 		// cout << "-> battle" << endl;
 	}
 };
 
-struct Hit : FSM::State {
+struct Injure : FSM::State {
 	void enter(Control& control) {
-		control.context().init(ACTION::HIT, true, false);
+		control.context().init(ACTION::INJURE, true, false);
 		control.context().stand();
 	}
 
@@ -164,9 +164,9 @@ struct Hit : FSM::State {
 	}
 };
 
-struct Defence : FSM::State {
+struct Defend : FSM::State {
 	void enter(Control& control) {
-		control.context().init(ACTION::DEFENCE, true, true);
+		control.context().init(ACTION::DEFEND, true, true);
 		control.context().stand();
 	}
 
@@ -192,9 +192,9 @@ struct Jump : FSM::State {
 	}
 };
 
-struct Died : FSM::State {
+struct Death : FSM::State {
 	void enter(Control& control) {
-		control.context().init(ACTION::DIE);
+		control.context().init(ACTION::DEATH);
 		control.context().stand();
 	}
 

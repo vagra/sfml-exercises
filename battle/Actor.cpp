@@ -163,7 +163,7 @@ bool Actor::isMoving() noexcept {
 }
 
 bool Actor::isBeaten() noexcept {
-	return m_fsm.isActive<Beaten>();
+	return m_fsm.isActive<Attacked>();
 }
 
 sf::Vector2f Actor::genPosition() {

@@ -116,7 +116,7 @@ void ActorManager::attack(Actor* actor1, Actor* actor2) {
 		actor1->m_type, ACTION::ATTACK
 	)->frames;
 
-	actor2->m_fsm.react(Attacked{hit, stiffs});
+	actor2->m_fsm.react(Combat{hit, stiffs});
 
 	actor2->m_hits.push(hit);
 
