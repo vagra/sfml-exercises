@@ -15,8 +15,18 @@ struct ActionSet
 	unordered_map<string, unique_ptr<Action>> actions;
 	vector<string> names;
 
-	Action* getAction(string name);
-	Action* getAction(int index);
+	Action* getAction(string name) {
+		if (actions.find(name) != actions.end()) {
+			return actions[name].get();
+		}
+		else {
+			return nullptr;
+		}
+	}
+
+	Action* getAction(int index) {
+		return getAction(names.at(index));
+	}
 };
 
 enum ACTION {

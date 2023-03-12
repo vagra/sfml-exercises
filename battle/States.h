@@ -27,6 +27,8 @@ struct Patrol : FSM::State {
 struct Stand : FSM::State {
 	using FSM::State::react;
 
+	Utility utility(const Control&) { return 0.05f; }
+
 	void enter(Control& control) {
 		control.context().init(ACTION::STAND);
 		control.context().stand();
@@ -47,6 +49,8 @@ struct Stand : FSM::State {
 
 struct Rest : FSM::State {
 	using FSM::State::react;
+
+	Utility utility(const Control&) { return 0.05f; }
 
 	void enter(Control& control) {
 		control.context().init(ACTION::REST);
@@ -69,6 +73,8 @@ struct Rest : FSM::State {
 struct Walk : FSM::State {
 	using FSM::State::react;
 
+	Utility utility(const Control&) { return 0.10f; }
+
 	void enter(Control& control) {
 		control.context().init(ACTION::WALK);
 		control.context().slow();
@@ -90,6 +96,8 @@ struct Walk : FSM::State {
 struct Advance : FSM::State {
 	using FSM::State::react;
 
+	Utility utility(const Control&) { return 0.10f; }
+
 	void enter(Control& control) {
 		control.context().init(ACTION::ADVANCE);
 		control.context().slow();
@@ -110,6 +118,8 @@ struct Advance : FSM::State {
 
 struct Run : FSM::State {
 	using FSM::State::react;
+
+	Utility utility(const Control&) { return 0.70f; }
 
 	void enter(Control& control) {
 		control.context().init(ACTION::RUN);
@@ -151,6 +161,8 @@ struct Attacked : FSM::State {
 };
 
 struct Injure : FSM::State {
+	Utility utility(const Control&) { return 0.70f; }
+
 	void enter(Control& control) {
 		control.context().init(ACTION::INJURE, true, false);
 		control.context().stand();
@@ -165,6 +177,8 @@ struct Injure : FSM::State {
 };
 
 struct Defend : FSM::State {
+	Utility utility(const Control&) { return 0.15f; }
+
 	void enter(Control& control) {
 		control.context().init(ACTION::DEFEND, true, true);
 		control.context().stand();
@@ -179,6 +193,8 @@ struct Defend : FSM::State {
 };
 
 struct Jump : FSM::State {
+	Utility utility(const Control&) { return 0.15f; }
+
 	void enter(Control& control) {
 		control.context().init(ACTION::JUMP, true, true);
 		control.context().stand();

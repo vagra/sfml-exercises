@@ -10,7 +10,7 @@ using M = hfsm2::MachineT<Config>;
 #define S(s) struct s
 
 using FSM = M::PeerRoot<
-				M::Composite<S(Patrol),
+				M::Random<S(Patrol),
 					S(Stand),
 					S(Rest),
 					S(Walk),
@@ -18,7 +18,7 @@ using FSM = M::PeerRoot<
 					S(Run)
 				>,
 				S(Attack),
-				M::Composite<S(Attacked),
+				M::Random<S(Attacked),
 					S(Injure),
 					S(Defend),
 					S(Jump)

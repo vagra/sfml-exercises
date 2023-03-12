@@ -87,7 +87,7 @@ void Actor::play(sf::Time elapsed) {
 		m_fsm.update();
 		if (m_fsm.context().end) {
 			m_direction = genDirection();
-			m_fsm.randomize<Patrol>();
+			m_fsm.changeTo<Patrol>();
 		}
 	}
 

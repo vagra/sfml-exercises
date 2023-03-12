@@ -112,7 +112,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Action.cpp" />
     <ClCompile Include="FontManager.cpp" />
     <ClCompile Include="GridManager.cpp" />
     <ClCompile Include="LGrid.cpp" />
