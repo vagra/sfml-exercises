@@ -19,4 +19,5 @@
 - [x] if hit the enemy then attack.
 - [x] add finite state machine for actions.
 - [x] play attack/hit animation when battle.
-- [ ] using more atcions.
+- [x] using more atcions.
+- [ ] if defend or jump, not minus hp.
