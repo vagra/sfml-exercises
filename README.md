@@ -22,6 +22,7 @@ using z change actor, x change action, arrow key change direction and move.
 
 ### battle
 if touch other types actor, attack. using finite state machine to manage actor actions.
+finite state machine, infinite possibilities.
 ![battle](https://github.com/vagra/sfml-exercises/blob/6e3cc0d28527e9df7e779f1be956dd7af564f639/assets/screenshots/battle.png)
 
 ## thanks for
