@@ -244,10 +244,28 @@ struct Stiff : FSM::State {
 	}
 };
 
+struct Fail : FSM::State {
+	void enter(Control& control) {
+		control.context().failInit();
+		control.context().stand();
+	}
+
+	void update(FullControl& control) {
+		control.context().stiffStep();
+		if (control.context().end) {
+			control.changeTo<Death>();
+		}
+	}
+};
 
 struct Death : FSM::State {
 	void enter(Control& control) {
+		cout << fmt::format("{} death", control.context().actor_id) << endl;
 		control.context().deathInit();
 		control.context().stand();
+	}
+
+	void update(FullControl& control) {
+		control.context().deathStep();
 	}
 };

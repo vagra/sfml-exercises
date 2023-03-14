@@ -13,6 +13,8 @@ constexpr int MIN_WALK_SPEED = 10;
 constexpr int MAX_WALK_SPEED = 5;
 
 constexpr int ATTACT_STIFFS = 3;
+constexpr int FAIL_STIFFS = 100;
+constexpr int DEATH_STIFFS = INT32_MAX;
 
 // Events
 
@@ -99,13 +101,30 @@ struct Context {
 
 	void patrolInit(ACTION action_id) {
 		action = action_id;
-		action_name = ActionManager::getActionName(action_id);
+		action_name = ActionManager::getActionName(action);
 
-		frames = ActionManager::getAction(actor_type, action_id)->frames;
+		frames = ActionManager::getAction(actor_type, action)->frames;
 		frame = 0;
 
 		rounds = rand() % (MAX_ROUNDS + 1 - MIN_ROUNDS) + MIN_ROUNDS;
 		round = 0;
+
+		end = false;
+		standby = false;
+	}
+
+	void failInit() {
+		action = ACTION::FAIL;
+		action_name = ActionManager::getActionName(action);
+
+		frames = ActionManager::getAction(actor_type, action)->frames;
+		frame = 0;
+
+		rounds = 1;
+		round = 0;
+
+		stiffs = FAIL_STIFFS;
+		stiff = 0;
 
 		end = false;
 		standby = false;
@@ -117,6 +136,12 @@ struct Context {
 
 		frames = ActionManager::getAction(actor_type, action)->frames;
 		frame = 0;
+
+		rounds = 1;
+		round = 0;
+
+		stiffs = DEATH_STIFFS;
+		stiff = 0;
 
 		end = false;
 		standby = false;
@@ -149,6 +174,15 @@ struct Context {
 
 		if (frame >= frames) {
 			frame = 0;
+		}
+	}
+
+	void deathStep() noexcept {
+		stiff++;
+
+		if (stiff >= stiffs) {
+			stiff = 0;
+			return;
 		}
 	}
 

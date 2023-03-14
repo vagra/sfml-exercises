@@ -78,7 +78,7 @@ void Actor::play(sf::Time elapsed) {
 		m_frame_timer = m_frame_timer % FRAME_CYCLE;
 		step();
 
-		if (!isAlive()) {
+		if (isDeath()) {
 			return;
 		}
 
@@ -144,10 +144,14 @@ void Actor::attack(not_null<Actor*> enemy) {
 	enemy->attackedBy(this, combat);
 }
 
-void Actor::die() {
+void Actor::fail() {
 	m_enemy = nullptr;
 
-	m_fsm.changeTo<Death>();
+	m_fsm.changeTo<Fail>();
+}
+
+void Actor::disable() {
+	m_disabled = true;
 }
 
 void Actor::attackedBy(not_null<Actor*> enemy, const Combat combat) {
@@ -158,7 +162,7 @@ void Actor::attackedBy(not_null<Actor*> enemy, const Combat combat) {
 	m_text->setString(to_string(m_hp));
 
 	if (m_hp <= 0) {
-		die();
+		fail();
 		return;
 	}
 
@@ -174,7 +178,11 @@ bool Actor::inAttacked() noexcept {
 }
 
 bool Actor::isAlive() noexcept {
-	return !m_fsm.isActive<Death>();
+	return !m_fsm.isActive<Death>() && !m_fsm.isActive<Fail>();
+}
+
+bool Actor::isDeath() noexcept {
+	return m_fsm.isActive<Death>();
 }
 
 bool Actor::inPatrol() {

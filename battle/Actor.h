@@ -47,12 +47,13 @@ public:
 
     void attack(not_null<Actor*> enemy);
 
-    void hit();
-    void die();
+    void fail();
+    void disable();
 
     bool inMoving() noexcept;
     bool inAttacked() noexcept;
     bool isAlive() noexcept;
+    bool isDeath() noexcept;
 
     bool inPatrol();
     bool inBattle();
@@ -66,6 +67,7 @@ public:
     const int& type = m_type;
     const string& name = m_name;
     const int& hp = m_hp;
+    const bool& disabled = m_disabled;
 
     const int& direction = m_direction;
     const sf::Vector2f& position = m_position;
@@ -105,6 +107,7 @@ private:
     int m_type{};
     string m_name{};
     int m_hp{};
+    bool m_disabled{};
 
     int m_frame_timer{};
 

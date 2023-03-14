@@ -10,15 +10,15 @@
 - [x] Introducing collision detection.
 - [x] stop if hit.
 
-
 ## grid
 - [x] optimizing.
 - [x] show uniform-grid border.
 
 ## battle
-- [x] if hit the enemy then attack.
+- [x] if encounter enemy，attack.
 - [x] add finite state machine for actions.
 - [x] play attack/hit animation when battle.
 - [x] using more atcions.
 - [ ] if defend or jump, not minus hp.
-- [ ] If dead, no collision handling.
+- [x] if dead, no collision handling, and disappear.
+- [ ] when attacking, crash into the enemy.

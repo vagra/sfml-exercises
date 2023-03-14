@@ -47,6 +47,18 @@ void GridManager::updateActors() {
 
     for (auto& actor : ActorManager::getActors())
     {
+        if (actor->disabled) {
+            continue;
+
+        } else if (actor->isDeath()) {
+            lgrid_remove(mp_grid, actor->id,
+                actor->position.x, actor->position.y
+            );
+
+            actor->disable();
+            continue;
+        }
+
         lgrid_move(mp_grid, actor->id,
             actor->prev_position.x, actor->prev_position.y,
             actor->position.x, actor->position.y

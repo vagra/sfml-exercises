@@ -27,6 +27,7 @@ using FSM = M::PeerRoot<
 					>,
 					S(Stiff)
 				>,
+				S(Fail),
 				S(Death)
 			>;
 
