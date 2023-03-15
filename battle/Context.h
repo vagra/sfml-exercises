@@ -28,6 +28,7 @@ struct Combat {
 struct Context {
 	int actor_id{};
 	int actor_type{};
+	int hp{};
 	ACTION action{};
 	string action_name{};
 	int rounds{};
@@ -38,6 +39,7 @@ struct Context {
 	int stiff{};
 	int hits{};
 	int speed{};
+	int knockback{};
 	bool end{};
 	bool standby{};
 
@@ -55,6 +57,8 @@ struct Context {
 		stiff = 0;
 
 		speed = 0;
+
+		knockback = 1;
 
 		end = false;
 		standby = false;
@@ -74,9 +78,15 @@ struct Context {
 			hits = 0;
 			stiffs = 0;
 		}
+		else {
+			hp = max(0, hp - hits);
+			hits = 0;
+		}
 		stiff = 0;
 
 		speed = 0;
+
+		knockback = -1;
 
 		end = false;
 		standby = false;
@@ -88,7 +98,7 @@ struct Context {
 
 		stiff = 0;
 
-		speed = 0;
+		knockback = 0;
 
 		end = false;
 		standby = false;
@@ -103,6 +113,8 @@ struct Context {
 
 		speed = 0;
 
+		knockback = 0;
+
 		end = true;
 		standby = true;
 	}
@@ -116,6 +128,8 @@ struct Context {
 
 		rounds = rand() % (MAX_ROUNDS + 1 - MIN_ROUNDS) + MIN_ROUNDS;
 		round = 0;
+
+		knockback = 0;
 
 		end = false;
 		standby = false;
@@ -136,6 +150,8 @@ struct Context {
 
 		speed = 0;
 
+		knockback = 0;
+
 		end = false;
 		standby = false;
 	}
@@ -154,6 +170,8 @@ struct Context {
 		stiff = 0;
 
 		speed = 0;
+
+		knockback = 0;
 
 		end = false;
 		standby = false;

@@ -14,8 +14,8 @@ constexpr int INIT_DIRECTION = 6;
 constexpr int FRAME_CYCLE = 100;
 
 constexpr int MAX_HP = 999;
-constexpr int MIN_HIT = 1;
-constexpr int MAX_HIT = 100;
+constexpr int MIN_HIT = 50;
+constexpr int MAX_HIT = 200;
 
 const string HP_FONT = "Lato";
 constexpr int HP_FONT_SIZE = 16;
@@ -47,30 +47,29 @@ public:
     void step();
     void turn() noexcept;
 
-    void attack(not_null<Actor*> enemy);
-
-    void fail();
+    void attack(Actor* enemy);
     void disable();
 
     bool inMoving() noexcept;
+    bool inKnockback() noexcept;
     bool inAttacked() noexcept;
+    bool inFail() noexcept;
     bool inInjured() noexcept;
     bool isAlive() noexcept;
     bool isDeath() noexcept;
 
     bool inPatrol();
     bool inBattle();
-    bool canAttack(not_null<Actor*> enemy);
+    bool canAttack(Actor* enemy);
     bool canAttack();
     bool canBeAttacked();
 
-    int getOpposite(not_null<Actor*> enemy) noexcept;
-    sf::Vector2f getKnockback(not_null<Actor*> enemy) noexcept;
+    int getOpposite(Actor* enemy);
+    sf::Vector2f getKnockback(Actor* enemy);
 
     const int& id = m_id;
     const int& type = m_type;
     const string& name = m_name;
-    const int& hp = m_hp;
     const bool& disabled = m_disabled;
 
     const int& direction = m_direction;
@@ -102,8 +101,7 @@ private:
 
     Combat genCombat();
 
-    void attackedBy(not_null<Actor*> enemy, const Combat combat);
-    void injure();
+    void attackedBy(Actor* enemy, const Combat combat);
 
     static constexpr int getScreenDirection(int direction) noexcept;
     static constexpr int getTextureDirection(int direction) noexcept;
@@ -111,7 +109,6 @@ private:
     int m_id{};
     int m_type{};
     string m_name{};
-    int m_hp{};
     bool m_disabled{};
 
     int m_frame_timer{};

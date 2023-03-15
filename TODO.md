@@ -21,4 +21,4 @@
 - [x] using more atcions.
 - [x] if defend or jump, not minus hp.
 - [x] if dead, no collision handling, and disappear.
-- [ ] when attacking, crash into the enemy.
+- [x] when attacking, crash into the enemy.

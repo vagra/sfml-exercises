@@ -157,12 +157,12 @@ struct Standby : FSM::State {
 struct Attack : FSM::State {
 	void enter(Control& control) {
 		control.context().attackInit();
-		control.context().stand();
 	}
 
 	void update(FullControl& control) {
 		control.context().step();
 		if (control.context().end) {
+			control.context().stand();
 			control.changeTo<Stiff>();
 		}
 	}
@@ -179,13 +179,17 @@ struct Injure : FSM::State {
 
 	void enter(Control& control) {
 		control.context().defendInit(ACTION::INJURE, false);
-		control.context().stand();
 	}
 
 	void update(FullControl& control) {
 		/*fmt::print("id: {} injure, hits: {}\n",
 			control.context().actor_id, control.context().hits);*/
 		control.context().step();
+
+		if (control.context().hp <= 0) {
+			control.changeTo<Fail>();
+		}
+
 		if (control.context().end) {
 			control.changeTo<Stiff>();
 		}
@@ -197,7 +201,6 @@ struct Defend : FSM::State {
 
 	void enter(Control& control) {
 		control.context().defendInit(ACTION::DEFEND, true);
-		control.context().stand();
 	}
 
 	void update(FullControl& control) {
@@ -215,7 +218,6 @@ struct Jump : FSM::State {
 
 	void enter(Control& control) {
 		control.context().defendInit(ACTION::JUMP, true);
-		control.context().stand();
 	}
 
 	void update(FullControl& control) {
@@ -227,7 +229,6 @@ struct Jump : FSM::State {
 		}
 	}
 };
-
 
 struct Stiff : FSM::State {
 
