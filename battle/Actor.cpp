@@ -98,21 +98,23 @@ void Actor::play(sf::Time elapsed) {
 				attack(m_enemy);
 				return;
 			}
-		} else if (inPatrol()) {
+
+		}
+		else if (inPatrol()) {
 			if (m_fsm.context().end) {
 				m_direction = genDirection();
 				m_fsm.changeTo<Patrol>();
 			}
 		}
 	}
-
+	
 	if (inMoving()) {
 		const sf::Vector2f offset = getOffset();
 
 		m_sprite->move(offset);
 		m_text->move(offset);
 	}
-
+	
 	m_prev_position = m_position;
 	m_position = m_sprite->getPosition();
 }
@@ -140,7 +142,7 @@ void Actor::attack(not_null<Actor*> enemy) {
 	}
 	
 	m_enemy = enemy;
-	int prev_direction = m_direction;
+	// const int prev_direction = m_direction;
 	m_direction = getOpposite(enemy);
 
 	const Combat combat = genCombat();
@@ -166,7 +168,7 @@ void Actor::disable() {
 
 void Actor::attackedBy(not_null<Actor*> enemy, const Combat combat) {
 	m_enemy = enemy;
-	int prev_direction = m_direction;
+	// const int prev_direction = m_direction;
 	m_direction = getOpposite(enemy);
 
 	/*fmt::print("{:3d}->{:3d} def: dir {}-{} pos({:.0f}, {:.0f})\n",
@@ -313,6 +315,14 @@ int Actor::getOpposite(not_null<Actor*> enemy) noexcept {
 	if (m_position.x > enemy->position.x) return 6;
 	
 	return m_direction;
+}
+
+sf::Vector2f Actor::getKnockback(not_null<Actor*> enemy) noexcept {
+	const sf::Vector2f unit = VECTORS.at(m_direction);
+	const sf::Vector2f offset = sf::Vector2f(unit.x * KNOCKBACK, unit.y * KNOCKBACK);
+	// fmt::print("{},{}\n", offset.x, offset.y);
+
+	return offset;
 }
 
 constexpr int Actor::getScreenDirection(int direction) noexcept {

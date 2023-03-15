@@ -54,6 +54,8 @@ struct Context {
 		stiffs = ATTACT_STIFFS;
 		stiff = 0;
 
+		speed = 0;
+
 		end = false;
 		standby = false;
 	}
@@ -74,6 +76,8 @@ struct Context {
 		}
 		stiff = 0;
 
+		speed = 0;
+
 		end = false;
 		standby = false;
 	}
@@ -83,6 +87,9 @@ struct Context {
 		round = 0;
 
 		stiff = 0;
+
+		speed = 0;
+
 		end = false;
 		standby = false;
 	}
@@ -93,6 +100,8 @@ struct Context {
 
 		frames = ActionManager::getAction(actor_type, action)->frames;
 		frame = 0;
+
+		speed = 0;
 
 		end = true;
 		standby = true;
@@ -125,6 +134,8 @@ struct Context {
 		stiffs = FAIL_STIFFS;
 		stiff = 0;
 
+		speed = 0;
+
 		end = false;
 		standby = false;
 	}
@@ -141,6 +152,8 @@ struct Context {
 
 		stiffs = DEATH_STIFFS;
 		stiff = 0;
+
+		speed = 0;
 
 		end = false;
 		standby = false;
