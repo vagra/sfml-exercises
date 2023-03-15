@@ -82,6 +82,10 @@ void Actor::play(sf::Time elapsed) {
 			return;
 		}
 
+		if (inInjured()) {
+			injure();
+		}
+
 		m_fsm.update();
 
 		if (inBattle()) {
@@ -89,7 +93,8 @@ void Actor::play(sf::Time elapsed) {
 				m_enemy = nullptr;
 				m_direction = genDirection();
 				m_fsm.changeTo<Patrol>();
-			} else if (canAttack(m_enemy)) {
+			}
+			else if (canAttack(m_enemy)) {
 				attack(m_enemy);
 				return;
 			}
@@ -158,15 +163,28 @@ void Actor::attackedBy(not_null<Actor*> enemy, const Combat combat) {
 	m_enemy = enemy;
 	m_direction = getOpposite(enemy);
 
-	m_hp = max(0, m_hp - combat.hits);
+	m_fsm.react(combat);
+}
+
+void Actor::injure() {
+
+	if (!m_fsm.isActive<Injure>() ||
+		m_fsm.context().hits == 0) {
+		return;
+	}
+
+	cout << fmt::format("id: {} actor.injure(): status: {}, hits: {}", m_id,
+		m_fsm.context().action_name, m_fsm.context().hits) << endl;
+
+	m_hp = max(0, m_hp - m_fsm.context().hits);
+	m_fsm.context().hits = 0;
+
 	m_text->setString(to_string(m_hp));
 
 	if (m_hp <= 0) {
 		fail();
 		return;
 	}
-
-	m_fsm.react(combat);
 }
 
 bool Actor::inMoving() noexcept {
@@ -175,6 +193,10 @@ bool Actor::inMoving() noexcept {
 
 bool Actor::inAttacked() noexcept {
 	return m_fsm.isActive<Attacked>();
+}
+
+bool Actor::inInjured() noexcept {
+	return m_fsm.isActive<Injure>();
 }
 
 bool Actor::isAlive() noexcept {

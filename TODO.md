@@ -19,6 +19,6 @@
 - [x] add finite state machine for actions.
 - [x] play attack/hit animation when battle.
 - [x] using more atcions.
-- [ ] if defend or jump, not minus hp.
+- [x] if defend or jump, not minus hp.
 - [x] if dead, no collision handling, and disappear.
 - [ ] when attacking, crash into the enemy.

@@ -68,11 +68,10 @@ struct Context {
 		rounds = 1;
 		round = 0;
 
-		/*
 		if (dodge) {
 			hits = 0;
 			stiffs = 0;
-		}*/
+		}
 		stiff = 0;
 
 		end = false;

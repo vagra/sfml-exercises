@@ -52,6 +52,7 @@ public:
 
     bool inMoving() noexcept;
     bool inAttacked() noexcept;
+    bool inInjured() noexcept;
     bool isAlive() noexcept;
     bool isDeath() noexcept;
 
@@ -99,6 +100,7 @@ private:
     Combat genCombat();
 
     void attackedBy(not_null<Actor*> enemy, const Combat combat);
+    void injure();
 
     static constexpr int getScreenDirection(int direction) noexcept;
     static constexpr int getTextureDirection(int direction) noexcept;
