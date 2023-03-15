@@ -78,7 +78,8 @@ void GridManager::updateActors() {
             other = ActorManager::getActor(ids[i]);
 
             if (ActorManager::atFront(actor.get(), other)) {
-                if (actor->type != other->type) {
+                if (actor->type != other->type &&
+                    actor->canAttack(other)) {
                     ActorManager::attack(actor.get(), other);
                 }
                 actor->turn();
