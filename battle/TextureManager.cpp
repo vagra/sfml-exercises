@@ -61,7 +61,7 @@ sf::Texture* TextureManager::loadTexture(string name, string path)
 }
 
 void TextureManager::listFiles() {
-    cout << fmt::format("check png files in dir {}: ", PNG_DIR) << endl;
+    fmt::print("check png files in dir {}:\n", PNG_DIR);
 
     files.clear();
 
@@ -86,7 +86,7 @@ void TextureManager::loadTextures() {
         loadTexture(name, path);
     }
 
-    cout << fmt::format("\t\t{} textures ready.", getCount()) << endl;
+    fmt::print("\t\t{} textures ready.\n", getCount());
 
     printList();
 }
@@ -94,12 +94,12 @@ void TextureManager::loadTextures() {
 
 void TextureManager::printMap() {
     for (auto const& [file_name, file_path] : files) {
-        cout << fmt::format("{}: {}", file_name, file_path) << endl;
+        fmt::print("{}: {}\n", file_name, file_path);
     }
 
     for (auto const& [file_name, texture] : textures) {
-        cout << fmt::format("{}: {},{}", 
-            file_name, texture->getSize().x, texture->getSize().y) << endl;
+        fmt::print("{}: {},{}\n", 
+            file_name, texture->getSize().x, texture->getSize().y);
     }
 }
 
@@ -112,7 +112,7 @@ void TextureManager::printList() {
         file_path = files[file_name];
         texture = textures[file_name].get();
         assert(texture);
-        cout << fmt::format("{}: {},{}\t{}",
-            file_name, texture->getSize().x, texture->getSize().y, file_path) << endl;
+        fmt::print("{}: {},{}\t{}\n",
+            file_name, texture->getSize().x, texture->getSize().y, file_path);
     }
 }

@@ -183,8 +183,8 @@ struct Injure : FSM::State {
 	}
 
 	void update(FullControl& control) {
-		cout << fmt::format("id: {} injure, hits: {}",
-			control.context().actor_id, control.context().hits) << endl;
+		/*fmt::print("id: {} injure, hits: {}\n",
+			control.context().actor_id, control.context().hits);*/
 		control.context().step();
 		if (control.context().end) {
 			control.changeTo<Stiff>();
@@ -201,8 +201,8 @@ struct Defend : FSM::State {
 	}
 
 	void update(FullControl& control) {
-		cout << fmt::format("id: {} defend, hits: {}",
-			control.context().actor_id, control.context().hits) << endl;
+		/*fmt::print("id: {} defend, hits: {}\n",
+			control.context().actor_id, control.context().hits);*/
 		control.context().step();
 		if (control.context().end) {
 			control.changeTo<Standby>();
@@ -219,8 +219,8 @@ struct Jump : FSM::State {
 	}
 
 	void update(FullControl& control) {
-		cout << fmt::format("id: {} jump, hits: {}",
-			control.context().actor_id, control.context().hits) << endl;
+		/*fmt::print("id: {} jump, hits: {}\n",
+			control.context().actor_id, control.context().hits);*/
 		control.context().step();
 		if (control.context().end) {
 			control.changeTo<Standby>();
@@ -238,9 +238,9 @@ struct Stiff : FSM::State {
 	}
 
 	void update(FullControl& control) {
-		cout << fmt::format("id: {} stiff, hits: {}, stiff: {}/{}",
+		/*fmt::print("id: {} stiff, hits: {}, stiff: {}/{}",
 			control.context().actor_id, control.context().hits,
-			control.context().stiff, control.context().stiffs) << endl;
+			control.context().stiff, control.context().stiffs);*/
 		control.context().stiffStep();
 		if (control.context().end) {
 			control.changeTo<Standby>();
@@ -269,7 +269,7 @@ struct Fail : FSM::State {
 
 struct Death : FSM::State {
 	void enter(Control& control) {
-		cout << fmt::format("id: {} death", control.context().actor_id) << endl;
+		/*fmt::print("id: {} death\n", control.context().actor_id);*/
 		control.context().deathInit();
 		control.context().stand();
 	}

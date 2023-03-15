@@ -64,6 +64,10 @@ void GridManager::updateActors() {
             actor->position.x, actor->position.y
         );
 
+        if (actor->inBattle()) {
+            continue;
+        }
+
         ids = lgrid_query(mp_grid,
             actor->position.x, actor->position.y,
             AGENT_HALFW, AGENT_HALFH,
@@ -82,7 +86,9 @@ void GridManager::updateActors() {
                     actor->canAttack(other)) {
                     ActorManager::attack(actor.get(), other);
                 }
-                actor->turn();
+                else {
+                    actor->turn();
+                }
                 break;
             }
         }

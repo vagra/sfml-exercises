@@ -140,11 +140,16 @@ void Actor::attack(not_null<Actor*> enemy) {
 	}
 	
 	m_enemy = enemy;
+	int prev_direction = m_direction;
 	m_direction = getOpposite(enemy);
 
 	const Combat combat = genCombat();
 
 	m_fsm.changeTo<Attack>();
+
+	/*fmt::print("{:3d}->{:3d} att: dir {}-{} pos({:.0f}, {:.0f})\n",
+		m_id, enemy->id, prev_direction, m_direction,
+		m_position.x, m_position.y);*/
 
 	enemy->attackedBy(this, combat);
 }
@@ -161,7 +166,12 @@ void Actor::disable() {
 
 void Actor::attackedBy(not_null<Actor*> enemy, const Combat combat) {
 	m_enemy = enemy;
+	int prev_direction = m_direction;
 	m_direction = getOpposite(enemy);
+
+	/*fmt::print("{:3d}->{:3d} def: dir {}-{} pos({:.0f}, {:.0f})\n",
+		enemy->id, m_id, prev_direction, m_direction,
+		m_position.x, m_position.y);*/
 
 	m_fsm.react(combat);
 }
@@ -173,13 +183,13 @@ void Actor::injure() {
 		return;
 	}
 
-	cout << fmt::format("id: {} actor.injure(): status: {}, hits: {}", m_id,
-		m_fsm.context().action_name, m_fsm.context().hits) << endl;
+	/*fmt::print("id: {} actor.injure(): status: {}, hits: {}\n", m_id,
+		m_fsm.context().action_name, m_fsm.context().hits);*/
 
 	m_hp = max(0, m_hp - m_fsm.context().hits);
 	m_fsm.context().hits = 0;
 
-	m_text->setString(to_string(m_hp));
+	m_text->setString(fmt::format("{}:{}", m_id, m_hp));
 
 	if (m_hp <= 0) {
 		fail();

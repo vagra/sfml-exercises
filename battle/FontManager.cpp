@@ -61,7 +61,7 @@ sf::Font* FontManager::loadFont(string name, string path)
 }
 
 void FontManager::listFiles() {
-    cout << fmt::format("check font files in dir {}: ", FONT_DIR) << endl;
+    fmt::print("check font files in dir {}:\n", FONT_DIR);
 
     files.clear();
 
@@ -87,7 +87,7 @@ void FontManager::loadFonts() {
         loadFont(name, path);
     }
 
-    cout << fmt::format("\t\t{} fonts ready.", getCount()) << endl;
+    fmt::print("\t\t{} fonts ready.\n", getCount());
 
     printList();
 }
@@ -95,12 +95,12 @@ void FontManager::loadFonts() {
 
 void FontManager::printMap() {
     for (auto const& [file_name, file_path] : files) {
-        cout << fmt::format("{}: {}", file_name, file_path) << endl;
+        fmt::print("{}: {}\n", file_name, file_path);
     }
 
     for (auto const& [file_name, font] : fonts) {
-        cout << fmt::format("{}: {}", 
-            file_name, font->getInfo().family) << endl;
+        fmt::print("{}: {}\n", 
+            file_name, font->getInfo().family);
     }
 }
 
@@ -112,7 +112,7 @@ void FontManager::printList() {
         file_path = files[file_name];
         font = fonts[file_name].get();
         assert(font);
-        cout << fmt::format("{}: {}\t\t{}",
-            file_name, font->getInfo().family, file_path) << endl;
+        fmt::print("{}: {}\t\t{}\n",
+            file_name, font->getInfo().family, file_path);
     }
 }

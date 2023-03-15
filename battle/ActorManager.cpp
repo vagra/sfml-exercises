@@ -59,15 +59,15 @@ void ActorManager::makeActors() {
         actors.push_back(move(actor));
     }
 
-    cout << fmt::format("{} actors ready.", getCount()) << endl;
+    fmt::print("{} actors ready.\n", getCount());
 
     // print();
 }
 
 void ActorManager::print() {
     for (auto const& actor : actors) {
-        cout << fmt::format("{}  {}  {},{}",
-            actor->id, actor->type, actor->position.x, actor->position.y) << endl;
+        fmt::print("{}  {}  {},{}\n",
+            actor->id, actor->type, actor->position.x, actor->position.y);
     }
 }
 
