@@ -111,7 +111,7 @@ void FontManager::printList() {
     for (auto const& file_name : names) {
         file_path = files[file_name];
         font = fonts[file_name].get();
-        assert(font);
+        Ensures(font);
         fmt::print("{}: {}\t\t{}\n",
             file_name, font->getInfo().family, file_path);
     }

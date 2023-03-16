@@ -111,7 +111,7 @@ void TextureManager::printList() {
     for (auto const& file_name : names) {
         file_path = files[file_name];
         texture = textures[file_name].get();
-        assert(texture);
+        Ensures(texture);
         fmt::print("{}: {},{}\t{}\n",
             file_name, texture->getSize().x, texture->getSize().y, file_path);
     }

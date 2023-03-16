@@ -140,6 +140,10 @@ void Actor::turn() noexcept {
 }
 
 void Actor::attack(Actor* enemy) {
+	if (enemy == nullptr) {
+		return;
+	}
+
 	if (!canAttack(enemy)) {
 		return;
 	}
@@ -298,7 +302,7 @@ int Actor::getStiffs() {
 	return ActionManager::getAction(m_type, ACTION::ATTACK)->frames;
 }
 
-int Actor::getOpposite(Actor* enemy) {
+int Actor::getOpposite(const Actor* enemy) {
 
 	if (enemy == nullptr) {
 		return m_direction;
@@ -321,7 +325,7 @@ int Actor::getOpposite(Actor* enemy) {
 	return m_direction;
 }
 
-sf::Vector2f Actor::getKnockback(Actor* enemy) {
+sf::Vector2f Actor::getKnockback(const Actor* enemy) {
 	if (enemy == nullptr) {
 		return sf::Vector2f(0.0f, 0.0f);
 	}

@@ -65,8 +65,8 @@ public:
     bool canAttack();
     bool canBeAttacked();
 
-    int getOpposite(Actor* enemy);
-    sf::Vector2f getKnockback(Actor* enemy);
+    int getOpposite(const Actor* enemy);
+    sf::Vector2f getKnockback(const Actor* enemy);
 
     const int& id = m_id;
     const int& type = m_type;
