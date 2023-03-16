@@ -28,7 +28,7 @@ constexpr int INIT_HEIGHT = 800;
 constexpr int ACTOR_TYPES = 8;
 constexpr int ACTIONS = 12;
 
-constexpr int MAX = 1000;
+constexpr int MAX = 5000;
 
 constexpr int FRAME_WIDTH = 80;
 constexpr int FRAME_HEIGHT = 80;

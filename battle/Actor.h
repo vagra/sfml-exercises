@@ -60,6 +60,7 @@ public:
 
     bool inPatrol();
     bool inBattle();
+    bool inStandby();
     bool canAttack(Actor* enemy);
     bool canAttack();
     bool canBeAttacked();

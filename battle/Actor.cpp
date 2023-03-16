@@ -83,7 +83,7 @@ void Actor::play(sf::Time elapsed) {
 
 		m_fsm.update();
 
-		if (inBattle()) {
+		if (inStandby()) {
 			if (!m_enemy->isAlive()) {
 				m_enemy = nullptr;
 				m_direction = genDirection();
@@ -216,6 +216,10 @@ bool Actor::inPatrol() {
 
 bool Actor::inBattle() {
 	return m_fsm.isActive<Battle>();
+}
+
+bool Actor::inStandby() {
+	return m_fsm.isActive<Standby>();
 }
 
 bool Actor::canAttack(Actor* enemy) {
