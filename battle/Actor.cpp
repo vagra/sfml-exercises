@@ -154,11 +154,11 @@ void Actor::attack(Actor* enemy) {
 
 	const pair<int, int> knockback = getKnockback(enemy);
 
-	const DefendSignl def_signl = DefendSignl(genHit(), getStiffs(), knockback.second);
+	const DefendSignl def_signl = DefendSignl(
+		genHit(), getStiffs(), knockback.second);
 	const AttackSignl att_signl = AttackSignl(knockback.first);
 
 	m_fsm.react(att_signl);
-	// m_fsm.context().knockback = knockback.first;
 
 	/*fmt::print("{:3d}->{:3d} att: dir {}-{} pos({:.0f}, {:.0f})\n",
 		m_id, enemy->id, prev_direction, m_direction,

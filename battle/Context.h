@@ -48,7 +48,7 @@ struct Context {
 	bool end{};
 	bool standby{};
 
-	void attackInit() {
+	void initAttack() {
 		action = ACTION::ATTACK;
 		action_name = ActionManager::getActionName(action);
 
@@ -67,7 +67,7 @@ struct Context {
 		standby = false;
 	}
 
-	void defendInit(ACTION action_id, bool dodge = true) {
+	void initDefend(ACTION action_id, bool dodge = true) {
 		action = action_id;
 		action_name = ActionManager::getActionName(action_id);
 
@@ -93,7 +93,7 @@ struct Context {
 		standby = false;
 	}
 
-	void stiffInit() noexcept {
+	void initStiff() noexcept {
 		rounds = 1;
 		round = 0;
 
@@ -105,7 +105,7 @@ struct Context {
 		standby = false;
 	}
 
-	void standbyInit() {
+	void initStandby() {
 		action = ACTION::REST;
 		action_name = ActionManager::getActionName(action);
 
@@ -120,7 +120,7 @@ struct Context {
 		standby = true;
 	}
 
-	void patrolInit(ACTION action_id) {
+	void initPatrol(ACTION action_id) {
 		action = action_id;
 		action_name = ActionManager::getActionName(action);
 
@@ -136,7 +136,7 @@ struct Context {
 		standby = false;
 	}
 
-	void failInit() {
+	void initFail() {
 		action = ACTION::FAIL;
 		action_name = ActionManager::getActionName(action);
 
@@ -157,7 +157,7 @@ struct Context {
 		standby = false;
 	}
 
-	void deathInit() {
+	void initDeath() {
 		action = ACTION::DEATH;
 		action_name = ActionManager::getActionName(action);
 
@@ -191,7 +191,7 @@ struct Context {
 		}
 	}
 
-	void stiffStep() noexcept {
+	void stepStiff() noexcept {
 		stiff++;
 
 		if (stiff >= stiffs) {
@@ -200,7 +200,7 @@ struct Context {
 		}
 	}
 
-	void standbyStep() noexcept {
+	void stepStandby() noexcept {
 		frame++;
 
 		if (frame >= frames) {
@@ -208,7 +208,7 @@ struct Context {
 		}
 	}
 
-	void deathStep() noexcept {
+	void stepDeath() noexcept {
 		stiff++;
 
 		if (stiff >= stiffs) {
@@ -217,25 +217,25 @@ struct Context {
 		}
 	}
 
-	void attack(AttackSignl signl) noexcept {
+	void reactAttack(AttackSignl signl) noexcept {
 		knockback = signl.knockback;
 	}
 
-	void attacked(DefendSignl signl) noexcept {
+	void reactAttacked(DefendSignl signl) noexcept {
 		hits = signl.hits;
 		stiffs = signl.stiffs;
 		knockback = signl.knockback;
 	}
 
-	void slow() noexcept {
+	void speedSlow() noexcept {
 		speed = rand() % (MAX_WALK_SPEED - MIN_WALK_SPEED) + MIN_WALK_SPEED;
 	}
 
-	void fast() noexcept {
+	void speedFast() noexcept {
 		speed = rand() % (MAX_RUN_SPEED - MIN_RUN_SPEED) + MIN_RUN_SPEED;
 	}
 
-	void stand() noexcept {
+	void speedZero() noexcept {
 		speed = 0;
 	}
 };

@@ -26,12 +26,12 @@ struct Patrol : FSM::State {
 
 	void react(const AttackSignl& signl, FullControl& control) {
 		control.changeTo<Attack>();
-		control.context().attack(signl);
+		control.context().reactAttack(signl);
 	}
 
 	void react(const DefendSignl& signl, FullControl& control) {
 		control.changeTo<Attacked>();
-		control.context().attacked(signl);
+		control.context().reactAttacked(signl);
 	}
 };
 
@@ -40,8 +40,8 @@ struct Stand : Patrol {
 	Utility utility(const Control&) { return 0.05f; }
 
 	void enter(Control& control) {
-		control.context().patrolInit(ACTION::STAND);
-		control.context().stand();
+		control.context().initPatrol(ACTION::STAND);
+		control.context().speedZero();
 	}
 };
 
@@ -50,8 +50,8 @@ struct Rest : Patrol {
 	Utility utility(const Control&) { return 0.05f; }
 
 	void enter(Control& control) {
-		control.context().patrolInit(ACTION::REST);
-		control.context().stand();
+		control.context().initPatrol(ACTION::REST);
+		control.context().speedZero();
 	}
 };
 
@@ -60,8 +60,8 @@ struct Walk : Patrol {
 	Utility utility(const Control&) { return 0.10f; }
 
 	void enter(Control& control) {
-		control.context().patrolInit(ACTION::WALK);
-		control.context().slow();
+		control.context().initPatrol(ACTION::WALK);
+		control.context().speedSlow();
 	}
 };
 
@@ -70,8 +70,8 @@ struct Advance : Patrol {
 	Utility utility(const Control&) { return 0.10f; }
 
 	void enter(Control& control) {
-		control.context().patrolInit(ACTION::ADVANCE);
-		control.context().slow();
+		control.context().initPatrol(ACTION::ADVANCE);
+		control.context().speedSlow();
 	}
 };
 
@@ -79,8 +79,8 @@ struct Run : Patrol {
 	Utility utility(const Control&) { return 0.70f; }
 
 	void enter(Control& control) {
-		control.context().patrolInit(ACTION::RUN);
-		control.context().fast();
+		control.context().initPatrol(ACTION::RUN);
+		control.context().speedFast();
 	}
 };
 
@@ -94,33 +94,33 @@ struct Standby : FSM::State {
 	using FSM::State::react;
 
 	void enter(Control& control) {
-		control.context().standbyInit();
+		control.context().initStandby();
 	}
 
 	void react(const AttackSignl& signl, FullControl& control) {
 		control.changeTo<Attack>();
-		control.context().attack(signl);
+		control.context().reactAttack(signl);
 	}
 
 	void react(const DefendSignl& signl, FullControl& control) {
 		control.changeTo<Attacked>();
-		control.context().attacked(signl);
+		control.context().reactAttacked(signl);
 	}
 
 	void update(FullControl& control) {
-		control.context().standbyStep();
+		control.context().stepStandby();
 	}
 };
 
 struct Attack : FSM::State {
 	void enter(Control& control) {
-		control.context().attackInit();
+		control.context().initAttack();
 	}
 
 	void update(FullControl& control) {
 		control.context().step();
 		if (control.context().end) {
-			control.context().stand();
+			control.context().speedZero();
 			control.changeTo<Stiff>();
 		}
 	}
@@ -136,7 +136,7 @@ struct Injure : FSM::State {
 	Utility utility(const Control&) { return 0.70f; }
 
 	void enter(Control& control) {
-		control.context().defendInit(ACTION::INJURE, false);
+		control.context().initDefend(ACTION::INJURE, false);
 	}
 
 	void update(FullControl& control) {
@@ -158,7 +158,7 @@ struct Defend : FSM::State {
 	Utility utility(const Control&) { return 0.15f; }
 
 	void enter(Control& control) {
-		control.context().defendInit(ACTION::DEFEND, true);
+		control.context().initDefend(ACTION::DEFEND, true);
 	}
 
 	void update(FullControl& control) {
@@ -175,7 +175,7 @@ struct Jump : FSM::State {
 	Utility utility(const Control&) { return 0.15f; }
 
 	void enter(Control& control) {
-		control.context().defendInit(ACTION::JUMP, true);
+		control.context().initDefend(ACTION::JUMP, true);
 	}
 
 	void update(FullControl& control) {
@@ -193,14 +193,14 @@ struct Stiff : FSM::State {
 	using FSM::State::react;
 	
 	void enter(Control& control) {
-		control.context().stiffInit();
+		control.context().initStiff();
 	}
 
 	void update(FullControl& control) {
 		/*fmt::print("id: {} stiff, hits: {}, stiff: {}/{}",
 			control.context().actor_id, control.context().hits,
 			control.context().stiff, control.context().stiffs);*/
-		control.context().stiffStep();
+		control.context().stepStiff();
 		if (control.context().end) {
 			control.changeTo<Standby>();
 		}
@@ -208,18 +208,18 @@ struct Stiff : FSM::State {
 
 	void react(const DefendSignl& signl, FullControl& control) {
 		control.changeTo<Attacked>();
-		control.context().attacked(signl);
+		control.context().reactAttacked(signl);
 	}
 };
 
 struct Fail : FSM::State {
 	void enter(Control& control) {
-		control.context().failInit();
-		control.context().stand();
+		control.context().initFail();
+		control.context().speedZero();
 	}
 
 	void update(FullControl& control) {
-		control.context().stiffStep();
+		control.context().stepStiff();
 		if (control.context().end) {
 			control.changeTo<Death>();
 		}
@@ -229,11 +229,11 @@ struct Fail : FSM::State {
 struct Death : FSM::State {
 	void enter(Control& control) {
 		/*fmt::print("id: {} death\n", control.context().actor_id);*/
-		control.context().deathInit();
-		control.context().stand();
+		control.context().initDeath();
+		control.context().speedZero();
 	}
 
 	void update(FullControl& control) {
-		control.context().deathStep();
+		control.context().stepDeath();
 	}
 };
