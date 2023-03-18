@@ -33,9 +33,14 @@ struct Stand : FSM::State {
 		}
 	}
 
-	void react(const Combat& combat, FullControl& control) {
-		control.context().attacked(combat);
+	void react(const AttackSignl& signl, FullControl& control) {
+		control.changeTo<Attack>();
+		control.context().attack(signl);
+	}
+
+	void react(const DefendSignl& signl, FullControl& control) {
 		control.changeTo<Attacked>();
+		control.context().attacked(signl);
 	}
 };
 
@@ -56,9 +61,14 @@ struct Rest : FSM::State {
 		}
 	}
 
-	void react(const Combat& combat, FullControl& control) {
-		control.context().attacked(combat);
+	void react(const AttackSignl& signl, FullControl& control) {
+		control.changeTo<Attack>();
+		control.context().attack(signl);
+	}
+
+	void react(const DefendSignl& signl, FullControl& control) {
 		control.changeTo<Attacked>();
+		control.context().attacked(signl);
 	}
 };
 
@@ -79,9 +89,14 @@ struct Walk : FSM::State {
 		}
 	}
 
-	void react(const Combat& combat, FullControl& control) {
-		control.context().attacked(combat);
+	void react(const AttackSignl& signl, FullControl& control) {
+		control.changeTo<Attack>();
+		control.context().attack(signl);
+	}
+
+	void react(const DefendSignl& signl, FullControl& control) {
 		control.changeTo<Attacked>();
+		control.context().attacked(signl);
 	}
 };
 
@@ -102,9 +117,14 @@ struct Advance : FSM::State {
 		}
 	}
 
-	void react(const Combat& combat, FullControl& control) {
-		control.context().attacked(combat);
+	void react(const AttackSignl& signl, FullControl& control) {
+		control.changeTo<Attack>();
+		control.context().attack(signl);
+	}
+
+	void react(const DefendSignl& signl, FullControl& control) {
 		control.changeTo<Attacked>();
+		control.context().attacked(signl);
 	}
 };
 
@@ -125,9 +145,14 @@ struct Run : FSM::State {
 		}
 	}
 
-	void react(const Combat& combat, FullControl& control) {
-		control.context().attacked(combat);
+	void react(const AttackSignl& signl, FullControl& control) {
+		control.changeTo<Attack>();
+		control.context().attack(signl);
+	}
+
+	void react(const DefendSignl& signl, FullControl& control) {
 		control.changeTo<Attacked>();
+		control.context().attacked(signl);
 	}
 };
 
@@ -144,9 +169,14 @@ struct Standby : FSM::State {
 		control.context().standbyInit();
 	}
 
-	void react(const Combat& combat, FullControl& control) {
-		control.context().attacked(combat);
+	void react(const AttackSignl& signl, FullControl& control) {
+		control.changeTo<Attack>();
+		control.context().attack(signl);
+	}
+
+	void react(const DefendSignl& signl, FullControl& control) {
 		control.changeTo<Attacked>();
+		control.context().attacked(signl);
 	}
 
 	void update(FullControl& control) {
@@ -248,9 +278,9 @@ struct Stiff : FSM::State {
 		}
 	}
 
-	void react(const Combat& combat, FullControl& control) {
-		control.context().attacked(combat);
+	void react(const DefendSignl& signl, FullControl& control) {
 		control.changeTo<Attacked>();
+		control.context().attacked(signl);
 	}
 };
 

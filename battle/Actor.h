@@ -103,9 +103,7 @@ private:
     int genDirection() noexcept;
     int genHit() noexcept;
 
-    Combat genCombat();
-
-    void attackedBy(Actor* enemy, const Combat combat);
+    void attackedBy(Actor* enemy, const DefendSignl signl);
 
     static constexpr int getScreenDirection(int direction) noexcept;
     static constexpr int getTextureDirection(int direction) noexcept;

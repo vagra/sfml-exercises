@@ -18,7 +18,11 @@ constexpr int DEATH_STIFFS = INT32_MAX;
 
 // Events
 
-struct Combat {
+struct AttackSignl {
+	int knockback{};
+};
+
+struct DefendSignl {
 	int hits{};
 	int stiffs{};
 	int knockback{};
@@ -213,10 +217,14 @@ struct Context {
 		}
 	}
 
-	void attacked(Combat combat) noexcept {
-		hits = combat.hits;
-		stiffs = combat.stiffs;
-		knockback = combat.knockback;
+	void attack(AttackSignl signl) noexcept {
+		knockback = signl.knockback;
+	}
+
+	void attacked(DefendSignl signl) noexcept {
+		hits = signl.hits;
+		stiffs = signl.stiffs;
+		knockback = signl.knockback;
 	}
 
 	void slow() noexcept {

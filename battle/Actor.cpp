@@ -154,17 +154,17 @@ void Actor::attack(Actor* enemy) {
 
 	const pair<int, int> knockback = getKnockback(enemy);
 
-	Combat combat = genCombat();
-	combat.knockback = knockback.second;
+	const DefendSignl def_signl = DefendSignl(genHit(), getStiffs(), knockback.second);
+	const AttackSignl att_signl = AttackSignl(knockback.first);
 
-	m_fsm.changeTo<Attack>();
-	m_fsm.context().knockback = knockback.first;
+	m_fsm.react(att_signl);
+	// m_fsm.context().knockback = knockback.first;
 
 	/*fmt::print("{:3d}->{:3d} att: dir {}-{} pos({:.0f}, {:.0f})\n",
 		m_id, enemy->id, prev_direction, m_direction,
 		m_position.x, m_position.y);*/
 
-	enemy->attackedBy(this, combat);
+	enemy->attackedBy(this, def_signl);
 }
 
 void Actor::disable() {
@@ -173,7 +173,7 @@ void Actor::disable() {
 	m_disabled = true;
 }
 
-void Actor::attackedBy(Actor* enemy, const Combat combat) {
+void Actor::attackedBy(Actor* enemy, const DefendSignl signl) {
 
 	if (enemy == nullptr) {
 		return;
@@ -187,7 +187,7 @@ void Actor::attackedBy(Actor* enemy, const Combat combat) {
 		enemy->id, m_id, prev_direction, m_direction,
 		m_position.x, m_position.y);*/
 
-	m_fsm.react(combat);
+	m_fsm.react(signl);
 }
 
 bool Actor::inMoving() noexcept {
@@ -241,7 +241,7 @@ bool Actor::canAttack(Actor* enemy) {
 
 bool Actor::canAttack() {
 	return (m_fsm.isActive<Patrol>() ||
-		m_fsm.isActive<Standby>() );
+		m_fsm.isActive<Standby>());
 }
 
 bool Actor::canBeAttacked() {
@@ -279,10 +279,6 @@ int Actor::genDirection() noexcept {
 
 int Actor::genHit() noexcept {
 	return rand() % (MAX_HIT - MIN_HIT) + MIN_HIT;
-}
-
-Combat Actor::genCombat() {
-	return Combat{genHit(), getStiffs()};
 }
 
 int Actor::getStartFrame() {
