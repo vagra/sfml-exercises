@@ -8,9 +8,6 @@
 #include "FSM.h"
 #include "States.h"
 
-constexpr int DIRECTIONS = 8;
-constexpr int INIT_DIRECTION = 6;
-
 constexpr int FRAME_CYCLE = 100;
 
 constexpr int MAX_HP = 999;
@@ -47,7 +44,7 @@ public:
 
     void play(sf::Time elapsed);
     void step();
-    void turn() noexcept;
+    void turn();
 
     void attack(Actor* enemy);
     void disable();
@@ -67,16 +64,16 @@ public:
     bool canAttack();
     bool canBeAttacked();
 
-    int getOpposite(const Actor* enemy);
+    int getDirection() const;
     sf::Vector2f getKnockbackOffset(const Actor* enemy);
     pair<int, int> getKnockback(const Actor* enemy);
+    pair<int, int> getOpposite(const Actor* enemy);
 
     const int& id = m_id;
     const int& type = m_type;
     const string& name = m_name;
     const bool& disabled = m_disabled;
 
-    const int& direction = m_direction;
     const sf::Vector2f& position = m_position;
     const sf::Vector2f& prev_position = m_prev_position;
 
@@ -100,8 +97,9 @@ private:
     int getStiffs();
 
     sf::Vector2f genPosition();
-    int genDirection() noexcept;
     int genHit() noexcept;
+
+    int checkRegion() noexcept;
 
     void attackedBy(Actor* enemy, const DefendSignl signl);
 
@@ -114,8 +112,6 @@ private:
     bool m_disabled{};
 
     int m_frame_timer{};
-
-    int m_direction{};
 
     sf::Vector2i m_frame;
     sf::IntRect m_area;

@@ -8,7 +8,22 @@
 #include "ActionManager.h"
 
 
+////////////////////////////////////////
 // Status
+////////////////////////////////////////
+
+struct Turn : FSM::State {
+
+	void enter(Control& control) {
+		// cout << "-> turn" << endl;
+		control.context().freeTurn();
+	}
+
+	void update(FullControl& control) {
+		control.changeTo<Patrol>();
+	}
+
+};
 
 struct Patrol : FSM::State {
 	using FSM::State::react;
@@ -20,7 +35,7 @@ struct Patrol : FSM::State {
 	void update(FullControl& control) {
 		control.context().step();
 		if (control.context().end) {
-			control.succeed();
+			control.changeTo<Turn>();
 		}
 	}
 
@@ -32,6 +47,10 @@ struct Patrol : FSM::State {
 	void react(const DefendSignl& signl, FullControl& control) {
 		control.changeTo<Attacked>();
 		control.context().reactAttacked(signl);
+	}
+
+	void react(const BackTurnSignl& signl, FullControl& control) {
+		control.context().reactBackTurn(signl);
 	}
 };
 

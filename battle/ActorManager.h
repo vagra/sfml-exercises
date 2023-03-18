@@ -17,7 +17,7 @@ public:
 	static const vector<unique_ptr<Actor>>& getActors() noexcept;
 
 	static void setRegion(int width, int height) noexcept;
-	static bool atFront(const Actor* actor1, const Actor* actor2) noexcept;
+	static bool atFront(const Actor* actor1, const Actor* actor2);
 	static void attack(Actor* actor1, Actor* actor2);
 
 private:

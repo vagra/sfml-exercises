@@ -74,18 +74,23 @@ void ActorManager::print() {
 
 void ActorManager::setRegion(int width, int height) noexcept {
 
-	const int x = width > INIT_WIDTH ? int((width - INIT_WIDTH) / 2) : 0;
-	const int y = height > INIT_HEIGHT ? int((height - INIT_HEIGHT) / 2) : 0;
+	// const int x = width > INIT_WIDTH ? int((width - INIT_WIDTH) / 2) : 0;
+	// const int y = height > INIT_HEIGHT ? int((height - INIT_HEIGHT) / 2) : 0;
 
-	Actor::region.left = x;
-	Actor::region.top = y;
+	Actor::region.width = width;
+	Actor::region.height = height;
 }
 
-bool ActorManager::atFront(const Actor* actor1, const Actor* actor2) noexcept {
+bool ActorManager::atFront(const Actor* actor1, const Actor* actor2) {
+
+	if (actor1 == nullptr || actor2 == nullptr) {
+		return false;
+	}
+
 	const float dx = actor2->m_position.x - actor1->m_position.x;
 	const float dy = actor2->m_position.y - actor1->m_position.y;
 
-	switch (actor1->m_direction) {
+	switch (actor1->getDirection()) {
 	case 0:
 		return dy > abs(dx);
 	case 1:

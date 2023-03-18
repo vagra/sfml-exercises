@@ -16,19 +16,31 @@ constexpr int ATTACT_STIFFS = 3;
 constexpr int FAIL_STIFFS = 100;
 constexpr int DEATH_STIFFS = INT32_MAX;
 
+////////////////////////////////////////
 // Events
+////////////////////////////////////////
 
 struct AttackSignl {
 	int knockback{};
+	int direction{};
 };
 
 struct DefendSignl {
 	int hits{};
 	int stiffs{};
 	int knockback{};
+	int direction{};
 };
 
+struct FreeTurnSignl {};
+struct BumpTurnSignl {};
+struct BackTurnSignl {
+	int direction{};
+};
+
+////////////////////////////////////////
 // Context
+////////////////////////////////////////
 
 struct Context {
 	int actor_id{};
@@ -45,8 +57,12 @@ struct Context {
 	int hits{};
 	int speed{};
 	int knockback{};
+	int direction{};
 	bool end{};
 	bool standby{};
+
+	// ------------------------------------
+	// inits
 
 	void initAttack() {
 		action = ACTION::ATTACK;
@@ -178,6 +194,9 @@ struct Context {
 		standby = false;
 	}
 
+	// ------------------------------------
+	// steps
+
 	void step() noexcept {
 		frame++;
 
@@ -217,15 +236,28 @@ struct Context {
 		}
 	}
 
+	// ------------------------------------
+	// combat reacts
+
 	void reactAttack(AttackSignl signl) noexcept {
 		knockback = signl.knockback;
+		direction = signl.direction;
 	}
 
 	void reactAttacked(DefendSignl signl) noexcept {
 		hits = signl.hits;
 		stiffs = signl.stiffs;
 		knockback = signl.knockback;
+		direction = signl.direction;
 	}
+
+	void reactBackTurn(BackTurnSignl signl) noexcept {
+		const int range = rand() % (DIRECTIONS - 5) + 7;
+		direction = (signl.direction + range) % DIRECTIONS;
+	}
+
+	// ------------------------------------
+	// speeds
 
 	void speedSlow() noexcept {
 		speed = rand() % (MAX_WALK_SPEED - MIN_WALK_SPEED) + MIN_WALK_SPEED;
@@ -237,5 +269,17 @@ struct Context {
 
 	void speedZero() noexcept {
 		speed = 0;
+	}
+
+	// ------------------------------------
+	// direction
+
+	void freeTurn() noexcept {
+		direction = rand() % DIRECTIONS;
+	}
+
+	void bumpTurn() noexcept {
+		const int range = rand() % (DIRECTIONS - 3) + 2;
+		direction = (direction + range) % DIRECTIONS;
 	}
 };

@@ -27,8 +27,6 @@ void Actor::init() {
 	m_position = genPosition();
 	m_prev_position = m_position;
 
-	m_direction = genDirection();
-
 	initSprite();
 	initText();
 	initFSM();
@@ -83,22 +81,22 @@ void Actor::play(sf::Time elapsed) {
 
 		m_fsm.update();
 
+		if (inPatrol()) {
+			const int direction = checkRegion();
+			if (direction >=0) {
+				m_fsm.react(BackTurnSignl(direction));
+			}
+		}
+
 		if (inStandby()) {
 			if (!m_enemy->isAlive()) {
 				m_enemy = nullptr;
-				m_direction = genDirection();
 				m_fsm.changeTo<Patrol>();
 			}
 			else if (canAttack(m_enemy)) {
 				attack(m_enemy);
 			}
 		}
-		else if (inPatrol()) {
-			if (m_fsm.context().end) {
-				m_direction = genDirection();
-				m_fsm.changeTo<Patrol>();
-			}
-		}	
 	}
 	
 	if (inMoving()) {
@@ -122,7 +120,7 @@ void Actor::play(sf::Time elapsed) {
 }
 
 void Actor::step() {
-	const int direction = getScreenDirection(m_direction);
+	const int direction = getScreenDirection(getDirection());
 
 	m_frame.x = getStartFrame() + getCurrentFrame();
 	m_frame.y = direction;
@@ -134,9 +132,8 @@ void Actor::step() {
 	m_text->setString(to_string(m_fsm.context().hp));
 }
 
-void Actor::turn() noexcept {
-	const int range = rand() % (DIRECTIONS - 3) + 2;
-	m_direction = (m_direction + range) % DIRECTIONS;
+void Actor::turn() {
+	m_fsm.react(BumpTurnSignl());
 }
 
 void Actor::attack(Actor* enemy) {
@@ -149,42 +146,33 @@ void Actor::attack(Actor* enemy) {
 	}
 	
 	m_enemy = enemy;
-	m_direction = getOpposite(enemy);
 
 	const pair<int, int> knockback = getKnockback(enemy);
+	const pair<int, int> opposite = getOpposite(enemy);
+
+	const AttackSignl att_signl = AttackSignl(
+		knockback.first, opposite.first);
 
 	const DefendSignl def_signl = DefendSignl(
-		genHit(), getStiffs(), knockback.second);
-	const AttackSignl att_signl = AttackSignl(knockback.first);
+		genHit(), getStiffs(), knockback.second, opposite.second);
 
 	m_fsm.react(att_signl);
-
-	/*fmt::print("{:3d}->{:3d} att: dir {}-{} pos({:.0f}, {:.0f})\n",
-		m_id, enemy->id, prev_direction, m_direction,
-		m_position.x, m_position.y);*/
 
 	enemy->attackedBy(this, def_signl);
 }
 
 void Actor::disable() {
 	m_enemy = nullptr;
-
 	m_disabled = true;
 }
 
-void Actor::attackedBy(Actor* enemy, const DefendSignl signl) {
+void Actor::attackedBy(Actor* enemy, DefendSignl signl) {
 
 	if (enemy == nullptr) {
 		return;
 	}
 
 	m_enemy = enemy;
-	// const int prev_direction = m_direction;
-	m_direction = getOpposite(enemy);
-
-	/*fmt::print("{:3d}->{:3d} def: dir {}-{} pos({:.0f}, {:.0f})\n",
-		enemy->id, m_id, prev_direction, m_direction,
-		m_position.x, m_position.y);*/
 
 	m_fsm.react(signl);
 }
@@ -249,7 +237,6 @@ bool Actor::canBeAttacked() {
 		m_fsm.isActive<Stiff>());
 }
 
-
 sf::Vector2f Actor::genPosition() {
 	const float x = narrow_cast<float>(rand() % INIT_WIDTH);
 	const float y = narrow_cast<float>(rand() % INIT_HEIGHT);
@@ -257,7 +244,7 @@ sf::Vector2f Actor::genPosition() {
 	return sf::Vector2f(x, y);
 }
 
-int Actor::genDirection() noexcept {
+int Actor::checkRegion() noexcept {
 	const int left = region.left;
 	const int top = region.top;
 	const int right = region.width + region.left;
@@ -273,7 +260,7 @@ int Actor::genDirection() noexcept {
 	if (m_position.y > bottom) return 4;
 	if (m_position.x > right) return 6;
 
-	return rand() % DIRECTIONS;
+	return -1;
 }
 
 int Actor::genHit() noexcept {
@@ -289,34 +276,15 @@ int Actor::getCurrentFrame() {
 }
 
 sf::Vector2f Actor::getOffset() {
-	return VECTORS.at(m_direction) * (m_fsm.context().speed / 10.f);
+	return VECTORS.at(getDirection()) * (m_fsm.context().speed / 10.f);
 }
 
 int Actor::getStiffs() {
 	return ActionManager::getAction(m_type, ACTION::ATTACK)->frames;
 }
 
-int Actor::getOpposite(const Actor* enemy) {
-
-	if (enemy == nullptr) {
-		return m_direction;
-	}
-
-	if (m_position.x < enemy->position.x &&
-		m_position.y < enemy->position.y) return 1;
-	if (m_position.x < enemy->position.x &&
-		m_position.y > enemy->position.y) return 3;
-	if (m_position.x > enemy->position.x &&
-		m_position.y > enemy->position.y) return 5;
-	if (m_position.x > enemy->position.x &&
-		m_position.y < enemy->position.y) return 7;
-
-	if (m_position.y < enemy->position.y) return 0;
-	if (m_position.x < enemy->position.x) return 2;
-	if (m_position.y > enemy->position.y) return 4;
-	if (m_position.x > enemy->position.x) return 6;
-	
-	return m_direction;
+int Actor::getDirection() const {
+	return m_fsm.context().direction;
 }
 
 sf::Vector2f Actor::getKnockbackOffset(const Actor* enemy) {
@@ -324,7 +292,7 @@ sf::Vector2f Actor::getKnockbackOffset(const Actor* enemy) {
 		return sf::Vector2f(0.0f, 0.0f);
 	}
 
-	const sf::Vector2f unit = VECTORS.at(m_direction);
+	const sf::Vector2f unit = VECTORS.at(getDirection());
 	const sf::Vector2f offset = sf::Vector2f(unit.x * KNOCKBACK, unit.y * KNOCKBACK);
 	// fmt::print("{},{}\n", offset.x, offset.y);
 
@@ -348,6 +316,47 @@ pair<int, int> Actor::getKnockback(const Actor* enemy) {
 	}
 
 	return make_pair(1, -1);
+}
+
+pair<int, int> Actor::getOpposite(const Actor* enemy) {
+
+	const int direction = getDirection();
+
+	if (enemy == nullptr) {
+		return make_pair(direction, 0);
+	}
+
+	if (m_position.x < enemy->position.x &&
+		m_position.y < enemy->position.y) {
+		return make_pair(1, 5);
+	}
+	if (m_position.x < enemy->position.x &&
+		m_position.y > enemy->position.y) {
+		return make_pair(3, 7);
+	}
+	if (m_position.x > enemy->position.x &&
+		m_position.y > enemy->position.y) {
+		return make_pair(5, 1);
+	}
+	if (m_position.x > enemy->position.x &&
+		m_position.y < enemy->position.y) {
+		return make_pair(7, 3);
+	}
+
+	if (m_position.y < enemy->position.y) {
+		return make_pair(0, 4);
+	}
+	if (m_position.x < enemy->position.x) {
+		return make_pair(2, 6);
+	}
+	if (m_position.y > enemy->position.y) {
+		return make_pair(4, 0);
+	}
+	if (m_position.x > enemy->position.x) {
+		return make_pair(6, 2);
+	}
+
+	return make_pair(direction, enemy->getDirection());
 }
 
 constexpr int Actor::getScreenDirection(int direction) noexcept {

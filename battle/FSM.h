@@ -10,6 +10,7 @@ using M = hfsm2::MachineT<Config>;
 #define S(s) struct s
 
 using FSM = M::PeerRoot<
+				S(Turn),
 				M::Random<S(Patrol),
 					S(Stand),
 					S(Rest),
