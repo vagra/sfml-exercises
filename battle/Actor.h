@@ -35,6 +35,8 @@ const array<sf::Vector2f, DIRECTIONS> VECTORS = {
 };
 
 constexpr float KNOCKBACK = 20.f;
+constexpr int NEAR = 10;
+constexpr int FAR = 30;
 
 class Actor
 {
@@ -66,7 +68,8 @@ public:
     bool canBeAttacked();
 
     int getOpposite(const Actor* enemy);
-    sf::Vector2f getKnockback(const Actor* enemy);
+    sf::Vector2f getKnockbackOffset(const Actor* enemy);
+    pair<int, int> getKnockback(const Actor* enemy);
 
     const int& id = m_id;
     const int& type = m_type;

@@ -21,6 +21,7 @@ constexpr int DEATH_STIFFS = INT32_MAX;
 struct Combat {
 	int hits{};
 	int stiffs{};
+	int knockback{};
 };
 
 // Context
@@ -58,8 +59,6 @@ struct Context {
 
 		speed = 0;
 
-		knockback = 1;
-
 		end = false;
 		standby = false;
 	}
@@ -85,8 +84,6 @@ struct Context {
 		stiff = 0;
 
 		speed = 0;
-
-		knockback = -1;
 
 		end = false;
 		standby = false;
@@ -219,6 +216,7 @@ struct Context {
 	void attacked(Combat combat) noexcept {
 		hits = combat.hits;
 		stiffs = combat.stiffs;
+		knockback = combat.knockback;
 	}
 
 	void slow() noexcept {

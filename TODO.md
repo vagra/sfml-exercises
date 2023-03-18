@@ -22,3 +22,4 @@
 - [x] if defend or jump, not minus hp.
 - [x] if dead, no collision handling, and disappear.
 - [x] when attacking, crash into the enemy.
+- [x] if too close, pull away; if too far, get closer. 

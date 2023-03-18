@@ -109,7 +109,7 @@ void Actor::play(sf::Time elapsed) {
 	}
 	else if (inKnockback()) {
 		const sf::Vector2f offset = 
-			narrow_cast<float>(m_fsm.context().knockback) * getKnockback(m_enemy);
+			narrow_cast<float>(m_fsm.context().knockback) * getKnockbackOffset(m_enemy);
 
 		m_sprite->move(offset);
 		m_text->move(offset);
@@ -152,9 +152,13 @@ void Actor::attack(Actor* enemy) {
 	// const int prev_direction = m_direction;
 	m_direction = getOpposite(enemy);
 
-	const Combat combat = genCombat();
+	const pair<int, int> knockback = getKnockback(enemy);
+
+	Combat combat = genCombat();
+	combat.knockback = knockback.second;
 
 	m_fsm.changeTo<Attack>();
+	m_fsm.context().knockback = knockback.first;
 
 	/*fmt::print("{:3d}->{:3d} att: dir {}-{} pos({:.0f}, {:.0f})\n",
 		m_id, enemy->id, prev_direction, m_direction,
@@ -229,11 +233,6 @@ bool Actor::inStandby() {
 bool Actor::canAttack(Actor* enemy) {
 
 	if (enemy == nullptr) {
-		return false;
-	}
-
-	if (abs(position.x - enemy->position.x) > FRAME_WIDTH &&
-		abs(position.x - enemy->position.y) > FRAME_WIDTH) {
 		return false;
 	}
 
@@ -325,7 +324,7 @@ int Actor::getOpposite(const Actor* enemy) {
 	return m_direction;
 }
 
-sf::Vector2f Actor::getKnockback(const Actor* enemy) {
+sf::Vector2f Actor::getKnockbackOffset(const Actor* enemy) {
 	if (enemy == nullptr) {
 		return sf::Vector2f(0.0f, 0.0f);
 	}
@@ -335,6 +334,25 @@ sf::Vector2f Actor::getKnockback(const Actor* enemy) {
 	// fmt::print("{},{}\n", offset.x, offset.y);
 
 	return offset;
+}
+
+pair<int, int> Actor::getKnockback(const Actor* enemy) {
+	if (enemy == nullptr) {
+		return make_pair(0, 0);
+	}
+
+	const float abx = abs(m_position.x - enemy->position.x);
+	const float aby = abs(m_position.y - enemy->position.y);
+
+	if (abx < NEAR && aby < NEAR) {
+		return make_pair(0, -1);
+	}
+
+	if (abx > FAR || aby > FAR) {
+		return make_pair(1, 0);
+	}
+
+	return make_pair(1, -1);
 }
 
 constexpr int Actor::getScreenDirection(int direction) noexcept {
