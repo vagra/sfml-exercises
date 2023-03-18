@@ -149,7 +149,6 @@ void Actor::attack(Actor* enemy) {
 	}
 	
 	m_enemy = enemy;
-	// const int prev_direction = m_direction;
 	m_direction = getOpposite(enemy);
 
 	const pair<int, int> knockback = getKnockback(enemy);

@@ -140,13 +140,7 @@ struct Injure : FSM::State {
 	}
 
 	void update(FullControl& control) {
-		/*fmt::print("id: {} injure, hits: {}\n",
-			control.context().actor_id, control.context().hits);*/
 		control.context().step();
-
-		if (control.context().hp <= 0) {
-			control.changeTo<Fail>();
-		}
 
 		if (control.context().end) {
 			control.changeTo<Stiff>();
@@ -162,8 +156,6 @@ struct Defend : FSM::State {
 	}
 
 	void update(FullControl& control) {
-		/*fmt::print("id: {} defend, hits: {}\n",
-			control.context().actor_id, control.context().hits);*/
 		control.context().step();
 		if (control.context().end) {
 			control.changeTo<Standby>();
@@ -179,8 +171,6 @@ struct Jump : FSM::State {
 	}
 
 	void update(FullControl& control) {
-		/*fmt::print("id: {} jump, hits: {}\n",
-			control.context().actor_id, control.context().hits);*/
 		control.context().step();
 		if (control.context().end) {
 			control.changeTo<Standby>();
@@ -197,10 +187,13 @@ struct Stiff : FSM::State {
 	}
 
 	void update(FullControl& control) {
-		/*fmt::print("id: {} stiff, hits: {}, stiff: {}/{}",
-			control.context().actor_id, control.context().hits,
-			control.context().stiff, control.context().stiffs);*/
+
 		control.context().stepStiff();
+
+		if (control.context().hp <= 0) {
+			control.changeTo<Fail>();
+		}
+
 		if (control.context().end) {
 			control.changeTo<Standby>();
 		}
@@ -228,7 +221,6 @@ struct Fail : FSM::State {
 
 struct Death : FSM::State {
 	void enter(Control& control) {
-		/*fmt::print("id: {} death\n", control.context().actor_id);*/
 		control.context().initDeath();
 		control.context().speedZero();
 	}
