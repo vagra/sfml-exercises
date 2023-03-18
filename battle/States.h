@@ -11,13 +11,31 @@
 // Status
 
 struct Patrol : FSM::State {
+	using FSM::State::react;
+
 	void enter(Control& control) {
 		// cout << "-> patrol" << endl;
 	}
+
+	void update(FullControl& control) {
+		control.context().step();
+		if (control.context().end) {
+			control.succeed();
+		}
+	}
+
+	void react(const AttackSignl& signl, FullControl& control) {
+		control.changeTo<Attack>();
+		control.context().attack(signl);
+	}
+
+	void react(const DefendSignl& signl, FullControl& control) {
+		control.changeTo<Attacked>();
+		control.context().attacked(signl);
+	}
 };
 
-struct Stand : FSM::State {
-	using FSM::State::react;
+struct Stand : Patrol {
 
 	Utility utility(const Control&) { return 0.05f; }
 
@@ -25,27 +43,9 @@ struct Stand : FSM::State {
 		control.context().patrolInit(ACTION::STAND);
 		control.context().stand();
 	}
-
-	void update(FullControl& control) {
-		control.context().step();
-		if (control.context().end) {
-			control.succeed();
-		}
-	}
-
-	void react(const AttackSignl& signl, FullControl& control) {
-		control.changeTo<Attack>();
-		control.context().attack(signl);
-	}
-
-	void react(const DefendSignl& signl, FullControl& control) {
-		control.changeTo<Attacked>();
-		control.context().attacked(signl);
-	}
 };
 
-struct Rest : FSM::State {
-	using FSM::State::react;
+struct Rest : Patrol {
 
 	Utility utility(const Control&) { return 0.05f; }
 
@@ -53,27 +53,9 @@ struct Rest : FSM::State {
 		control.context().patrolInit(ACTION::REST);
 		control.context().stand();
 	}
-
-	void update(FullControl& control) {
-		control.context().step();
-		if (control.context().end) {
-			control.succeed();
-		}
-	}
-
-	void react(const AttackSignl& signl, FullControl& control) {
-		control.changeTo<Attack>();
-		control.context().attack(signl);
-	}
-
-	void react(const DefendSignl& signl, FullControl& control) {
-		control.changeTo<Attacked>();
-		control.context().attacked(signl);
-	}
 };
 
-struct Walk : FSM::State {
-	using FSM::State::react;
+struct Walk : Patrol {
 
 	Utility utility(const Control&) { return 0.10f; }
 
@@ -81,27 +63,9 @@ struct Walk : FSM::State {
 		control.context().patrolInit(ACTION::WALK);
 		control.context().slow();
 	}
-
-	void update(FullControl& control) {
-		control.context().step();
-		if (control.context().end) {
-			control.succeed();
-		}
-	}
-
-	void react(const AttackSignl& signl, FullControl& control) {
-		control.changeTo<Attack>();
-		control.context().attack(signl);
-	}
-
-	void react(const DefendSignl& signl, FullControl& control) {
-		control.changeTo<Attacked>();
-		control.context().attacked(signl);
-	}
 };
 
-struct Advance : FSM::State {
-	using FSM::State::react;
+struct Advance : Patrol {
 
 	Utility utility(const Control&) { return 0.10f; }
 
@@ -109,50 +73,14 @@ struct Advance : FSM::State {
 		control.context().patrolInit(ACTION::ADVANCE);
 		control.context().slow();
 	}
-
-	void update(FullControl& control) {
-		control.context().step();
-		if (control.context().end) {
-			control.succeed();
-		}
-	}
-
-	void react(const AttackSignl& signl, FullControl& control) {
-		control.changeTo<Attack>();
-		control.context().attack(signl);
-	}
-
-	void react(const DefendSignl& signl, FullControl& control) {
-		control.changeTo<Attacked>();
-		control.context().attacked(signl);
-	}
 };
 
-struct Run : FSM::State {
-	using FSM::State::react;
-
+struct Run : Patrol {
 	Utility utility(const Control&) { return 0.70f; }
 
 	void enter(Control& control) {
 		control.context().patrolInit(ACTION::RUN);
 		control.context().fast();
-	}
-
-	void update(FullControl& control) {
-		control.context().step();
-		if (control.context().end) {
-			control.succeed();
-		}
-	}
-
-	void react(const AttackSignl& signl, FullControl& control) {
-		control.changeTo<Attack>();
-		control.context().attack(signl);
-	}
-
-	void react(const DefendSignl& signl, FullControl& control) {
-		control.changeTo<Attacked>();
-		control.context().attacked(signl);
 	}
 };
 
