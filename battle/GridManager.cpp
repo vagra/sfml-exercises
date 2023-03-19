@@ -87,7 +87,7 @@ void GridManager::updateActors() {
                     ActorManager::attack(actor.get(), other);
                 }
                 else {
-                    actor->turn();
+                    actor->bump();
                 }
                 break;
             }

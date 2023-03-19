@@ -239,19 +239,24 @@ struct Context {
 	// ------------------------------------
 	// combat reacts
 
-	void reactAttack(AttackSignl signl) noexcept {
+	void reactAttack(const AttackSignl& signl) noexcept {
 		knockback = signl.knockback;
 		direction = signl.direction;
 	}
 
-	void reactAttacked(DefendSignl signl) noexcept {
+	void reactAttacked(const DefendSignl& signl) noexcept {
 		hits = signl.hits;
 		stiffs = signl.stiffs;
 		knockback = signl.knockback;
 		direction = signl.direction;
 	}
 
-	void reactBackTurn(BackTurnSignl signl) noexcept {
+	void reactBumpTurn(const BumpTurnSignl& signl) noexcept {
+		const int range = rand() % (DIRECTIONS - 3) + 2;
+		direction = (direction + range) % DIRECTIONS;
+	}
+
+	void reactBackTurn(const BackTurnSignl& signl) noexcept {
 		const int range = rand() % (DIRECTIONS - 5) + 7;
 		direction = (signl.direction + range) % DIRECTIONS;
 	}
@@ -278,8 +283,5 @@ struct Context {
 		direction = rand() % DIRECTIONS;
 	}
 
-	void bumpTurn() noexcept {
-		const int range = rand() % (DIRECTIONS - 3) + 2;
-		direction = (direction + range) % DIRECTIONS;
-	}
+	
 };

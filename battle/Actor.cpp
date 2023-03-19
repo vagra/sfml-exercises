@@ -84,7 +84,7 @@ void Actor::play(sf::Time elapsed) {
 		if (inPatrol()) {
 			const int direction = checkRegion();
 			if (direction >=0) {
-				m_fsm.react(BackTurnSignl(direction));
+				back(direction);
 			}
 		}
 
@@ -132,8 +132,12 @@ void Actor::step() {
 	m_text->setString(to_string(m_fsm.context().hp));
 }
 
-void Actor::turn() {
+void Actor::bump() {
 	m_fsm.react(BumpTurnSignl());
+}
+
+void Actor::back(int direction) {
+	m_fsm.react(BackTurnSignl{direction});
 }
 
 void Actor::attack(Actor* enemy) {
@@ -150,11 +154,11 @@ void Actor::attack(Actor* enemy) {
 	const pair<int, int> knockback = getKnockback(enemy);
 	const pair<int, int> opposite = getOpposite(enemy);
 
-	const AttackSignl att_signl = AttackSignl(
-		knockback.first, opposite.first);
+	const AttackSignl att_signl = AttackSignl{
+		knockback.first, opposite.first };
 
-	const DefendSignl def_signl = DefendSignl(
-		genHit(), getStiffs(), knockback.second, opposite.second);
+	const DefendSignl def_signl = DefendSignl{
+		genHit(), getStiffs(), knockback.second, opposite.second };
 
 	m_fsm.react(att_signl);
 

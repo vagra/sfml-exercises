@@ -44,7 +44,8 @@ public:
 
     void play(sf::Time elapsed);
     void step();
-    void turn();
+    void bump();
+    void back(int direction);
 
     void attack(Actor* enemy);
     void disable();

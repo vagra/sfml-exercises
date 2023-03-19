@@ -49,6 +49,10 @@ struct Patrol : FSM::State {
 		control.context().reactAttacked(signl);
 	}
 
+	void react(const BumpTurnSignl& signl, FullControl& control) {
+		control.context().reactBumpTurn(signl);
+	}
+
 	void react(const BackTurnSignl& signl, FullControl& control) {
 		control.context().reactBackTurn(signl);
 	}
