@@ -22,14 +22,23 @@ public:
     Actor& operator=(Actor&&) noexcept = default;
     virtual ~Actor() = default;
 
-    void initRegion(const sf::IntRect& region);
-    void initPosition(const sf::Vector2f& position);
+    void initRegion(const sf::IntRect& region) noexcept;
+    void initPosition(const sf::Vector2f& position) noexcept;
     void initSprite(const sf::Vector2f& scale, const sf::Vector2f& origin);
-    void initArea(const sf::IntRect area);
+    void initArea(const sf::IntRect area) noexcept;
     void initText(const Text& text);
 
     virtual void play(sf::Time elapsed) = 0;
     virtual void step() = 0;
+    
+    virtual int getStartFrame() const = 0;
+    virtual int getTotalFrames() const = 0;
+    virtual int getCurrentFrame() const = 0;
+
+    virtual int getDirection() const = 0;
+    virtual sf::Vector2f getOffset() const = 0;
+
+    static void setRegion(int width, int height) noexcept;
 
     const int& id = m_id;
     const int& type = m_type;
@@ -43,14 +52,8 @@ public:
 
 protected:
 
-    virtual int getStartFrame() = 0;
-    virtual int getTotalFrames() = 0;
-
-    virtual int getDirection() = 0;
-    virtual sf::Vector2f getOffset() = 0;
-
     string genName();
-    int checkRegion();
+    int checkRegion() noexcept;
 
     int m_id{};
     int m_type{};

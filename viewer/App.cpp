@@ -10,12 +10,12 @@ void App::init()
     FontManager::instance().loadFonts();
     TextureManager::instance().loadTextures(PNG_DIR);
     ActionManager::instance().loadActions(PNG_DIR);
-    ActorManager::instance().makeActors<Hero>(ACTORS, ACTORS);
+    ActorManager::instance().makeActors<Hero>(ACTORS, ACTOR_TYPES, false);
 
     initWindow();
     initText();
 
-    initActor(0);
+    changeActor(0);
 }
 
 void App::run() {
@@ -104,7 +104,7 @@ void App::changeActor() {
     if (z) {
         actor_id = (actor_id + 1) % ActorManager::instance().getCount();
 
-        initActor(actor_id);
+        changeActor(actor_id);
     }
 }
 
@@ -114,7 +114,7 @@ void App::changeAction() {
     if (x) {
         action_id = (action_id + 1) % ActionManager::instance().getActionCount();
 
-        actor->change(action_id);
+        actor->changeAction(action_id);
     }
 }
 
@@ -212,8 +212,9 @@ void App::updateText(sf::Time elapsed) {
     ));
 }
 
-void App::initActor(int actor_id) {
-    actor = dynamic_cast<Hero*>(ActorManager::instance().getActor(actor_id));
+void App::changeActor(int actor_id) {
+    actor = ActorManager::instance().getActor<Hero>(actor_id);
+    actor->changeActor();
 }
 
 void App::updateActor(sf::Time elapsed) {

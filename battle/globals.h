@@ -11,13 +11,11 @@
 constexpr int INIT_WIDTH = 1600;
 constexpr int INIT_HEIGHT = 800;
 
+constexpr int ACTORS = 2000;
 constexpr int ACTOR_TYPES = 8;
 constexpr int ACTIONS = 12;
 
-constexpr int DIRECTIONS = 8;
 constexpr int INIT_DIRECTION = 6;
-
-constexpr int MAX = 2000;
 
 constexpr int FRAME_WIDTH = 80;
 constexpr int FRAME_HEIGHT = 80;
@@ -40,8 +38,6 @@ constexpr int TCELL_WIDTH = 100;
 constexpr int TCELL_HEIGHT = 100;
 
 const string PNG_DIR = "../assets/heros/";
-
-const string ACTOR_PNG = "helo{}.png";
 
 enum ACTION {
 	WALK = 0,

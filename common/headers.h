@@ -1,5 +1,5 @@
 #pragma once
-#pragma warning(disable: 26440 26481)
+#pragma warning(disable: 26481)
 
 #include <fstream>
 #include <iostream>

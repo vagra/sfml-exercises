@@ -14,18 +14,13 @@ void ActorManager::draw(sf::RenderWindow& window) {
     }
 }
 
-int ActorManager::genID() noexcept {
-    counter++;
-    return counter;
-}
-
 int ActorManager::getCount() noexcept {
     return narrow_cast<int>(m_actors.size());
 }
 
-Actor* ActorManager::getActor(int index) noexcept {
-	assert(index < m_actors.size());
-    return m_actors.at(index).get();
+int ActorManager::genID() noexcept {
+    counter++;
+    return counter;
 }
 
 void ActorManager::print() {

@@ -8,6 +8,7 @@ constexpr int INIT_WIDTH = 1600;
 constexpr int INIT_HEIGHT = 800;
 
 constexpr int ACTORS = 8;
+constexpr int ACTOR_TYPES = 8;
 constexpr int ACTIONS = 11;
 constexpr int STEPS = 6;
 

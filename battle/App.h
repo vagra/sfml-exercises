@@ -4,9 +4,9 @@
 #include "../common/FontManager.h"
 #include "../common/TextureManager.h"
 #include "../common/ActionManager.h"
-#include "ActorManager.h"
+#include "../common/ActorManager.h"
 #include "GridManager.h"
-#include "Actor.h"
+#include "Hero.h"
 
 const string GUI_FONT = "ark";
 constexpr int GUI_FONT_SIZE = 24;
@@ -23,7 +23,6 @@ public:
 	void run();
 
 private:
-
 	void initWindow();
 
 	void initText();
@@ -31,7 +30,7 @@ private:
 	void drawText();
 
 	void onResize();
-	void onKeyboard() noexcept;
+	void onKeyboard();
 
 	sf::RenderWindow window;
 	sf::Text text;

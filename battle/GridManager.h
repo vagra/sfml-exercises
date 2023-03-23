@@ -1,7 +1,8 @@
 #pragma once
 
 #include "globals.h"
-#include "ActorManager.h"
+#include "../common/ActorManager.h"
+#include "Hero.h"
 
 const sf::Color LRECT_COLOR = sf::Color(128, 0, 0, 50);
 const sf::Color TRECT_COLOR = sf::Color(128, 0, 0, 50);

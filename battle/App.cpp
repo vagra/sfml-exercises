@@ -2,10 +2,10 @@
 
 void App::init() {
 
-    FontManager::init();
-    TextureManager::init(PNG_DIR);
-    ActionManager::init(PNG_DIR);
-    ActorManager::init();
+    FontManager::instance().loadFonts();
+    TextureManager::instance().loadTextures(PNG_DIR);
+    ActionManager::instance().loadActions(PNG_DIR);
+    ActorManager::instance().makeActors<Hero>(ACTORS, ACTOR_TYPES, true);
     GridManager::init(true);
 
     initWindow();
@@ -40,7 +40,7 @@ void App::run() {
 
         elapsed = clock.restart();
 
-        ActorManager::update(elapsed);
+        ActorManager::instance().update(elapsed);
         updateText(elapsed);
         GridManager::update();
 
@@ -56,7 +56,7 @@ void App::run() {
 void App::onResize() {
     const sf::Vector2f win = static_cast<sf::Vector2f>(window.getSize());
 
-    ActorManager::setRegion(narrow_cast<int>(win.x), narrow_cast<int>(win.y));
+    Actor::setRegion(narrow_cast<int>(win.x), narrow_cast<int>(win.y));
 
     sf::View view = window.getDefaultView();
     view.setCenter(win / 2.f);
@@ -65,7 +65,7 @@ void App::onResize() {
     window.setView(view);
 }
 
-void App::onKeyboard() noexcept {
+void App::onKeyboard() {
 
     
 }
@@ -77,7 +77,7 @@ void App::initWindow() {
 }
 
 void App::initText() {
-    text.setFont(*FontManager::getFont(GUI_FONT));
+    text.setFont(*FontManager::instance().getFont(GUI_FONT));
     text.setCharacterSize(GUI_FONT_SIZE);
     text.setFillColor(GUI_COLOR);
 }
@@ -88,5 +88,5 @@ void App::drawText() {
 
 void App::updateText(sf::Time elapsed) {
     int fps = narrow_cast<int>(1 / elapsed.asSeconds());
-    text.setString(fmt::format("Actors: {}\nFPS: {}", MAX, fps));
+    text.setString(fmt::format("Actors: {}\nFPS: {}", ACTORS, fps));
 }

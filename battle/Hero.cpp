@@ -1,71 +1,28 @@
 #include "Hero.h"
 
-void Hero::init(int type) {
-	m_type = type;
-	m_name = ActionManager::getActionSetName(type);
+Hero::Hero(int type) 
+	: Actor(type)
+{
 
-	init();
-}
+	initRegion(
+		sf::IntRect(0, 0, INIT_WIDTH, INIT_HEIGHT));
+	initPosition(
+		genPosition());
+	initArea(
+		sf::IntRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT));
+	initSprite(
+		sf::Vector2f(SCALE, SCALE), sf::Vector2f(ORIGIN_X, ORIGIN_Y));
+	initText(
+		Text{ HP_FONT, "", HP_FONT_SIZE, HP_COLOR, sf::Vector2f(0, ORIGIN_Y) });
 
-void Hero::init(string name) {
-	m_name = name;
-	m_type = ActionManager::getActionSetIndex(name);
-
-	init();
-}
-
-void Hero::init() {
-
-	m_id = ActorManager::genID();
-
-	mp_action_set = ActionManager::getActionSet(m_name);
-	mp_texture = TextureManager::getTexture(m_name);
-	m_area = sf::IntRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-
-	m_position = genPosition();
-	m_prev_position = m_position;
-
-	initSprite();
-	initText();
 	initFSM();
 	
 	step();
-
-}
-
-void Hero::initSprite() {
-	m_sprite.reset();
-
-	m_sprite = make_unique<sf::Sprite>();
-
-	m_sprite->setTexture(*mp_texture);
-	m_sprite->setScale(SCALE, SCALE);
-	m_sprite->setOrigin(ORIGIN_X, ORIGIN_Y);
-	m_sprite->setPosition(m_position);
-}
-
-void Hero::initText() {
-	m_text.reset();
-
-	m_text = make_unique<sf::Text>();
-
-	m_text->setFont(*FontManager::getFont(HP_FONT));
-	m_text->setCharacterSize(HP_FONT_SIZE);
-	m_text->setFillColor(HP_COLOR);
-	m_text->setString(to_string(m_fsm.context().hp));
-	m_text->setOrigin(0, ORIGIN_Y);
-	m_text->setPosition(m_position);
-}
-
-void Hero::initFSM() {
-	m_fsm.context().actor_id = m_id;
-	m_fsm.context().actor_type = m_type;
-	m_fsm.context().hp = MAX_HP;
 }
 
 void Hero::play(sf::Time elapsed) {
 
-	if (isDeath()) {
+	if (inDeath()) {
 		return;
 	}
 
@@ -87,7 +44,7 @@ void Hero::play(sf::Time elapsed) {
 		}
 
 		if (inStandby()) {
-			if (!m_enemy->isAlive()) {
+			if (!m_enemy->inAlive()) {
 				m_enemy = nullptr;
 				m_fsm.changeTo<Patrol>();
 			}
@@ -163,11 +120,6 @@ void Hero::attack(Hero* enemy) {
 	enemy->attackedBy(this, def_signl);
 }
 
-void Hero::disable() {
-	m_enemy = nullptr;
-	m_disabled = true;
-}
-
 void Hero::attackedBy(Hero* enemy, DefendSignl signl) {
 
 	if (enemy == nullptr) {
@@ -179,47 +131,107 @@ void Hero::attackedBy(Hero* enemy, DefendSignl signl) {
 	m_fsm.react(signl);
 }
 
-bool Hero::inMoving() noexcept {
+void Hero::disable() {
+	m_enemy = nullptr;
+	m_disabled = true;
+}
+
+int Hero::getStartFrame() const {
+	return m_action_set->getAction(m_fsm.context().action)->start;
+}
+
+int Hero::getTotalFrames() const {
+	return m_action_set->getAction(m_fsm.context().action)->frames;
+}
+
+int Hero::getCurrentFrame() const {
+	return min(m_fsm.context().frames - 1, m_fsm.context().frame);
+}
+
+int Hero::getDirection() const {
+	return m_fsm.context().direction;
+}
+
+sf::Vector2f Hero::getOffset() const {
+	return VECTORS.at(getDirection()) * (m_fsm.context().speed / 10.f);
+}
+
+int Hero::getStiffs() const {
+	return ActionManager::instance().getAction(m_type, ACTION::ATTACK)->frames;
+}
+
+bool Hero::inMoving() const {
 	return m_fsm.context().speed > 0;
 }
 
-bool Hero::inKnockback() noexcept {
+bool Hero::inKnockback() const {
 	return m_fsm.context().knockback != 0;
 }
 
-bool Hero::inAttacked() noexcept {
+bool Hero::inAttacked() const {
 	return m_fsm.isActive<Attacked>();
 }
 
-bool Hero::inFail() noexcept {
+bool Hero::inFail() const {
 	return m_fsm.isActive<Fail>();
 }
 
-bool Hero::inInjured() noexcept {
+bool Hero::inInjured() const {
 	return m_fsm.isActive<Injure>();
 }
 
-bool Hero::isAlive() noexcept {
+bool Hero::inAlive() const {
 	return !m_fsm.isActive<Death>() && !m_fsm.isActive<Fail>();
 }
 
-bool Hero::isDeath() noexcept {
+bool Hero::inDeath() const {
 	return m_fsm.isActive<Death>();
 }
 
-bool Hero::inPatrol() {
+bool Hero::inPatrol() const {
 	return m_fsm.isActive<Patrol>();
 }
 
-bool Hero::inBattle() {
+bool Hero::inBattle() const {
 	return m_fsm.isActive<Battle>();
 }
 
-bool Hero::inStandby() {
+bool Hero::inStandby() const {
 	return m_fsm.isActive<Standby>();
 }
 
-bool Hero::canAttack(Hero* enemy) {
+bool Hero::atFront(const Hero* other) const {
+
+	if (other == nullptr) {
+		return false;
+	}
+
+	const float dx = other->position.x - m_position.x;
+	const float dy = other->position.y - m_position.y;
+
+	switch (getDirection()) {
+	case 0:
+		return dy > abs(dx);
+	case 1:
+		return dx > 0 && dy > 0;
+	case 2:
+		return dx > abs(dy);
+	case 3:
+		return dx > 0 and dy < 0;
+	case 4:
+		return -dy > abs(dx);
+	case 5:
+		return dx < 0 and dy < 0;
+	case 6:
+		return -dx > abs(dy);
+	case 7:
+		return dx < 0 and dy > 0;
+	default:
+		return false;
+	}
+}
+
+bool Hero::canAttack(Hero* enemy) const {
 
 	if (enemy == nullptr) {
 		return false;
@@ -228,15 +240,21 @@ bool Hero::canAttack(Hero* enemy) {
 	return (canAttack() && enemy->canBeAttacked());
 }
 
-bool Hero::canAttack() {
+bool Hero::canAttack() const {
 	return (m_fsm.isActive<Patrol>() ||
 		m_fsm.isActive<Standby>());
 }
 
-bool Hero::canBeAttacked() {
+bool Hero::canBeAttacked() const {
 	return (m_fsm.isActive<Patrol>() ||
 		m_fsm.isActive<Standby>() ||
 		m_fsm.isActive<Stiff>());
+}
+
+void Hero::initFSM() {
+	m_fsm.context().actor_id = m_id;
+	m_fsm.context().actor_type = m_type;
+	m_fsm.context().hp = MAX_HP;
 }
 
 sf::Vector2f Hero::genPosition() {
@@ -246,47 +264,8 @@ sf::Vector2f Hero::genPosition() {
 	return sf::Vector2f(x, y);
 }
 
-int Hero::checkRegion() noexcept {
-	const int left = region.left;
-	const int top = region.top;
-	const int right = region.width + region.left;
-	const int bottom = region.height + region.top;
-
-	if (m_position.x < left && m_position.y < top) return 1;
-	if (m_position.x < left && m_position.y > bottom) return 3;
-	if (m_position.x > right && m_position.y > bottom) return 5;
-	if (m_position.x > right &&	m_position.y < top) return 7;
-
-	if (m_position.y < top) return 0;
-	if (m_position.x < left) return 2;
-	if (m_position.y > bottom) return 4;
-	if (m_position.x > right) return 6;
-
-	return -1;
-}
-
 int Hero::genHit() noexcept {
 	return rand() % (MAX_HIT - MIN_HIT) + MIN_HIT;
-}
-
-int Hero::getStartFrame() {
-	return mp_action_set->getAction(m_fsm.context().action)->start;
-}
-
-int Hero::getCurrentFrame() {
-	return min(m_fsm.context().frames - 1, m_fsm.context().frame);
-}
-
-sf::Vector2f Hero::getOffset() {
-	return VECTORS.at(getDirection()) * (m_fsm.context().speed / 10.f);
-}
-
-int Hero::getStiffs() {
-	return ActionManager::getAction(m_type, ACTION::ATTACK)->frames;
-}
-
-int Hero::getDirection() const {
-	return m_fsm.context().direction;
 }
 
 sf::Vector2f Hero::getKnockbackOffset(const Hero* enemy) {

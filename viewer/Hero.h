@@ -18,25 +18,26 @@ public:
     void play(sf::Time elapsed) override;
     void step() override;
 
-    void move(bool move);
+    void move(bool move) noexcept;
     void turn(int direction);
-    void change(int action_id);
+    void changeActor();
+    void changeAction(int action_id) noexcept;
 
-    bool inMoving();
+    int getStartFrame() const override;
+    int getTotalFrames() const override;
+    int getCurrentFrame() const noexcept override;
+
+    int getDirection() const override;
+    sf::Vector2f getOffset() const override;
 
 private:
-    int getTotalFrames() override;
-    int getStartFrame() override;
-
-    int getDirection() override;
-    sf::Vector2f getOffset() override;
-
     static constexpr int getScreenDirection(int direction);
     static constexpr int getTextureDirection(int direction);
 
-    static inline int m_frame_step = 0;
-    static inline int m_action_id = 0;
-    static inline int m_direction = 0;
-    static inline bool m_move = false;
-    static inline bool m_change = false;
+    static inline sf::Vector2f g_position = sf::Vector2f(INIT_WIDTH / 2, INIT_HEIGHT / 2);
+    static inline int g_frame_step = 0;
+    static inline int g_action_id = 0;
+    static inline int g_direction = 0;
+    static inline bool g_moving = false;
+    static inline bool g_change_action = true;
 };

@@ -29,7 +29,7 @@ void GridManager::draw(sf::RenderWindow& window) {
 
 void GridManager::initActors() {
 
-    for (auto& actor : ActorManager::getActors())
+    for (auto& actor : ActorManager::instance().actors)
     {
         lgrid_insert(mp_grid, actor->id,
             actor->position.x, actor->position.y, AGENT_HALFW, AGENT_HALFH
@@ -43,28 +43,31 @@ void GridManager::updateActors() {
 
     SmallList<int> ids;
 
-    Actor* other = nullptr;
+    Hero* hero = nullptr;
+    Hero* other = nullptr;
 
-    for (auto& actor : ActorManager::getActors())
+    for (auto& actor : ActorManager::instance().actors)
     {
-        if (actor->disabled) {
+        hero = dynamic_cast<Hero*>(actor.get());
+
+        if (hero->disabled) {
             continue;
 
-        } else if (actor->isDeath()) {
-            lgrid_remove(mp_grid, actor->id,
-                actor->position.x, actor->position.y
+        } else if (hero->inDeath()) {
+            lgrid_remove(mp_grid, hero->id,
+                hero->position.x, hero->position.y
             );
 
-            actor->disable();
+            hero->disable();
             continue;
         }
 
-        lgrid_move(mp_grid, actor->id,
-            actor->prev_position.x, actor->prev_position.y,
-            actor->position.x, actor->position.y
+        lgrid_move(mp_grid, hero->id,
+            hero->prev_position.x, hero->prev_position.y,
+            hero->position.x, hero->position.y
         );
 
-        if (actor->inBattle()) {
+        if (hero->inBattle()) {
             continue;
         }
 
@@ -79,15 +82,15 @@ void GridManager::updateActors() {
         }
 
         for (int i = 0; i < ids.size(); i++) {
-            other = ActorManager::getActor(ids[i]);
+            other = ActorManager::instance().getActor<Hero>(ids[i]);
 
-            if (ActorManager::atFront(actor.get(), other)) {
-                if (actor->type != other->type &&
-                    actor->canAttack(other)) {
-                    ActorManager::attack(actor.get(), other);
+            if (hero->atFront(other)) {
+                if (hero->type != other->type &&
+                    hero->canAttack(other)) {
+                    hero->attack(other);
                 }
                 else {
-                    actor->bump();
+                    hero->bump();
                 }
                 break;
             }
@@ -100,7 +103,7 @@ void GridManager::updateActors() {
 void GridManager::drawActors(sf::RenderWindow& window) {
     LGridLooseCell* lcell = nullptr;
     LGridElt* elt = nullptr;
-    Actor* actor = nullptr;
+    Hero* hero = nullptr;
     int elt_idx = 0;
 
     for (int i = 0; i < mp_grid->loose.num_cells; i++) {
@@ -110,11 +113,11 @@ void GridManager::drawActors(sf::RenderWindow& window) {
         while (elt_idx != -1)
         {
             elt = &mp_grid->elts[elt_idx];
-            actor = ActorManager::getActor(elt->id);
+            hero = ActorManager::instance().getActor<Hero>(elt->id);
 
-            window.draw(*actor->sprite);
-            if (actor->inAttacked()) {
-                window.draw(*actor->text);
+            window.draw(*hero->sprite);
+            if (hero->inAttacked()) {
+                window.draw(*hero->text);
             }
 
             elt_idx = elt->next;

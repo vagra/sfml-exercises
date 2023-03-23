@@ -10,22 +10,27 @@ class ActorManager
 
 public:
 
-	static ActorManager& instance() {
+	static ActorManager& instance() noexcept {
 		static ActorManager instance;
 		return instance;
 	}
 
 	template <typename T>
-	void makeActors(int count, int types) {
+	void makeActors(int count, int types, bool random) {
+		static_assert(std::is_base_of<Actor, T>::value, "T must be a subclass of Actor");
+
 		cout << "make actors with texture, actions and sprite..." << endl;
 
 		m_actors.clear();
 
-		int type = 0;
+		for (int type = 0, i = 0; i < count; i++) {
 
-		for (int i = 0; i < count; i++) {
-
-			type = rand() % types;
+			if (random) {
+				type = rand() % types;
+			}
+			else {
+				type = i % types;
+			}
 
 			auto actor = make_unique<T>(type);
 
@@ -36,14 +41,19 @@ public:
 
 		// print();
 	}
+
+	template <typename T>
+	T* getActor(int index) noexcept {
+		static_assert(std::is_base_of<Actor, T>::value, "T must be a subclass of Actor");
+		assert(index < m_actors.size());
+		return dynamic_cast<T*>(m_actors.at(index).get());
+	}
 	
 	void update(sf::Time elapsed);
 	void draw(sf::RenderWindow& window);
 
-	int genID() noexcept;
-
 	int getCount() noexcept;
-	Actor* getActor(int index) noexcept;
+	int genID() noexcept;
 
 	const vector<unique_ptr<Actor>>& actors = m_actors;
 

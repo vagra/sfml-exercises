@@ -27,7 +27,7 @@ private:
 	void updateText(sf::Time elapsed);
 	void drawText();
 
-	void initActor(int actor_id);
+	void changeActor(int actor_id);
 	void updateActor(sf::Time elapsed);
 	void drawActor();
 

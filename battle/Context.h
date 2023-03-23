@@ -65,9 +65,9 @@ struct Context {
 
 	void initAttack() {
 		action = ACTION::ATTACK;
-		action_name = ActionManager::getActionName(action);
+		action_name = ActionManager::instance().getActionName(action);
 
-		frames = ActionManager::getAction(actor_type, action)->frames;
+		frames = ActionManager::instance().getAction(actor_type, action)->frames;
 		frame = 0;
 
 		rounds = 1;
@@ -84,9 +84,9 @@ struct Context {
 
 	void initDefend(ACTION action_id, bool dodge = true) {
 		action = action_id;
-		action_name = ActionManager::getActionName(action_id);
+		action_name = ActionManager::instance().getActionName(action_id);
 
-		frames = ActionManager::getAction(actor_type, action_id)->frames;
+		frames = ActionManager::instance().getAction(actor_type, action_id)->frames;
 		frame = 0;
 
 		rounds = 1;
@@ -122,9 +122,9 @@ struct Context {
 
 	void initStandby() {
 		action = ACTION::REST;
-		action_name = ActionManager::getActionName(action);
+		action_name = ActionManager::instance().getActionName(action);
 
-		frames = ActionManager::getAction(actor_type, action)->frames;
+		frames = ActionManager::instance().getAction(actor_type, action)->frames;
 		frame = 0;
 
 		speed = 0;
@@ -137,9 +137,9 @@ struct Context {
 
 	void initPatrol(ACTION action_id) {
 		action = action_id;
-		action_name = ActionManager::getActionName(action);
+		action_name = ActionManager::instance().getActionName(action);
 
-		frames = ActionManager::getAction(actor_type, action)->frames;
+		frames = ActionManager::instance().getAction(actor_type, action)->frames;
 		frame = 0;
 
 		rounds = rand() % (MAX_ROUNDS + 1 - MIN_ROUNDS) + MIN_ROUNDS;
@@ -153,9 +153,9 @@ struct Context {
 
 	void initFail() {
 		action = ACTION::FAIL;
-		action_name = ActionManager::getActionName(action);
+		action_name = ActionManager::instance().getActionName(action);
 
-		frames = ActionManager::getAction(actor_type, action)->frames;
+		frames = ActionManager::instance().getAction(actor_type, action)->frames;
 		frame = 0;
 
 		rounds = 1;
@@ -174,9 +174,9 @@ struct Context {
 
 	void initDeath() {
 		action = ACTION::DEATH;
-		action_name = ActionManager::getActionName(action);
+		action_name = ActionManager::instance().getActionName(action);
 
-		frames = ActionManager::getAction(actor_type, action)->frames;
+		frames = ActionManager::instance().getAction(actor_type, action)->frames;
 		frame = 0;
 
 		rounds = 1;
