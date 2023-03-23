@@ -1,11 +1,115 @@
 // ************************************************************************************
-// LGrid.cpp
+// LGrid.h
 // ************************************************************************************
-#include "LGrid.h"
+#pragma once
+#pragma warning(disable: 26400 26401 26402 26408 26409)
+#pragma warning(disable: 26426 26429 26432 26440 26455 26461 26462)
+#pragma warning(disable: 26481 26485 26493 26496 26497)
 
-#include <cfloat>
-#include <utility>
-#include <algorithm>
+#include "SmallList.h"
+#include "FreeList.h"
+
+struct LGridQuery4
+{
+    // Stores the resulting elements of the SIMD query.
+    SmallList<int> elements[4];
+};
+
+struct LGridElt
+{
+    // Stores the index to the next element in the loose cell using an indexed SLL.
+    int next{};
+
+    // Stores the ID of the element. This can be used to associate external
+    // data to the element.
+    int id{};
+
+    // Stores the center of the element.
+    float mx{};
+    float my{};
+
+    // Stores the half-size of the element relative to the upper-left corner
+    // of the grid.
+    float hx{};
+    float hy{};
+};
+
+struct LGridLooseCell
+{
+    // Stores the extents of the grid cell relative to the upper-left corner
+    // of the grid which expands and shrinks with the elements inserted and
+    // removed.
+    float rect[4]{};
+
+    // Stores the index to the first element using an indexed SLL.
+    int head{};
+};
+
+struct LGridLoose
+{
+    // Stores all the cells in the loose grid.
+    LGridLooseCell* cells{};
+
+    // Stores the number of columns, rows, and cells in the loose grid.
+    int num_cols{};
+    int num_rows{};
+    int num_cells{};
+
+    // Stores the inverse size of a loose cell.
+    float inv_cell_w{};
+    float inv_cell_h{};
+};
+
+struct LGridTightCell
+{
+    // Stores the index to the next loose cell in the grid cell.
+    int next{};
+
+    // Stores the position of the loose cell in the grid.
+    int lcell{};
+};
+
+struct LGridTight
+{
+    // Stores all the tight cell nodes in the grid.
+    FreeList<LGridTightCell> cells;
+
+    // Stores the tight cell heads.
+    int* heads{};
+
+    // Stores the number of columns, rows, and cells in the tight grid.
+    int num_cols{};
+    int num_rows{};
+    int num_cells{};
+
+    // Stores the inverse size of a tight cell.
+    float inv_cell_w{};
+    float inv_cell_h{};
+};
+
+struct LGrid
+{
+    // Stores the tight cell data for the grid.
+    LGridTight tight;
+
+    // Stores the loose cell data for the grid.
+    LGridLoose loose;
+
+    // Stores all the elements in the grid.
+    FreeList<LGridElt> elts;
+
+    // Stores the number of elements in the grid.
+    int num_elts{};
+
+    // Stores the upper-left corner of the grid.
+    float x{};
+    float y{};
+
+    // Stores the size of the grid.
+    float w{};
+    float h{};
+};
+
 
 static int ceil_div(float value, float divisor)
 {
@@ -154,7 +258,13 @@ static void expand_aabb(LGrid* grid, int cell_idx, float mx, float my, float hx,
     }
 }
 
-LGrid* lgrid_create(float lcell_w, float lcell_h, float tcell_w, float tcell_h,
+
+// Creates a loose grid encompassing the specified extents using the specified cell
+// size. Elements inserted to the loose grid are only inserted in one cell, but the
+// extents of each cell are allowed to expand and shrink. To avoid requiring every
+// loose cell to be checked during a search, a second grid of tight cells referencing
+// the loose cells is stored.
+static LGrid* lgrid_create(float lcell_w, float lcell_h, float tcell_w, float tcell_h,
                     float l, float t, float r, float b)
 {
     const float w = r - l, h = b - t;
@@ -198,21 +308,24 @@ LGrid* lgrid_create(float lcell_w, float lcell_h, float tcell_w, float tcell_h,
     return grid;
 }
 
-void lgrid_destroy(LGrid* grid)
+// Destroys the grid.
+static void lgrid_destroy(LGrid* grid)
 {
     delete[] grid->loose.cells;
     delete[] grid->tight.heads;
     delete grid;
 }
 
-int lgrid_lcell_idx(LGrid* grid, float x, float y)
+// Returns the grid cell index for the specified position.
+static int lgrid_lcell_idx(LGrid* grid, float x, float y)
 {
     const int cell_x = to_cell_idx(x - grid->x, grid->loose.inv_cell_w, grid->loose.num_cols);
     const int cell_y = to_cell_idx(y - grid->y, grid->loose.inv_cell_h, grid->loose.num_rows);
     return cell_y * grid->loose.num_cols + cell_x;
 }
 
-void lgrid_insert(LGrid* grid, int id, float mx, float my, float hx, float hy)
+// Inserts an element to the grid.
+static void lgrid_insert(LGrid* grid, int id, float mx, float my, float hx, float hy)
 {
     const int cell_idx = lgrid_lcell_idx(grid, mx, my);
     LGridLooseCell* lcell = &grid->loose.cells[cell_idx];
@@ -226,7 +339,8 @@ void lgrid_insert(LGrid* grid, int id, float mx, float my, float hx, float hy)
     expand_aabb(grid, cell_idx, mx, my, hx, hy);
 }
 
-void lgrid_remove(LGrid* grid, int id, float mx, float my)
+// Removes an element from the grid.
+static void lgrid_remove(LGrid* grid, int id, float mx, float my)
 {
     // Find the element in the loose cell.
     LGridLooseCell* lcell = &grid->loose.cells[lgrid_lcell_idx(grid, mx, my)];
@@ -241,7 +355,8 @@ void lgrid_remove(LGrid* grid, int id, float mx, float my)
     --grid->num_elts;
 }
 
-void lgrid_move(LGrid* grid, int id, float prev_mx, float prev_my, float mx, float my)
+// Moves an element in the grid from the former position to the new one.
+static void lgrid_move(LGrid* grid, int id, float prev_mx, float prev_my, float mx, float my)
 {
     const int prev_cell_idx = lgrid_lcell_idx(grid, prev_mx, prev_my);
     const int new_cell_idx = lgrid_lcell_idx(grid, mx, my);
@@ -284,7 +399,9 @@ void lgrid_move(LGrid* grid, int id, float prev_mx, float prev_my, float mx, flo
     }
 }
 
-SmallList<int> lgrid_query(const LGrid* grid, float mx, float my, float hx, float hy, int omit_id)
+// Returns all the element IDs that intersect the specified rectangle excluding elements
+// with the specified ID to omit.
+static SmallList<int> lgrid_query(const LGrid* grid, float mx, float my, float hx, float hy, int omit_id)
 {
     mx -= grid->x;
     my -= grid->y;
@@ -333,7 +450,8 @@ SmallList<int> lgrid_query(const LGrid* grid, float mx, float my, float hx, floa
     return res;
 }
 
-bool lgrid_in_bounds(const LGrid* grid, float mx, float my, float hx, float hy)
+// Returns true if the specified rectangle is inside the grid boundaries.
+static bool lgrid_in_bounds(const LGrid* grid, float mx, float my, float hx, float hy)
 {
     mx -= grid->x;
     my -= grid->y;
@@ -341,7 +459,9 @@ bool lgrid_in_bounds(const LGrid* grid, float mx, float my, float hx, float hy)
     return x1 >= 0.0f && x2 < grid->w && y1 >= 0.0f && y2 < grid->h;
 }
 
-void lgrid_optimize(LGrid* grid)
+// Optimizes the grid, shrinking bounding boxes in response to removed elements and
+// rearranging the memory of the grid to allow cache-friendly cell traversal.
+static void lgrid_optimize(LGrid* grid)
 {
     // Clear all the tight cell data.
     for (int j=0; j < grid->tight.num_cells; ++j)
@@ -392,3 +512,4 @@ void lgrid_optimize(LGrid* grid)
         }
     }
 }
+

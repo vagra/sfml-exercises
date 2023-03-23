@@ -1,22 +1,20 @@
-#include "Actor.h"
-#include "ActorManager.h"
+#include "Hero.h"
 
-
-void Actor::init(int type) {
+void Hero::init(int type) {
 	m_type = type;
 	m_name = ActionManager::getActionSetName(type);
 
 	init();
 }
 
-void Actor::init(string name) {
+void Hero::init(string name) {
 	m_name = name;
 	m_type = ActionManager::getActionSetIndex(name);
 
 	init();
 }
 
-void Actor::init() {
+void Hero::init() {
 
 	m_id = ActorManager::genID();
 
@@ -35,7 +33,7 @@ void Actor::init() {
 
 }
 
-void Actor::initSprite() {
+void Hero::initSprite() {
 	m_sprite.reset();
 
 	m_sprite = make_unique<sf::Sprite>();
@@ -46,7 +44,7 @@ void Actor::initSprite() {
 	m_sprite->setPosition(m_position);
 }
 
-void Actor::initText() {
+void Hero::initText() {
 	m_text.reset();
 
 	m_text = make_unique<sf::Text>();
@@ -59,13 +57,13 @@ void Actor::initText() {
 	m_text->setPosition(m_position);
 }
 
-void Actor::initFSM() {
+void Hero::initFSM() {
 	m_fsm.context().actor_id = m_id;
 	m_fsm.context().actor_type = m_type;
 	m_fsm.context().hp = MAX_HP;
 }
 
-void Actor::play(sf::Time elapsed) {
+void Hero::play(sf::Time elapsed) {
 
 	if (isDeath()) {
 		return;
@@ -119,7 +117,7 @@ void Actor::play(sf::Time elapsed) {
 	m_position = m_sprite->getPosition();
 }
 
-void Actor::step() {
+void Hero::step() {
 	const int direction = getScreenDirection(getDirection());
 
 	m_frame.x = getStartFrame() + getCurrentFrame();
@@ -132,15 +130,15 @@ void Actor::step() {
 	m_text->setString(to_string(m_fsm.context().hp));
 }
 
-void Actor::bump() {
+void Hero::bump() {
 	m_fsm.react(BumpTurnSignl());
 }
 
-void Actor::back(int direction) {
+void Hero::back(int direction) {
 	m_fsm.react(BackTurnSignl{direction});
 }
 
-void Actor::attack(Actor* enemy) {
+void Hero::attack(Hero* enemy) {
 	if (enemy == nullptr) {
 		return;
 	}
@@ -165,12 +163,12 @@ void Actor::attack(Actor* enemy) {
 	enemy->attackedBy(this, def_signl);
 }
 
-void Actor::disable() {
+void Hero::disable() {
 	m_enemy = nullptr;
 	m_disabled = true;
 }
 
-void Actor::attackedBy(Actor* enemy, DefendSignl signl) {
+void Hero::attackedBy(Hero* enemy, DefendSignl signl) {
 
 	if (enemy == nullptr) {
 		return;
@@ -181,47 +179,47 @@ void Actor::attackedBy(Actor* enemy, DefendSignl signl) {
 	m_fsm.react(signl);
 }
 
-bool Actor::inMoving() noexcept {
+bool Hero::inMoving() noexcept {
 	return m_fsm.context().speed > 0;
 }
 
-bool Actor::inKnockback() noexcept {
+bool Hero::inKnockback() noexcept {
 	return m_fsm.context().knockback != 0;
 }
 
-bool Actor::inAttacked() noexcept {
+bool Hero::inAttacked() noexcept {
 	return m_fsm.isActive<Attacked>();
 }
 
-bool Actor::inFail() noexcept {
+bool Hero::inFail() noexcept {
 	return m_fsm.isActive<Fail>();
 }
 
-bool Actor::inInjured() noexcept {
+bool Hero::inInjured() noexcept {
 	return m_fsm.isActive<Injure>();
 }
 
-bool Actor::isAlive() noexcept {
+bool Hero::isAlive() noexcept {
 	return !m_fsm.isActive<Death>() && !m_fsm.isActive<Fail>();
 }
 
-bool Actor::isDeath() noexcept {
+bool Hero::isDeath() noexcept {
 	return m_fsm.isActive<Death>();
 }
 
-bool Actor::inPatrol() {
+bool Hero::inPatrol() {
 	return m_fsm.isActive<Patrol>();
 }
 
-bool Actor::inBattle() {
+bool Hero::inBattle() {
 	return m_fsm.isActive<Battle>();
 }
 
-bool Actor::inStandby() {
+bool Hero::inStandby() {
 	return m_fsm.isActive<Standby>();
 }
 
-bool Actor::canAttack(Actor* enemy) {
+bool Hero::canAttack(Hero* enemy) {
 
 	if (enemy == nullptr) {
 		return false;
@@ -230,25 +228,25 @@ bool Actor::canAttack(Actor* enemy) {
 	return (canAttack() && enemy->canBeAttacked());
 }
 
-bool Actor::canAttack() {
+bool Hero::canAttack() {
 	return (m_fsm.isActive<Patrol>() ||
 		m_fsm.isActive<Standby>());
 }
 
-bool Actor::canBeAttacked() {
+bool Hero::canBeAttacked() {
 	return (m_fsm.isActive<Patrol>() ||
 		m_fsm.isActive<Standby>() ||
 		m_fsm.isActive<Stiff>());
 }
 
-sf::Vector2f Actor::genPosition() {
+sf::Vector2f Hero::genPosition() {
 	const float x = narrow_cast<float>(rand() % INIT_WIDTH);
 	const float y = narrow_cast<float>(rand() % INIT_HEIGHT);
 
 	return sf::Vector2f(x, y);
 }
 
-int Actor::checkRegion() noexcept {
+int Hero::checkRegion() noexcept {
 	const int left = region.left;
 	const int top = region.top;
 	const int right = region.width + region.left;
@@ -267,31 +265,31 @@ int Actor::checkRegion() noexcept {
 	return -1;
 }
 
-int Actor::genHit() noexcept {
+int Hero::genHit() noexcept {
 	return rand() % (MAX_HIT - MIN_HIT) + MIN_HIT;
 }
 
-int Actor::getStartFrame() {
+int Hero::getStartFrame() {
 	return mp_action_set->getAction(m_fsm.context().action)->start;
 }
 
-int Actor::getCurrentFrame() {
+int Hero::getCurrentFrame() {
 	return min(m_fsm.context().frames - 1, m_fsm.context().frame);
 }
 
-sf::Vector2f Actor::getOffset() {
+sf::Vector2f Hero::getOffset() {
 	return VECTORS.at(getDirection()) * (m_fsm.context().speed / 10.f);
 }
 
-int Actor::getStiffs() {
+int Hero::getStiffs() {
 	return ActionManager::getAction(m_type, ACTION::ATTACK)->frames;
 }
 
-int Actor::getDirection() const {
+int Hero::getDirection() const {
 	return m_fsm.context().direction;
 }
 
-sf::Vector2f Actor::getKnockbackOffset(const Actor* enemy) {
+sf::Vector2f Hero::getKnockbackOffset(const Hero* enemy) {
 	if (enemy == nullptr) {
 		return sf::Vector2f(0.0f, 0.0f);
 	}
@@ -303,7 +301,7 @@ sf::Vector2f Actor::getKnockbackOffset(const Actor* enemy) {
 	return offset;
 }
 
-pair<int, int> Actor::getKnockback(const Actor* enemy) {
+pair<int, int> Hero::getKnockback(const Hero* enemy) {
 	if (enemy == nullptr) {
 		return make_pair(0, 0);
 	}
@@ -322,7 +320,7 @@ pair<int, int> Actor::getKnockback(const Actor* enemy) {
 	return make_pair(1, -1);
 }
 
-pair<int, int> Actor::getOpposite(const Actor* enemy) {
+pair<int, int> Hero::getOpposite(const Hero* enemy) {
 
 	const int direction = getDirection();
 
@@ -363,10 +361,10 @@ pair<int, int> Actor::getOpposite(const Actor* enemy) {
 	return make_pair(direction, enemy->getDirection());
 }
 
-constexpr int Actor::getScreenDirection(int direction) noexcept {
+constexpr int Hero::getScreenDirection(int direction) noexcept {
 	return (DIRECTIONS + INIT_DIRECTION - direction) % DIRECTIONS;
 }
 
-constexpr int Actor::getTextureDirection(int direction) noexcept {
+constexpr int Hero::getTextureDirection(int direction) noexcept {
 	return (DIRECTIONS + INIT_DIRECTION - direction) % DIRECTIONS;
 }

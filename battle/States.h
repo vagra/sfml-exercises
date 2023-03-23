@@ -4,8 +4,6 @@
 #include "globals.h"
 #include "FSM.h"
 #include "Context.h"
-#include "Action.h"
-#include "ActionManager.h"
 
 
 ////////////////////////////////////////

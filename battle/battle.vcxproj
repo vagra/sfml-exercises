@@ -112,32 +112,32 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="FontManager.cpp" />
+    <ClCompile Include="..\common\ActionManager.cpp" />
+    <ClCompile Include="..\common\Actor.cpp" />
+    <ClCompile Include="..\common\ActorManager.cpp" />
+    <ClCompile Include="..\common\FontManager.cpp" />
+    <ClCompile Include="..\common\TextureManager.cpp" />
     <ClCompile Include="GridManager.cpp" />
-    <ClCompile Include="LGrid.cpp" />
-    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Hero.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="FSM.cpp" />
-    <ClCompile Include="TextureManager.cpp" />
-    <ClCompile Include="ActionManager.cpp" />
-    <ClCompile Include="ActorManager.cpp" />
     <ClCompile Include="battle.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Action.h" />
+    <ClInclude Include="..\common\Action.h" />
+    <ClInclude Include="..\common\ActionManager.h" />
+    <ClInclude Include="..\common\Actor.h" />
+    <ClInclude Include="..\common\ActorManager.h" />
+    <ClInclude Include="..\common\Text.h" />
+    <ClInclude Include="..\common\FontManager.h" />
+    <ClInclude Include="..\common\headers.h" />
+    <ClInclude Include="..\common\TextureManager.h" />
     <ClInclude Include="Context.h" />
-    <ClInclude Include="FontManager.h" />
     <ClInclude Include="GridManager.h" />
-    <ClInclude Include="SmallList.h" />
-    <ClInclude Include="FreeList.h" />
-    <ClInclude Include="LGrid.h" />
-    <ClInclude Include="Actor.h" />
+    <ClInclude Include="Hero.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="FSM.h" />
-    <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="ActionManager.h" />
-    <ClInclude Include="ActorManager.h" />
     <ClInclude Include="globals.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

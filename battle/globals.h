@@ -1,26 +1,12 @@
 #pragma once
-#pragma warning(disable: 26481)
 
-#include <fstream>
-#include <iostream>
-#include <filesystem>
-#include <set>
-#include <queue>
-#include <unordered_map>
-#include <cmath>
-#include <array>
-#include <gsl/gsl>
-#include <SFML/Graphics.hpp>
-#include <fmt/core.h>
+#include "../common/headers.h"
 
-#include <rapidcsv.h>
+#include <dragon-space/LGrid.h>
 
 #define HFSM2_ENABLE_UTILITY_THEORY
 #define HFSM2_ENABLE_PLANS
-#include <machine.hpp>
-
-using namespace std;
-using namespace gsl;
+#include <hfsm2/machine.hpp>
 
 constexpr int INIT_WIDTH = 1600;
 constexpr int INIT_HEIGHT = 800;
@@ -53,14 +39,36 @@ constexpr int LCELL_HEIGHT = 50;
 constexpr int TCELL_WIDTH = 100;
 constexpr int TCELL_HEIGHT = 100;
 
-const string FONT_DIR = "../assets/fonts/";
-const string FONT_EXT = ".ttf";
-
 const string PNG_DIR = "../assets/heros/";
-const string PNG_EXT = ".png";
 
 const string ACTOR_PNG = "helo{}.png";
 
-const string ACTIONS_CSV = PNG_DIR + "/actions.csv";
+enum ACTION {
+	WALK = 0,
+	RUN = 1,
+	SIT = 2,
+	DEATH = 3,
+	FAIL = 4,
+	STAND = 5,
+	ADVANCE = 6,
+	ATTACK = 7,
+	INJURE = 8,
+	JUMP = 9,
+	REST = 10,
+	DEFEND = 11
+};
 
-
+const array<string, ACTIONS> ACTION_NAMES = {
+	"walk",
+	"run",
+	"sit",
+	"death",
+	"fail",
+	"stand",
+	"advance",
+	"attack",
+	"injure",
+	"jump",
+	"rest",
+	"defend"
+};

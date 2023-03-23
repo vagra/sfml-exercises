@@ -1,22 +1,19 @@
 #include "App.h"
 
-App::App() {
-    init();
-}
-
-void App::init() {
-
+void App::init()
+{
     actor_id = 0;
     action_id = 0;
     direction = 0;
     move = false;
 
+    FontManager::instance().loadFonts();
+    TextureManager::instance().loadTextures(PNG_DIR);
+    ActionManager::instance().loadActions(PNG_DIR);
+    ActorManager::instance().makeActors<Hero>(ACTORS, ACTORS);
+
     initWindow();
     initText();
-
-    TextureManager::init();
-    ActionManager::init();
-    ActorManager::init();
 
     initActor(0);
 }
@@ -62,7 +59,7 @@ void App::run() {
 }
 
 void App::onResize() {
-    sf::Vector2f win = static_cast<sf::Vector2f>(window.getSize());
+    const sf::Vector2f win = static_cast<sf::Vector2f>(window.getSize());
 
     sf::View view = window.getDefaultView();
     view.setCenter(win / 2.f);
@@ -81,13 +78,13 @@ void App::onKeyboard() {
 }
 
 void App::changeDirection() {
-    int prev_direction = direction;
-    bool prev_move = move;
+    const int prev_direction = direction;
+    const bool prev_move = move;
 
-    bool l = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
-    bool r = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
-    bool u = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
-    bool d = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
+    const bool l = sf::Keyboard::isKeyPressed(sf::Keyboard::Left);
+    const bool r = sf::Keyboard::isKeyPressed(sf::Keyboard::Right);
+    const bool u = sf::Keyboard::isKeyPressed(sf::Keyboard::Up);
+    const bool d = sf::Keyboard::isKeyPressed(sf::Keyboard::Down);
 
     direction = getDirection(l, u, r, d);
     move = needMove(l, u, r, d);
@@ -102,27 +99,27 @@ void App::changeDirection() {
 }
 
 void App::changeActor() {
-    bool z = sf::Keyboard::isKeyPressed(sf::Keyboard::Z);
+    const bool z = sf::Keyboard::isKeyPressed(sf::Keyboard::Z);
 
     if (z) {
-        actor_id = (actor_id + 1) % ActorManager::getCount();
+        actor_id = (actor_id + 1) % ActorManager::instance().getCount();
 
         initActor(actor_id);
     }
 }
 
 void App::changeAction() {
-    bool x = sf::Keyboard::isKeyPressed(sf::Keyboard::X);
+    const bool x = sf::Keyboard::isKeyPressed(sf::Keyboard::X);
 
     if (x) {
-        action_id = (action_id + 1) % ActionManager::getActionCount();
+        action_id = (action_id + 1) % ActionManager::instance().getActionCount();
 
         actor->change(action_id);
     }
 }
 
 
-int App::getDirection(bool l, bool u, bool r, bool d) {
+int App::getDirection(bool l, bool u, bool r, bool d) noexcept {
 
     if (l && r) {
         l = false;
@@ -169,7 +166,7 @@ int App::getDirection(bool l, bool u, bool r, bool d) {
     return direction;
 }
 
-bool App::needMove(bool l, bool u, bool r, bool d) {
+bool App::needMove(bool l, bool u, bool r, bool d) noexcept {
 
     if (l && r) {
         l = false;
@@ -195,14 +192,9 @@ void App::initWindow() {
 }
 
 void App::initText() {
-    if (!font.loadFromFile(FONT_OTF))
-    {
-        cout << "can't read font: " << FONT_OTF << endl;
-    }
-
-    text.setFont(font);
-    text.setCharacterSize(24);
-    text.setFillColor(sf::Color::Yellow);
+    text.setFont(*FontManager::instance().getFont(GUI_FONT));
+    text.setCharacterSize(GUI_FONT_SIZE);
+    text.setFillColor(GUI_COLOR);
 }
 
 void App::drawText() {
@@ -210,18 +202,18 @@ void App::drawText() {
 }
 
 void App::updateText(sf::Time elapsed) {
-    int fps = int(1 / elapsed.asSeconds());
-    text.setString(fmt::format("FPS: {}\nactor: {} {}\naction: {} {}\ndirection: {}\nmove: {}",
+    int fps = narrow_cast<int>(1 / elapsed.asSeconds());
+    text.setString(fmt::format("FPS: {}\nactor: {}\naction: {} {}\ndirection: {}\nmove: {}",
         fps, 
-        actor_id, ActorManager::getActorName(actor_id),
-        action_id, ActionManager::getActionName(action_id),
+        actor_id,
+        action_id, ActionManager::instance().getActionName(action_id),
         direction,
         move
     ));
 }
 
 void App::initActor(int actor_id) {
-    actor = ActorManager::getActor(actor_id);
+    actor = dynamic_cast<Hero*>(ActorManager::instance().getActor(actor_id));
 }
 
 void App::updateActor(sf::Time elapsed) {

@@ -11,6 +11,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
+#include <cfloat>
+#include <utility>
+#include <algorithm>
 
 // Stores a random-access sequence of elements similar to vector, but avoids
 // heap allocations for small lists. T must be trivially constructible and

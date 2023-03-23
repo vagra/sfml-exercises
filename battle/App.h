@@ -1,9 +1,9 @@
 #pragma once
 
 #include "globals.h"
-#include "FontManager.h"
-#include "TextureManager.h"
-#include "ActionManager.h"
+#include "../common/FontManager.h"
+#include "../common/TextureManager.h"
+#include "../common/ActionManager.h"
 #include "ActorManager.h"
 #include "GridManager.h"
 #include "Actor.h"

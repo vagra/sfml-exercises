@@ -1,37 +1,25 @@
 #pragma once
 
-#include <fstream>
-#include <iostream>
-#include <filesystem>
-#include <unordered_map>
-#include <cmath>
-#include <array>
-#include <SFML/Graphics.hpp>
-#include <fmt/core.h>
+#include "../common/headers.h"
 
-#include "rapidcsv.h"
+#include <rapidcsv/rapidcsv.h>
 
-using namespace std;
+constexpr int INIT_WIDTH = 1600;
+constexpr int INIT_HEIGHT = 800;
 
-const int INIT_WIDTH = 1600;
-const int INIT_HEIGHT = 800;
+constexpr int ACTORS = 8;
+constexpr int ACTIONS = 11;
+constexpr int STEPS = 6;
 
-const int ACTORS = 8;
-const int ACTIONS = 11;
-const int STEPS = 6;
+constexpr int FRAME_WIDTH = 80;
+constexpr int FRAME_HEIGHT = 80;
+constexpr int ORIGIN_X = 39;
+constexpr int ORIGIN_Y = 59;
 
-const int FRAME_WIDTH = 80;
-const int FRAME_HEIGHT = 80;
-const int ORIGIN_X = 39;
-const int ORIGIN_Y = 59;
-
-const float SCALE = 2.0f;
+constexpr float SCALE = 2.0f;
 
 const string PNG_DIR = "../assets/heros/";
-const string PNG_EXT = ".png";
 
 const string ACTOR_PNG = "helo{}.png";
-
-const string ACTIONS_CSV = PNG_DIR + "/actions.csv";
 
 

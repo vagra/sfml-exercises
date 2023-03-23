@@ -1,8 +1,7 @@
 #pragma once
 
 #include "globals.h"
-#include "Action.h"
-#include "ActionManager.h"
+#include "../common/ActionManager.h"
 
 constexpr int MIN_ROUNDS = 1;
 constexpr int MAX_ROUNDS = 5;

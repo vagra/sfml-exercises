@@ -3,8 +3,8 @@
 void App::init() {
 
     FontManager::init();
-    TextureManager::init();
-    ActionManager::init();
+    TextureManager::init(PNG_DIR);
+    ActionManager::init(PNG_DIR);
     ActorManager::init();
     GridManager::init(true);
 

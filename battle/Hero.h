@@ -2,9 +2,10 @@
 
 #include "globals.h"
 
-#include "FontManager.h"
-#include "TextureManager.h"
-#include "ActionManager.h"
+#include "../common/FontManager.h"
+#include "../common/TextureManager.h"
+#include "../common/ActionManager.h"
+#include "../common/ActorManager.h"
 #include "FSM.h"
 #include "States.h"
 
@@ -35,7 +36,7 @@ constexpr float KNOCKBACK = 20.f;
 constexpr int NEAR = 10;
 constexpr int FAR = 30;
 
-class Actor
+class Hero : Actor
 {
 public:
 
@@ -47,7 +48,7 @@ public:
     void bump();
     void back(int direction);
 
-    void attack(Actor* enemy);
+    void attack(Hero* enemy);
     void disable();
 
     bool inMoving() noexcept;
@@ -61,14 +62,14 @@ public:
     bool inPatrol();
     bool inBattle();
     bool inStandby();
-    bool canAttack(Actor* enemy);
+    bool canAttack(Hero* enemy);
     bool canAttack();
     bool canBeAttacked();
 
     int getDirection() const;
-    sf::Vector2f getKnockbackOffset(const Actor* enemy);
-    pair<int, int> getKnockback(const Actor* enemy);
-    pair<int, int> getOpposite(const Actor* enemy);
+    sf::Vector2f getKnockbackOffset(const Hero* enemy);
+    pair<int, int> getKnockback(const Hero* enemy);
+    pair<int, int> getOpposite(const Hero* enemy);
 
     const int& id = m_id;
     const int& type = m_type;
@@ -102,7 +103,7 @@ private:
 
     int checkRegion() noexcept;
 
-    void attackedBy(Actor* enemy, const DefendSignl signl);
+    void attackedBy(Hero* enemy, const DefendSignl signl);
 
     static constexpr int getScreenDirection(int direction) noexcept;
     static constexpr int getTextureDirection(int direction) noexcept;
@@ -126,7 +127,7 @@ private:
     ActionSet* mp_action_set = nullptr;
     sf::Texture* mp_texture = nullptr;
 
-    Actor* m_enemy = nullptr;
+    Hero* m_enemy = nullptr;
 
     Context m_context{};
     FSM::Instance m_fsm{m_context};

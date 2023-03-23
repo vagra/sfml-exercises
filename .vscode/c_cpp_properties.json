@@ -6,7 +6,7 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/include",
                 "D:/Library/GSL/include",
-                "D:/Library/msys64/clang64/include",
+                "D:/Library/msys64/mingw64/include",
                 "${vcpkgRoot}/x64-windows/include",
                 "${vcpkgRoot}/x64-windows-static/include",
                 "${vcpkgRoot}/x86-windows/include"
@@ -17,7 +17,7 @@
                 "_UNICODE"
             ],
             "windowsSdkVersion": "10.0.19041.0",
-            "compilerPath": "D:/Library/msys64/clang64/bin/clang++.exe",
+            "compilerPath": "D:/Library/msys64/mingw64/bin/clang++.exe",
             "cStandard": "c17",
             "cppStandard": "c++20",
             "intelliSenseMode": "windows-clang-x64"
