@@ -16,10 +16,6 @@ public:
     Actor(int type);
 
     Actor() = default;
-    Actor(const Actor&) = default;
-    Actor(Actor&&) noexcept = default;
-    Actor& operator=(const Actor&) = default;
-    Actor& operator=(Actor&&) noexcept = default;
     virtual ~Actor() = default;
 
     void initRegion(const sf::IntRect& region) noexcept;

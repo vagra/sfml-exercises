@@ -3,11 +3,13 @@ project (viewer)
 
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
-    Actor.cpp
+    ../common/FontManager.cpp
+    ../common/TextureManager.cpp
+    ../common/ActionManager.cpp
+    ../common/ActorManager.cpp
+    ../common/Actor.cpp
+    Hero.cpp
     App.cpp
-    TextureManager.cpp
-    ActionManager.cpp
-    ActorManager.cpp
     viewer.cpp
 )
 

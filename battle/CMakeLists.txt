@@ -3,15 +3,15 @@ project (battle)
 
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
-    LGrid.cpp
-    FSM.cpp
-    Actor.cpp
-    App.cpp
-    FontManager.cpp
-    TextureManager.cpp
-    ActionManager.cpp
-    ActorManager.cpp
+    ../common/FontManager.cpp
+    ../common/TextureManager.cpp
+    ../common/ActionManager.cpp
+    ../common/ActorManager.cpp
+    ../common/Actor.cpp
     GridManager.cpp
+    Hero.cpp
+    FSM.cpp
+    App.cpp
     battle.cpp
 )
 
