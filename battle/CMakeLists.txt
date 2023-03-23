@@ -10,7 +10,6 @@ set(SOURCES
     ../common/Actor.cpp
     GridManager.cpp
     Hero.cpp
-    FSM.cpp
     App.cpp
     battle.cpp
 )

@@ -120,7 +120,6 @@
     <ClCompile Include="GridManager.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="FSM.cpp" />
     <ClCompile Include="battle.cpp" />
   </ItemGroup>
   <ItemGroup>

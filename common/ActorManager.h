@@ -46,7 +46,7 @@ public:
 	T* getActor(int index) noexcept {
 		static_assert(std::is_base_of<Actor, T>::value, "T must be a subclass of Actor");
 		assert(index < m_actors.size());
-		return dynamic_cast<T*>(m_actors.at(index).get());
+		return static_cast<T*>(m_actors.at(index).get());
 	}
 	
 	void update(sf::Time elapsed);
