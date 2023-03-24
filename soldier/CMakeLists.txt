@@ -3,10 +3,13 @@ project (soldier)
 
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
-    LGrid.cpp
-    Actor.cpp
+    ../common/FontManager.cpp
+    ../common/TextureManager.cpp
+    ../common/ActionManager.cpp
+    ../common/ActorManager.cpp
+    ../common/Actor.cpp
+    Hero.cpp
     App.cpp
-    TextureManager.cpp
     soldier.cpp
 )
 

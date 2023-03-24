@@ -57,7 +57,6 @@ public:
     bool inBattle() const;
     bool inStandby() const;
 
-    bool atFront(const Hero* other) const;
     bool canAttack(Hero* enemy) const;
     bool canAttack() const;
     bool canBeAttacked() const;

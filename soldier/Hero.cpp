@@ -116,37 +116,6 @@ sf::Vector2f Hero::getOffset() const {
 	return VECTORS.at(direction) * m_speed * SPEED_RATE;
 }
 
-bool Hero::atFront(const Hero* other) const {
-
-	if (other == nullptr) {
-		return false;
-	}
-
-	const float dx = other->position.x - m_position.x;
-	const float dy = other->position.y - m_position.y;
-
-	switch (getDirection()) {
-	case 0:
-		return dy > abs(dx);
-	case 1:
-		return dx > 0 && dy > 0;
-	case 2:
-		return dx > abs(dy);
-	case 3:
-		return dx > 0 and dy < 0;
-	case 4:
-		return -dy > abs(dx);
-	case 5:
-		return dx < 0 and dy < 0;
-	case 6:
-		return -dx > abs(dy);
-	case 7:
-		return dx < 0 and dy > 0;
-	default:
-		return false;
-	}
-}
-
 sf::Vector2f Hero::genPosition() {
 	const float x = narrow_cast<float>(rand() % INIT_WIDTH);
 	const float y = narrow_cast<float>(rand() % INIT_HEIGHT);

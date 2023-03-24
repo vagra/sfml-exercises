@@ -24,6 +24,8 @@ public:
     void initArea(const sf::IntRect area) noexcept;
     void initText(const Text& text);
 
+    bool atFront(const Actor* other) const;
+
     virtual void play(sf::Time elapsed) = 0;
     virtual void step() = 0;
     

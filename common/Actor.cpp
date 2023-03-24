@@ -44,6 +44,38 @@ void Actor::initText(const Text& text) {
 	m_text->setPosition(m_position);
 }
 
+
+bool Actor::atFront(const Actor* other) const {
+
+	if (other == nullptr) {
+		return false;
+	}
+
+	const float dx = other->position.x - m_position.x;
+	const float dy = other->position.y - m_position.y;
+
+	switch (getDirection()) {
+	case 0:
+		return dy > abs(dx);
+	case 1:
+		return dx > 0 && dy > 0;
+	case 2:
+		return dx > abs(dy);
+	case 3:
+		return dx > 0 and dy < 0;
+	case 4:
+		return -dy > abs(dx);
+	case 5:
+		return dx < 0 and dy < 0;
+	case 6:
+		return -dx > abs(dy);
+	case 7:
+		return dx < 0 and dy > 0;
+	default:
+		return false;
+	}
+}
+
 void Actor::setRegion(int width, int height) noexcept {
 	region.width = width;
 	region.height = height;

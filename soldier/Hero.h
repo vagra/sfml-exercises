@@ -41,8 +41,6 @@ public:
     int getDirection() const override;
     sf::Vector2f getOffset() const override;
 
-    bool atFront(const Hero* other) const;
-
 private:
     sf::Vector2f genPosition();
     int genDirection();
