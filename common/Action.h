@@ -21,6 +21,7 @@ struct Action
 	string name;
 	int frames{};
 	int start{};
+	int row{};
 };
 
 struct ActionSet

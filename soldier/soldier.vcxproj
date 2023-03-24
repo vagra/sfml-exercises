@@ -49,9 +49,11 @@
     <PublicIncludeDirectories>$(PublicIncludeDirectories)</PublicIncludeDirectories>
     <OutDir>$(Platform)\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)-d</TargetName>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <VcpkgUseStatic>true</VcpkgUseStatic>
@@ -62,9 +64,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(VCPKG_ROOT)\packages\sfml_x64-windows\include;$(VCPKG_ROOT)\packages\fmt_x64-windows\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;$(VCPKG_ROOT)\packages\ms-gsl_x64-windows\include;$(VCPKG_ROOT)\packages\sfml_x64-windows\include;$(VCPKG_ROOT)\packages\fmt_x64-windows\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -85,9 +90,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(VCPKG_ROOT)\packages\sfml_x64-windows\include;$(VCPKG_ROOT)\packages\fmt_x64-windows\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;$(VCPKG_ROOT)\packages\ms-gsl_x64-windows\include;$(VCPKG_ROOT)\packages\sfml_x64-windows\include;$(VCPKG_ROOT)\packages\fmt_x64-windows\include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <TreatAngleIncludeAsExternal>true</TreatAngleIncludeAsExternal>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,20 +112,25 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LGrid.cpp" />
-    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="..\common\ActionManager.cpp" />
+    <ClCompile Include="..\common\Actor.cpp" />
+    <ClCompile Include="..\common\ActorManager.cpp" />
+    <ClCompile Include="..\common\FontManager.cpp" />
+    <ClCompile Include="..\common\TextureManager.cpp" />
+    <ClCompile Include="Hero.cpp" />
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="soldier.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SmallList.h" />
-    <ClInclude Include="FreeList.h" />
-    <ClInclude Include="LGrid.h" />
-    <ClInclude Include="Actor.h" />
+    <ClInclude Include="..\common\Action.h" />
+    <ClInclude Include="..\common\ActionManager.h" />
+    <ClInclude Include="..\common\Actor.h" />
+    <ClInclude Include="..\common\ActorManager.h" />
+    <ClInclude Include="..\common\FontManager.h" />
+    <ClInclude Include="..\common\headers.h" />
+    <ClInclude Include="..\common\TextureManager.h" />
+    <ClInclude Include="Hero.h" />
     <ClInclude Include="App.h" />
-    <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="V.h" />
     <ClInclude Include="globals.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

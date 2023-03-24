@@ -101,7 +101,7 @@ void FontManager::printList() {
         file_path = m_files[file_name];
         font = m_fonts[file_name].get();
         Ensures(font);
-        fmt::print("{}: {}\t\t{}\n",
+        fmt::print("{}: {}\n\t{}\n",
             file_name, font->getInfo().family, file_path);
     }
 }

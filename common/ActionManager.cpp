@@ -1,6 +1,6 @@
 #include "ActionManager.h"
 
-void ActionManager::loadActions(string png_dir) {
+void ActionManager::loadActions(string png_dir, int row_actions) {
     cout << "from csv load actions to action manager...";
 
     m_action_sets.clear();
@@ -17,14 +17,24 @@ void ActionManager::loadActions(string png_dir) {
         action_set->actions.clear();
         action_set->names.clear();
 
+        int row = 0;
+        int index = 0;
         int start_frame = 0;
         for (auto& action_name : m_action_names) {
             auto action = make_unique<Action>();
             action->name = action_name;
             action->frames = csv.GetCell<int>(action_name, actor_name);
             action->start = start_frame;
+            action->row = row;
 
-            start_frame += action->frames;
+            index++;
+            if (index % row_actions == 0) {
+                start_frame = 0;
+                row++;
+            }
+            else {
+                start_frame += action->frames;
+            }
 
             action_set->actions[action_name] = move(action);
             action_set->names.push_back(action_name);
@@ -105,7 +115,8 @@ void ActionManager::printMap() {
     for (auto const& [actor_name, action_set] : m_action_sets) {
         fmt::print("actor {}:\n", actor_name);
         for (auto const& [action_name, action] : action_set->actions) {
-            fmt::print("\t{}\t{}\t{}\n", action_name, action->frames, action->start);
+            fmt::print("\t{}\t{:4}{:4}{:4}\n",
+                action_name, action->frames, action->start, action->row);
         }
     }
 }
@@ -115,7 +126,8 @@ void ActionManager::printList() {
         fmt::print("actor {}:\n", actor_name);
         for (auto const& action_name : m_action_names) {
             auto const& action = m_action_sets[actor_name]->actions[action_name];
-            fmt::print("\t{}\t{}\t{}\n", action->name, action->frames, action->start);
+            fmt::print("\t{}\t{:4}{:4}{:4}\n",
+                action->name, action->frames, action->start, action->row);
         }
     }
 }

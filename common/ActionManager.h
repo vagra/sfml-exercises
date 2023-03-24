@@ -15,7 +15,7 @@ public:
 		return instance;
 	}
 
-	void loadActions(string png_dir);
+	void loadActions(string png_dir, int row_actions);
 
 	int getCount() noexcept;
 	ActionSet* getActionSet(string name);

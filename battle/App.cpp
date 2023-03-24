@@ -4,7 +4,7 @@ void App::init() {
 
     FontManager::instance().loadFonts();
     TextureManager::instance().loadTextures(PNG_DIR);
-    ActionManager::instance().loadActions(PNG_DIR);
+    ActionManager::instance().loadActions(PNG_DIR, ROW_ACTIONS);
     ActorManager::instance().makeActors<Hero>(ACTORS, ACTOR_TYPES, true);
     GridManager::init(true);
 

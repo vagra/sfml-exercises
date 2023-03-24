@@ -48,7 +48,7 @@ void GridManager::updateActors() {
 
     for (auto& actor : ActorManager::instance().actors)
     {
-        hero = static_cast<Hero*>(actor.get());
+        hero = dynamic_cast<Hero*>(actor.get());
 
         if (hero->disabled) {
             continue;

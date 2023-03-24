@@ -14,6 +14,7 @@ constexpr int INIT_HEIGHT = 800;
 constexpr int ACTORS = 2000;
 constexpr int ACTOR_TYPES = 8;
 constexpr int ACTIONS = 12;
+constexpr int ROW_ACTIONS = ACTIONS;
 
 constexpr int INIT_DIRECTION = 6;
 

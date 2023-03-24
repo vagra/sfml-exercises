@@ -1,27 +1,29 @@
 #pragma once
 
 #include "globals.h"
-#include "TextureManager.h"
-#include "Actor.h"
-#include "LGrid.h"
+#include "../common/FontManager.h"
+#include "../common/TextureManager.h"
+#include "../common/ActionManager.h"
+#include "../common/ActorManager.h"
+#include "Hero.h"
 
-using namespace std;
-
-const string FONT_OTF = "../assets/fonts/ark-pixel-12px-monospaced-zh_cn.ttf";
-const sf::String APP_NAME = L"战士";
+const string GUI_FONT = "ark";
+constexpr int GUI_FONT_SIZE = 24;
+const sf::Color GUI_COLOR = sf::Color::Yellow;
 const sf::Color BG_COLOR = sf::Color(69, 86, 103);
+
+const sf::Color LRECT_COLOR = sf::Color(128, 0, 0, 50);
+const sf::Color TRECT_COLOR = sf::Color(128, 0, 0, 50);
+
+const sf::String APP_NAME = L"战士";
 
 class App
 {
 public:
-	App();
-
+	void init();
 	void run();
 
 private:
-
-	void init();
-
 	void initWindow();
 
 	void initText();
@@ -40,17 +42,19 @@ private:
 	void drawRects();
 
 	void onResize();
+	void onKeyboard();
+
+	void initLRects();
+	void initTRects();
 
 	sf::RenderWindow window;
-	sf::Font font;
 	sf::Text text;
 
-	vector<Actor> actors;
+	LGrid* mp_grid = nullptr;
 
-	LGrid* mp_grid;
+	vector<unique_ptr<sf::RectangleShape>> lrects;
+	vector<unique_ptr<sf::RectangleShape>> trects;
 
-	vector<sf::RectangleShape> lrects;
-	vector<sf::RectangleShape> trects;
-
+	bool m_show_rects = true;
 };
 
