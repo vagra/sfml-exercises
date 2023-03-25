@@ -16,4 +16,7 @@ struct Grid
 	float agent_h{};
 	float agent_hw{};
 	float agent_hh{};
+	float cell_w{};
+	float cell_h{};
+	float agent_r{};
 };

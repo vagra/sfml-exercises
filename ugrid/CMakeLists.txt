@@ -1,13 +1,17 @@
 
-project (grid)
+project (ugrid)
 
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
-    UGrid.cpp
-    TextureManager.cpp
-    Actor.cpp
+    ../common/FontManager.cpp
+    ../common/TextureManager.cpp
+    ../common/ActionManager.cpp
+    ../common/ActorManager.cpp
+    ../common/UGridManager.cpp
+    ../common/Actor.cpp
+    Tank.cpp
     App.cpp
-    grid.cpp
+    ugrid.cpp
 )
 
 add_executable(${PROJECT_NAME}

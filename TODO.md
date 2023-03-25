@@ -10,7 +10,7 @@
 - [x] Introducing collision detection.
 - [x] stop if hit.
 
-## grid
+## ugrid
 - [x] optimizing.
 - [x] show uniform-grid border.
 

@@ -156,9 +156,9 @@ void GridManager::updateRects() {
             lcell->rect[3] - lcell->rect[1]
         ));
 
-        lrects.at(i)->setPosition(sf::Vector2(
+        lrects.at(i)->setPosition(
             lcell->rect[0], lcell->rect[1]
-        ));
+        );
     }
 }
 
@@ -183,11 +183,12 @@ void GridManager::initLRects() {
         lcell = &mp_grid->loose.cells[i];
 
         auto lrect = make_unique<sf::RectangleShape>();
-        lrect->setSize(
-            sf::Vector2(lcell->rect[2] - lcell->rect[0], lcell->rect[3] - lcell->rect[1])
-        );
+        lrect->setSize(sf::Vector2(
+            lcell->rect[2] - lcell->rect[0],
+            lcell->rect[3] - lcell->rect[1]
+        ));
         lrect->setPosition(
-            sf::Vector2(lcell->rect[0], lcell->rect[1])
+            lcell->rect[0], lcell->rect[1]
         );
         lrect->setFillColor(sf::Color::Transparent);
         lrect->setOutlineColor(LRECT_COLOR);
@@ -208,8 +209,7 @@ void GridManager::initTRects() {
                 sf::Vector2f(m_config.tcell_w, m_config.tcell_h)
             );
             trect->setPosition(
-                narrow_cast<float>(m_config.tcell_w * j),
-                narrow_cast<float>(m_config.tcell_h * i)
+                m_config.tcell_w * j, m_config.tcell_h * i
             );
             trect->setFillColor(sf::Color::Transparent);
             trect->setOutlineColor(TRECT_COLOR);

@@ -8,9 +8,9 @@ Some practice projects for sfml.
 ### soldier
 ![soldier](https://github.com/vagra/sfml-exercises/blob/1156b74a41abc0dcea627945aed1aaf264f6a0ef/assets/screenshots/soldier.png)
 
-### grid
+### ugrid
 using uniform-grid for 2d collision detection. very fast!
-![grid](https://github.com/vagra/sfml-exercises/blob/066d98090c64500652d2757c12b2ef68f0b5f312/assets/screenshots/grid.png)
+![ugrid](https://github.com/vagra/sfml-exercises/blob/066d98090c64500652d2757c12b2ef68f0b5f312/assets/screenshots/grid.png)
 
 ### dgrid
 using loose/tight double-grid for 2d collision detection. very fast!
