@@ -1,5 +1,8 @@
 #include "FontManager.h"
 
+// ---------------------------------------------
+// public methods
+// ---------------------------------------------
 
 void FontManager::loadFonts() {
 
@@ -42,7 +45,7 @@ sf::Font* FontManager::loadFont(string name, string path)
     return m_fonts[name].get();
 }
 
-int FontManager::getCount() noexcept {
+int FontManager::getCount() {
     return narrow_cast<int>(m_fonts.size());
 }
 
@@ -63,6 +66,10 @@ sf::Font* FontManager::getFont(int index)
     return getFont(m_names.at(index));
 }
 
+
+// ---------------------------------------------
+// private methods
+// ---------------------------------------------
 
 void FontManager::listFiles() {
     fmt::print("check font files in dir {}:\n", FONT_DIR);

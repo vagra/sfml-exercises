@@ -25,26 +25,40 @@ class Hero : public Actor
 public:
     Hero(int type);
 
+    /* override pure virtual methods */
+
     void play(sf::Time elapsed) override;
     void step() override;
-	
-    void bump();
-    void back(int direction);
-    void stop();
-    void random();
 
     int getStartFrame() const override;
     int getTotalFrames() const override;
     int getCurrentFrame() const noexcept override;
-    int getRowFrame() const;
 
     int getDirection() const override;
     sf::Vector2f getOffset() const override;
 
+    /* override virtual methods */
+
+    void handleBump(Actor* other) noexcept override;
+	
+    /* public methods */
+
+    void bump() noexcept;
+    void back(int direction) noexcept;
+    void stop();
+    void random();
+    
+    int getRowFrame() const;
+
 private:
+
+    /* private methods */
+
     sf::Vector2f genPosition();
     int genDirection();
     int genStopAction();
+
+    /* private members */
 
     int m_rounds{};
     int m_round{};

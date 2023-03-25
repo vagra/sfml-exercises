@@ -6,7 +6,7 @@ struct Text
 {
 	string font;
 	string text;
-	int size{};
+	int size;
 	sf::Color color;
 	sf::Vector2f origin;
 };

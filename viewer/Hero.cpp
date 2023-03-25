@@ -5,7 +5,7 @@ Hero::Hero(int type)
 {
 
 	initRegion(
-		sf::IntRect(0, 0, INIT_WIDTH, INIT_HEIGHT));
+		sf::FloatRect(0, 0, INIT_WIDTH, INIT_HEIGHT));
 	initPosition(
 		g_position);
 	initArea(

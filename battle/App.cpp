@@ -6,7 +6,7 @@ void App::init() {
     TextureManager::instance().loadTextures(PNG_DIR);
     ActionManager::instance().loadActions(PNG_DIR, ROW_ACTIONS);
     ActorManager::instance().makeActors<Hero>(ACTORS, ACTOR_TYPES, true);
-    GridManager::init(true);
+    GridManager::instance().init(grid, true);
 
     initWindow();
     initText();
@@ -42,11 +42,11 @@ void App::run() {
 
         ActorManager::instance().update(elapsed);
         updateText(elapsed);
-        GridManager::update();
+        GridManager::instance().update();
 
         window.clear(BG_COLOR);
         
-        GridManager::draw(window);
+        GridManager::instance().draw(window);
         drawText();
         
         window.display();
@@ -56,7 +56,7 @@ void App::run() {
 void App::onResize() {
     const sf::Vector2f win = static_cast<sf::Vector2f>(window.getSize());
 
-    Actor::setRegion(narrow_cast<int>(win.x), narrow_cast<int>(win.y));
+    Actor::setRegion(win.x, win.y);
 
     sf::View view = window.getDefaultView();
     view.setCenter(win / 2.f);
@@ -77,9 +77,9 @@ void App::initWindow() {
 }
 
 void App::initText() {
-    text.setFont(*FontManager::instance().getFont(GUI_FONT));
-    text.setCharacterSize(GUI_FONT_SIZE);
-    text.setFillColor(GUI_COLOR);
+    text.setFont(*FontManager::instance().getFont(gui_text.font));
+    text.setCharacterSize(gui_text.size);
+    text.setFillColor(gui_text.color);
 }
 
 void App::drawText() {

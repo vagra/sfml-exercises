@@ -10,11 +10,39 @@ Actor::Actor(int type)
 	m_texture = TextureManager::instance().getTexture(m_type);
 }
 
-void Actor::initRegion(const sf::IntRect& region) noexcept {
+// ---------------------------------------------
+// public virtual methods
+// ---------------------------------------------
+
+bool Actor::needRemove() const {
+	return false;
+}
+
+bool Actor::skipBump() const {
+	return false;
+}
+
+bool Actor::textOn() const {
+	return false;
+}
+
+void Actor::remove() {
+	return;
+}
+
+void Actor::handleBump(Actor* other) {
+	return;
+}
+
+// ---------------------------------------------
+// public methods
+// ---------------------------------------------
+
+void Actor::initRegion(const sf::FloatRect& region) {
 	Actor::region = region;
 }
 
-void Actor::initPosition(const sf::Vector2f& position) noexcept {
+void Actor::initPosition(const sf::Vector2f& position) {
 	m_position = position;
 	m_prev_position = position;
 }
@@ -29,7 +57,7 @@ void Actor::initSprite(const sf::Vector2f& scale, const sf::Vector2f& origin) {
 	m_sprite->setPosition(m_position);
 }
 
-void Actor::initArea(sf::IntRect rect) noexcept {
+void Actor::initArea(sf::IntRect rect) {
 	m_area = rect;
 }
 
@@ -43,7 +71,6 @@ void Actor::initText(const Text& text) {
 	m_text->setOrigin(text.origin);
 	m_text->setPosition(m_position);
 }
-
 
 bool Actor::atFront(const Actor* other) const {
 
@@ -76,21 +103,29 @@ bool Actor::atFront(const Actor* other) const {
 	}
 }
 
-void Actor::setRegion(int width, int height) noexcept {
+// ---------------------------------------------
+// public static methods
+// ---------------------------------------------
+
+void Actor::setRegion(float width, float height) {
 	region.width = width;
 	region.height = height;
 }
+
+// ---------------------------------------------
+// private methods
+// ---------------------------------------------
 
 string Actor::genName() {
 	const string type_name = ActionManager::instance().getActionSetName(m_type);
 	return fmt::format("{}-{}", type_name, m_id);
 }
 
-int Actor::checkRegion() noexcept {
-	const int left = region.left;
-	const int top = region.top;
-	const int right = region.width + region.left;
-	const int bottom = region.height + region.top;
+int Actor::checkRegion() {
+	const float left = region.left;
+	const float top = region.top;
+	const float right = region.width + region.left;
+	const float bottom = region.height + region.top;
 
 	if (m_position.x < left && m_position.y < top) return 1;
 	if (m_position.x < left && m_position.y > bottom) return 3;

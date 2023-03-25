@@ -1,13 +1,22 @@
 #include "GridManager.h"
 
-void GridManager::init() {
-    init(false);
-}
+// ---------------------------------------------
+// public methods
+// ---------------------------------------------
 
-void GridManager::init(bool show_rects) {
+void GridManager::init(Grid config, bool show_rects) {
+    m_config = config;
     m_show_rects = show_rects;
 
+    mp_grid = lgrid_create(
+        config.lcell_w, config.lcell_h,
+        config.tcell_w, config.tcell_h,
+        config.grid_l, config.grid_t,
+        config.grid_r, config.grid_b
+    );
+
     initActors();
+
     if (m_show_rects) {
         initRects();
     }
@@ -27,12 +36,17 @@ void GridManager::draw(sf::RenderWindow& window) {
     drawActors(window);
 }
 
+// ---------------------------------------------
+// private methods
+// ---------------------------------------------
+
 void GridManager::initActors() {
 
     for (auto& actor : ActorManager::instance().actors)
     {
         lgrid_insert(mp_grid, actor->id,
-            actor->position.x, actor->position.y, AGENT_HALFW, AGENT_HALFH
+            actor->position.x, actor->position.y,
+            m_config.agent_hw, m_config.agent_hh
         );
     }
 
@@ -43,37 +57,37 @@ void GridManager::updateActors() {
 
     SmallList<int> ids;
 
-    Hero* hero = nullptr;
-    Hero* other = nullptr;
+    Actor* other = nullptr;
 
     for (auto& actor : ActorManager::instance().actors)
     {
-        hero = dynamic_cast<Hero*>(actor.get());
-
-        if (hero->disabled) {
+        if (actor->removed) {
             continue;
 
-        } else if (hero->inDeath()) {
-            lgrid_remove(mp_grid, hero->id,
-                hero->position.x, hero->position.y
+        }
+        
+        if (actor->needRemove()) {
+            lgrid_remove(mp_grid, actor->id,
+                actor->position.x, actor->position.y
             );
 
-            hero->disable();
+            actor->remove();
+
             continue;
         }
 
-        lgrid_move(mp_grid, hero->id,
-            hero->prev_position.x, hero->prev_position.y,
-            hero->position.x, hero->position.y
+        lgrid_move(mp_grid, actor->id,
+            actor->prev_position.x, actor->prev_position.y,
+            actor->position.x, actor->position.y
         );
 
-        if (hero->inBattle()) {
+        if (actor->skipBump()) {
             continue;
         }
 
         ids = lgrid_query(mp_grid,
             actor->position.x, actor->position.y,
-            AGENT_HALFW, AGENT_HALFH,
+            m_config.agent_hw, m_config.agent_hh,
             actor->id
         );
 
@@ -82,16 +96,11 @@ void GridManager::updateActors() {
         }
 
         for (int i = 0; i < ids.size(); i++) {
-            other = ActorManager::instance().getActor<Hero>(ids[i]);
+            other = ActorManager::instance().getActor<Actor>(ids[i]);
 
-            if (hero->atFront(other)) {
-                if (hero->type != other->type &&
-                    hero->canAttack(other)) {
-                    hero->attack(other);
-                }
-                else {
-                    hero->bump();
-                }
+            if (actor->atFront(other)) {
+                actor->handleBump(other);
+
                 break;
             }
         }
@@ -103,7 +112,7 @@ void GridManager::updateActors() {
 void GridManager::drawActors(sf::RenderWindow& window) {
     LGridLooseCell* lcell = nullptr;
     LGridElt* elt = nullptr;
-    Hero* hero = nullptr;
+    Actor* actor = nullptr;
     int elt_idx = 0;
 
     for (int i = 0; i < mp_grid->loose.num_cells; i++) {
@@ -113,18 +122,17 @@ void GridManager::drawActors(sf::RenderWindow& window) {
         while (elt_idx != -1)
         {
             elt = &mp_grid->elts[elt_idx];
-            hero = ActorManager::instance().getActor<Hero>(elt->id);
+            actor = ActorManager::instance().getActor<Actor>(elt->id);
 
-            window.draw(*hero->sprite);
-            if (hero->inAttacked()) {
-                window.draw(*hero->text);
+            window.draw(*actor->sprite);
+            if (actor->textOn()) {
+                window.draw(*actor->text);
             }
 
             elt_idx = elt->next;
         }
     }
 }
-
 
 void GridManager::initRects() {
     initTRects();
@@ -194,10 +202,12 @@ void GridManager::initTRects() {
         for (int j = 0; j < mp_grid->tight.num_cols; j++) {
 
             auto trect = make_unique<sf::RectangleShape>();
-            trect->setSize(sf::Vector2f(TCELL_WIDTH, TCELL_HEIGHT));
+            trect->setSize(
+                sf::Vector2f(m_config.tcell_w, m_config.tcell_h)
+            );
             trect->setPosition(
-                narrow_cast<float>(TCELL_WIDTH * j),
-                narrow_cast<float>(TCELL_HEIGHT * i)
+                narrow_cast<float>(m_config.tcell_w * j),
+                narrow_cast<float>(m_config.tcell_h * i)
             );
             trect->setFillColor(sf::Color::Transparent);
             trect->setOutlineColor(TRECT_COLOR);
@@ -206,5 +216,4 @@ void GridManager::initTRects() {
             trects.push_back(move(trect));
         }
     }
-
 }

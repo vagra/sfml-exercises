@@ -1,5 +1,9 @@
 #include "ActorManager.h"
 
+// ---------------------------------------------
+// public methods
+// ---------------------------------------------
+
 void ActorManager::update(sf::Time elapsed) {
 
     for (auto& actor : m_actors) {
@@ -14,14 +18,18 @@ void ActorManager::draw(sf::RenderWindow& window) {
     }
 }
 
-int ActorManager::getCount() noexcept {
+int ActorManager::getCount() {
     return narrow_cast<int>(m_actors.size());
 }
 
-int ActorManager::genID() noexcept {
+int ActorManager::genID() {
     counter++;
     return counter;
 }
+
+// ---------------------------------------------
+// private methods
+// ---------------------------------------------
 
 void ActorManager::print() {
     for (auto const& actor : m_actors) {

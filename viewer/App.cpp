@@ -192,9 +192,9 @@ void App::initWindow() {
 }
 
 void App::initText() {
-    text.setFont(*FontManager::instance().getFont(GUI_FONT));
-    text.setCharacterSize(GUI_FONT_SIZE);
-    text.setFillColor(GUI_COLOR);
+    text.setFont(*FontManager::instance().getFont(gui_text.font));
+    text.setCharacterSize(gui_text.size);
+    text.setFillColor(gui_text.color);
 }
 
 void App::drawText() {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../common/headers.h"
+#include "../common/Grid.h"
 
 #include <dragon-space/LGrid.h>
 
@@ -25,18 +26,20 @@ constexpr int ORIGIN_Y = 59;
 
 constexpr float SCALE = 1.0f;
 
-constexpr int AGENT_WIDTH = 20;
-constexpr int AGENT_HEIGHT = 20;
-constexpr int AGENT_HALFW = 10;
-constexpr int AGENT_HALFH = 10;
-
-constexpr int GRID_WIDTH = 2000;
-constexpr int GRID_HEIGHT = 1200;
-
-constexpr int LCELL_WIDTH = 50;
-constexpr int LCELL_HEIGHT = 50;
-constexpr int TCELL_WIDTH = 100;
-constexpr int TCELL_HEIGHT = 100;
+constexpr Grid grid = {
+	.lcell_w = 50,
+	.lcell_h = 50,
+	.tcell_w = 100,
+	.tcell_h = 100,
+	.grid_l = 0,
+	.grid_t = 0,
+	.grid_r = 2000,
+	.grid_b = 1200,
+	.agent_w = 20,
+	.agent_h = 20,
+	.agent_hw = 10,
+	.agent_hh = 10
+};
 
 const string PNG_DIR = "../assets/heros/";
 
@@ -53,19 +56,4 @@ enum ACTION {
 	JUMP = 9,
 	REST = 10,
 	DEFEND = 11
-};
-
-const array<string, ACTIONS> ACTION_NAMES = {
-	"walk",
-	"run",
-	"sit",
-	"death",
-	"fail",
-	"stand",
-	"advance",
-	"attack",
-	"injure",
-	"jump",
-	"rest",
-	"defend"
 };

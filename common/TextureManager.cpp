@@ -1,5 +1,9 @@
 #include "TextureManager.h"
 
+// ---------------------------------------------
+// public methods
+// ---------------------------------------------
+
 void TextureManager::loadTextures(string png_dir) {
     listFiles(png_dir);
 
@@ -39,7 +43,7 @@ sf::Texture* TextureManager::loadTexture(string name, string path)
     return m_textures[name].get();
 }
 
-int TextureManager::getCount() noexcept{
+int TextureManager::getCount() {
     return narrow_cast<int>(m_textures.size());
 }
 
@@ -59,6 +63,10 @@ sf::Texture* TextureManager::getTexture(int index)
     assert(index < m_names.size());
     return getTexture(m_names.at(index));
 }
+
+// ---------------------------------------------
+// private methods
+// ---------------------------------------------
 
 void TextureManager::listFiles(string png_dir) {
     fmt::print("check png files in dir {}:\n", png_dir);

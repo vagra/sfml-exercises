@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable: 26440)
 
 #include "headers.h"
 
@@ -18,17 +19,11 @@ public:
     Actor() = default;
     virtual ~Actor() = default;
 
-    void initRegion(const sf::IntRect& region) noexcept;
-    void initPosition(const sf::Vector2f& position) noexcept;
-    void initSprite(const sf::Vector2f& scale, const sf::Vector2f& origin);
-    void initArea(const sf::IntRect area) noexcept;
-    void initText(const Text& text);
-
-    bool atFront(const Actor* other) const;
+    /* public pure virtual methods */
 
     virtual void play(sf::Time elapsed) = 0;
     virtual void step() = 0;
-    
+
     virtual int getStartFrame() const = 0;
     virtual int getTotalFrames() const = 0;
     virtual int getCurrentFrame() const = 0;
@@ -36,11 +31,36 @@ public:
     virtual int getDirection() const = 0;
     virtual sf::Vector2f getOffset() const = 0;
 
-    static void setRegion(int width, int height) noexcept;
+    /* public virtual methods */
+
+    virtual bool needRemove() const;
+    virtual bool skipBump() const;
+    virtual bool textOn() const;
+
+    virtual void remove();
+    virtual void handleBump(Actor* other);
+
+    /* public methods */
+    
+    void initRegion(const sf::FloatRect& region);
+    void initPosition(const sf::Vector2f& position);
+    void initSprite(const sf::Vector2f& scale, const sf::Vector2f& origin);
+    void initArea(const sf::IntRect area);
+    void initText(const Text& text);
+
+    bool atFront(const Actor* other) const;
+
+    /* public static methods */
+
+    static void setRegion(float width, float height);
+
+    /* const member accessers */
 
     const int& id = m_id;
     const int& type = m_type;
     const string& name = m_name;
+
+    const bool& removed = m_removed;
 
     const sf::Vector2f& position = m_position;
     const sf::Vector2f& prev_position = m_prev_position;
@@ -50,14 +70,20 @@ public:
 
 protected:
 
+    /* private methods */
+
     string genName();
-    int checkRegion() noexcept;
+    int checkRegion();
+
+    /* private members */
 
     int m_id{};
     int m_type{};
     string m_name{};
 
     int m_frame_timer{};
+
+    bool m_removed{};
 
     sf::Vector2i m_frame;
     sf::IntRect m_area;
@@ -71,5 +97,7 @@ protected:
     ActionSet* m_action_set{};
     sf::Texture* m_texture{};
 
-    static inline sf::IntRect region = sf::IntRect();
+    /* private static memebers */
+
+    static inline sf::FloatRect region = sf::FloatRect{};
 };

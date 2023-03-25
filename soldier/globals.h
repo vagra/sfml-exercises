@@ -1,8 +1,11 @@
 #pragma once
 
 #include "../common/headers.h"
+#include "../common/Grid.h"
 
 #include <dragon-space/LGrid.h>
+
+
 constexpr int INIT_WIDTH = 1600;
 constexpr int INIT_HEIGHT = 800;
 
@@ -20,18 +23,20 @@ constexpr int ORIGIN_Y = 56;
 
 constexpr float SCALE = 0.5f;
 
-constexpr int AGENT_WIDTH = 16;
-constexpr int AGENT_HEIGHT = 16;
-constexpr int AGENT_HALFW = 8;
-constexpr int AGENT_HALFH = 8;
-
-constexpr int GRID_WIDTH = 2000;
-constexpr int GRID_HEIGHT = 1200;
-
-constexpr int LCELL_WIDTH = 50;
-constexpr int LCELL_HEIGHT = 50;
-constexpr int TCELL_WIDTH = 100;
-constexpr int TCELL_HEIGHT = 100;
+constexpr Grid grid = {
+	.lcell_w = 50,
+	.lcell_h = 50,
+	.tcell_w = 100,
+	.tcell_h = 100,
+	.grid_l = 0,
+	.grid_t = 0,
+	.grid_r = 2000,
+	.grid_b = 1200,
+	.agent_w = 16,
+	.agent_h = 16,
+	.agent_hw = 8,
+	.agent_hh = 8
+};
 
 const string PNG_DIR = "../assets/soldiers/";
 

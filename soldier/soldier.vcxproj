@@ -116,6 +116,7 @@
     <ClCompile Include="..\common\Actor.cpp" />
     <ClCompile Include="..\common\ActorManager.cpp" />
     <ClCompile Include="..\common\FontManager.cpp" />
+    <ClCompile Include="..\common\GridManager.cpp" />
     <ClCompile Include="..\common\TextureManager.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="App.cpp" />
@@ -127,6 +128,8 @@
     <ClInclude Include="..\common\Actor.h" />
     <ClInclude Include="..\common\ActorManager.h" />
     <ClInclude Include="..\common\FontManager.h" />
+    <ClInclude Include="..\common\Grid.h" />
+    <ClInclude Include="..\common\GridManager.h" />
     <ClInclude Include="..\common\headers.h" />
     <ClInclude Include="..\common\TextureManager.h" />
     <ClInclude Include="Hero.h" />

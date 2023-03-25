@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable: 26440)
 
 #include "headers.h"
 #include "Actor.h"
@@ -10,10 +11,12 @@ class ActorManager
 
 public:
 
-	static ActorManager& instance() noexcept {
+	static ActorManager& instance() {
 		static ActorManager instance;
 		return instance;
 	}
+
+	/* public template methods */
 
 	template <typename T>
 	void makeActors(int count, int types, bool random) {
@@ -43,22 +46,31 @@ public:
 	}
 
 	template <typename T>
-	T* getActor(int index) noexcept {
+	T* getActor(int index) {
 		static_assert(std::is_base_of<Actor, T>::value, "T must be a subclass of Actor");
 		assert(index < m_actors.size());
 		return dynamic_cast<T*>(m_actors.at(index).get());
 	}
+
+	/* public methods */
 	
 	void update(sf::Time elapsed);
 	void draw(sf::RenderWindow& window);
 
-	int getCount() noexcept;
-	int genID() noexcept;
+	int getCount();
+	int genID();
+
+	/* const member accessers */
 
 	const vector<unique_ptr<Actor>>& actors = m_actors;
 
 private:
+
+	/* private methods */
+
 	void print();
+
+	/* private members */
 
 	int counter = -1;
 	vector<unique_ptr<Actor>> m_actors;

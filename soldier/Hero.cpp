@@ -4,7 +4,7 @@ Hero::Hero(int type)
 	: Actor(type)
 {
 	initRegion(
-		sf::IntRect(0, 0, INIT_WIDTH, INIT_HEIGHT));
+		sf::FloatRect(0, 0, INIT_WIDTH, INIT_HEIGHT));
 	initPosition(
 		genPosition());
 	initArea(
@@ -17,23 +17,9 @@ Hero::Hero(int type)
 	step();
 }
 
-void Hero::random() {
-	m_rounds = rand() % MAX_ROUNDS + 1;
-
-	m_speed = narrow_cast<float>(rand() % MAX_RUN_SPEED);
-
-	m_direction = genDirection();
-
-	if (m_speed > MAX_WALK_SPEED) {
-		m_action_id = 6;	// Run
-	}
-	else if (m_speed > MAX_STOP_SPEED) {
-		m_action_id = 7;	// Walk
-	}
-	else {
-		m_action_id = genStopAction();	// Attack, Block, Idle, Jump
-	}
-}
+// ---------------------------------------------
+// override pure virtual methods
+// ---------------------------------------------
 
 void Hero::play(sf::Time elapsed) {
 
@@ -77,20 +63,6 @@ void Hero::step() {
 	m_sprite->setTextureRect(m_area);
 }
 
-void Hero::bump() {
-	const int range = rand() % (DIRECTIONS - 3) + 2;
-	m_direction = (m_direction + range) % DIRECTIONS;
-}
-
-void Hero::back(int direction) {
-	const int range = rand() % (DIRECTIONS - 5) + 7;
-	m_direction = (direction + range) % DIRECTIONS;
-}
-
-void Hero::stop() {
-	m_speed = 0.f;
-}
-
 int Hero::getStartFrame() const {
 	return m_action_set->getAction(m_action_id)->start;
 }
@@ -103,10 +75,6 @@ int Hero::getCurrentFrame() const noexcept {
 	return m_frame_step;
 }
 
-int Hero::getRowFrame() const {
-	return m_action_set->getAction(m_action_id)->row * DIRECTIONS;
-}
-
 int Hero::getDirection() const {
 	return m_direction;
 }
@@ -115,6 +83,58 @@ sf::Vector2f Hero::getOffset() const {
 	const int direction = getDirection();
 	return VECTORS.at(direction) * m_speed * SPEED_RATE;
 }
+
+// ---------------------------------------------
+// override virtual methods
+// ---------------------------------------------
+
+void Hero::handleBump(Actor* other) noexcept {
+	bump();
+}
+
+// ---------------------------------------------
+// public methods
+// ---------------------------------------------
+
+void Hero::bump() noexcept {
+	const int range = rand() % (DIRECTIONS - 3) + 2;
+	m_direction = (m_direction + range) % DIRECTIONS;
+}
+
+void Hero::back(int direction) noexcept {
+	const int range = rand() % (DIRECTIONS - 5) + 7;
+	m_direction = (direction + range) % DIRECTIONS;
+}
+
+void Hero::stop() {
+	m_speed = 0.f;
+}
+
+void Hero::random() {
+	m_rounds = rand() % MAX_ROUNDS + 1;
+
+	m_speed = narrow_cast<float>(rand() % MAX_RUN_SPEED);
+
+	m_direction = genDirection();
+
+	if (m_speed > MAX_WALK_SPEED) {
+		m_action_id = 6;	// Run
+	}
+	else if (m_speed > MAX_STOP_SPEED) {
+		m_action_id = 7;	// Walk
+	}
+	else {
+		m_action_id = genStopAction();	// Attack, Block, Idle, Jump
+	}
+}
+
+int Hero::getRowFrame() const {
+	return m_action_set->getAction(m_action_id)->row * DIRECTIONS;
+}
+
+// ---------------------------------------------
+// private methods
+// ---------------------------------------------
 
 sf::Vector2f Hero::genPosition() {
 	const float x = narrow_cast<float>(rand() % INIT_WIDTH);
