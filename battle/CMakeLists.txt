@@ -7,8 +7,8 @@ set(SOURCES
     ../common/TextureManager.cpp
     ../common/ActionManager.cpp
     ../common/ActorManager.cpp
+    ../common/GridManager.cpp
     ../common/Actor.cpp
-    GridManager.cpp
     Hero.cpp
     App.cpp
     battle.cpp
