@@ -7,7 +7,7 @@ Actor::Actor(int type)
 	m_name = genName();
 
 	m_action_set = ActionManager::instance().getActionSet(m_type);
-	m_texture = TextureManager::instance().getTexture(m_type);
+	m_texture = TextureManager::instance().getTexture(getTypeName());
 }
 
 // ---------------------------------------------
@@ -37,6 +37,10 @@ void Actor::handleBump(Actor* other) {
 // ---------------------------------------------
 // public methods
 // ---------------------------------------------
+
+string Actor::getTypeName() const {
+	return ActionManager::instance().getActionSetName(m_type);
+}
 
 void Actor::initRegion(const sf::FloatRect& region) {
 	Actor::region = region;
@@ -117,8 +121,7 @@ void Actor::setRegion(float width, float height) {
 // ---------------------------------------------
 
 string Actor::genName() {
-	const string type_name = ActionManager::instance().getActionSetName(m_type);
-	return fmt::format("{}-{}", type_name, m_id);
+	return fmt::format("{}-{}", getTypeName(), m_id);
 }
 
 int Actor::checkRegion() {

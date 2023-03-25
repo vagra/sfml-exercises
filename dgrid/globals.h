@@ -1,44 +1,46 @@
 #pragma once
 
-#include <fstream>
-#include <iostream>
-#include <filesystem>
-#include <unordered_map>
-#include <cmath>
-#include <SFML/Graphics.hpp>
-#include <fmt/core.h>
+#include "../common/headers.h"
+#include "../common/Grid.h"
 
-using namespace std;
+#include <dragon-space/LGrid.h>
 
 
-const int INIT_WIDTH = 1600;
-const int INIT_HEIGHT = 800;
+constexpr int INIT_WIDTH = 1600;
+constexpr int INIT_HEIGHT = 800;
 
-const int ACTORS = 4;
+constexpr int ACTORS = 1000;
+constexpr int ACTOR_TYPES = 4;
+constexpr int ACTIONS = 1;
+constexpr int ROW_ACTIONS = 1;
 
-const int MAX = 8000;
+constexpr int INIT_DIRECTION = 0;
 
-const int PNG_WIDTH = 64;
-const int PNG_HEIGHT = 64;
-const int SPRITE_WIDTH = 16;
-const int SPRITE_HEIGHT = 16;
-const int SPRITE_RADIUS = 4;
-const int SPRITE_HALFW = 6;
-const int SPRITE_HALFH = 6;
+constexpr int FRAME_WIDTH = 64;
+constexpr int FRAME_HEIGHT = 64;
+constexpr int ORIGIN_X = 32;
+constexpr int ORIGIN_Y = 32;
 
-const int GRID_WIDTH = 2000;
-const int GRID_HEIGHT = 1200;
-const int CELL_WIDTH = 40;
-const int CELL_HEIGHT = 40;
+constexpr float SCALE = 0.25f;
 
-const int LCELL_WIDTH = 50;
-const int LCELL_HEIGHT = 50;
-const int TCELL_WIDTH = 100;
-const int TCELL_HEIGHT = 100;
-
+constexpr Grid grid = {
+	.lcell_w = 50,
+	.lcell_h = 50,
+	.tcell_w = 100,
+	.tcell_h = 100,
+	.grid_l = 0,
+	.grid_t = 0,
+	.grid_r = 2000,
+	.grid_b = 1200,
+	.agent_w = 16,
+	.agent_h = 16,
+	.agent_hw = 8,
+	.agent_hh = 8
+};
 
 const string PNG_DIR = "../assets/tanks/";
-const string PNG_EXT = ".png";
 
-const string ACTOR_PNG = "tank-{}.png";
+enum ACTION {
+	RUN = 0
+};
 

@@ -41,6 +41,8 @@ public:
     virtual void handleBump(Actor* other);
 
     /* public methods */
+
+    string getTypeName() const;
     
     void initRegion(const sf::FloatRect& region);
     void initPosition(const sf::Vector2f& position);

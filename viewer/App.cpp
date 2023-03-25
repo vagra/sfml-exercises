@@ -15,7 +15,7 @@ void App::init()
     initWindow();
     initText();
 
-    changeActor(0);
+    initActor();
 }
 
 void App::run() {
@@ -104,7 +104,7 @@ void App::changeActor() {
     if (z) {
         actor_id = (actor_id + 1) % ActorManager::instance().getCount();
 
-        changeActor(actor_id);
+        initActor();
     }
 }
 
@@ -212,7 +212,7 @@ void App::updateText(sf::Time elapsed) {
     ));
 }
 
-void App::changeActor(int actor_id) {
+void App::initActor() {
     actor = dynamic_cast<Hero*>(ActorManager::instance().getActor(actor_id));
     Ensures(actor);
     actor->changeActor();

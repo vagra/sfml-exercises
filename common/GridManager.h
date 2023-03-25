@@ -10,8 +10,8 @@
 
 class Actor;
 
-const sf::Color LRECT_COLOR = sf::Color(128, 0, 0, 50);
-const sf::Color TRECT_COLOR = sf::Color(128, 0, 0, 50);
+const sf::Color LRECT_COLOR = sf::Color(128, 0, 0, 100);
+const sf::Color TRECT_COLOR = sf::Color(128, 0, 0, 100);
 
 class GridManager
 {

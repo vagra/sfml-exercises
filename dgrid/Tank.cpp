@@ -1,6 +1,6 @@
-#include "Hero.h"
+#include "Tank.h"
 
-Hero::Hero(int type)
+Tank::Tank(int type)
 	: Actor(type)
 {
 	initRegion(
@@ -21,36 +21,31 @@ Hero::Hero(int type)
 // override pure virtual methods
 // ---------------------------------------------
 
-void Hero::play(sf::Time elapsed) {
+void Tank::play(sf::Time elapsed) {
 
 	m_frame_timer += elapsed.asMilliseconds();
 
 	if (m_frame_timer >= FRAME_CYCLE) {
 		m_frame_timer = m_frame_timer % FRAME_CYCLE;
-		m_frame_step++;
+		m_round++;
 
-		if (m_speed > MAX_STOP_SPEED) {
+		if (m_speed > MIN_SPEED) {
 			const int direction = checkRegion();
 			if (direction >= 0) {
 				back(direction);
 			}
 		}
 
-		if (m_frame_step >= getTotalFrames()) {
-			m_frame_step = 0;
-			m_round++;
+		if (m_round >= m_rounds) {
+			m_round = 0;
 
-			if (m_round >= m_rounds) {
-				m_round = 0;
-
-				random();
-			}
+			random();
 		}
 
 		step();
 	}
 
-	if (m_speed > MAX_STOP_SPEED) {
+	if (m_speed > MIN_SPEED) {
 		const sf::Vector2f offset = getOffset();
 
 		sprite->move(offset);
@@ -60,33 +55,27 @@ void Hero::play(sf::Time elapsed) {
 	m_position = sprite->getPosition();
 }
 
-void Hero::step() {
-	m_frame.x = getStartFrame() + getCurrentFrame();
-	m_frame.y = getRowFrame() + m_direction;
-
-	m_area.left = m_frame.x * FRAME_WIDTH;
-	m_area.top = m_frame.y * FRAME_HEIGHT;
-
-	m_sprite->setTextureRect(m_area);
+void Tank::step() {
+    m_sprite->setRotation(m_direction * -45.f);
 }
 
-int Hero::getStartFrame() const {
-	return m_action_set->getAction(m_action_id)->start;
+int Tank::getStartFrame() const {
+	return 0;
 }
 
-int Hero::getTotalFrames() const {
-	return m_action_set->getAction(m_action_id)->frames;
+int Tank::getTotalFrames() const {
+	return 1;
 }
 
-int Hero::getCurrentFrame() const noexcept {
-	return m_frame_step;
+int Tank::getCurrentFrame() const noexcept {
+	return 0;
 }
 
-int Hero::getDirection() const {
+int Tank::getDirection() const {
 	return m_direction;
 }
 
-sf::Vector2f Hero::getOffset() const {
+sf::Vector2f Tank::getOffset() const {
 	const int direction = getDirection();
 	return VECTORS.at(direction) * m_speed * SPEED_RATE;
 }
@@ -95,7 +84,7 @@ sf::Vector2f Hero::getOffset() const {
 // override virtual methods
 // ---------------------------------------------
 
-void Hero::handleBump(Actor* other) noexcept {
+void Tank::handleBump(Actor* other) noexcept {
 	bump();
 }
 
@@ -103,60 +92,43 @@ void Hero::handleBump(Actor* other) noexcept {
 // public methods
 // ---------------------------------------------
 
-void Hero::bump() noexcept {
+void Tank::bump() noexcept {
 	const int range = rand() % (DIRECTIONS - 3) + 2;
 	m_direction = (m_direction + range) % DIRECTIONS;
 }
 
-void Hero::back(int direction) noexcept {
+void Tank::back(int direction) noexcept {
 	const int range = rand() % (DIRECTIONS - 5) + 7;
 	m_direction = (direction + range) % DIRECTIONS;
 }
 
-void Hero::stop() {
+void Tank::stop() {
 	m_speed = 0.f;
 }
 
-void Hero::random() {
+void Tank::random() {
 	m_rounds = rand() % MAX_ROUNDS + 1;
 
-	m_speed = narrow_cast<float>(rand() % MAX_RUN_SPEED);
+	m_speed = narrow_cast<float>(rand() % MAX_SPEED);
+
+	if (m_speed <= MIN_SPEED) {
+		m_speed = 0;
+	}
 
 	m_direction = genDirection();
-
-	if (m_speed > MAX_WALK_SPEED) {
-		m_action_id = 6;	// Run
-	}
-	else if (m_speed > MAX_STOP_SPEED) {
-		m_action_id = 7;	// Walk
-	}
-	else {
-		m_speed = 0;
-		m_action_id = genStopAction();	// Attack, Block, Idle, Jump
-	}
-}
-
-int Hero::getRowFrame() const {
-	return m_action_set->getAction(m_action_id)->row * DIRECTIONS;
 }
 
 // ---------------------------------------------
 // private methods
 // ---------------------------------------------
 
-sf::Vector2f Hero::genPosition() {
+sf::Vector2f Tank::genPosition() {
 	const float x = narrow_cast<float>(rand() % INIT_WIDTH);
 	const float y = narrow_cast<float>(rand() % INIT_HEIGHT);
 
 	return sf::Vector2f(x, y);
 }
 
-int Hero::genDirection() {
+int Tank::genDirection() {
 	return rand() % DIRECTIONS;
-}
-
-int Hero::genStopAction() {
-	const int index = rand() % STOPS;
-
-	return at(STOP_ACTIONS, index);
 }

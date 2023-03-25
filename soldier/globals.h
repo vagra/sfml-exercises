@@ -9,7 +9,7 @@
 constexpr int INIT_WIDTH = 1600;
 constexpr int INIT_HEIGHT = 800;
 
-constexpr int ACTORS = 500;
+constexpr int ACTORS = 1000;
 constexpr int ACTOR_TYPES = 6;
 constexpr int ACTIONS = 8;
 constexpr int ROW_ACTIONS = 4;

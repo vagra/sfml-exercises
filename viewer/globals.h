@@ -9,9 +9,8 @@ constexpr int INIT_HEIGHT = 800;
 
 constexpr int ACTORS = 8;
 constexpr int ACTOR_TYPES = 8;
-constexpr int ACTIONS = 11;
+constexpr int ACTIONS = 12;
 constexpr int ROW_ACTIONS = ACTIONS;
-constexpr int STEPS = 6;
 
 constexpr int FRAME_WIDTH = 80;
 constexpr int FRAME_HEIGHT = 80;

@@ -3,9 +3,13 @@ project (dgrid)
 
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
-    LGrid.cpp
-    TextureManager.cpp
-    Actor.cpp
+    ../common/FontManager.cpp
+    ../common/TextureManager.cpp
+    ../common/ActionManager.cpp
+    ../common/ActorManager.cpp
+    ../common/GridManager.cpp
+    ../common/Actor.cpp
+    Tank.cpp
     App.cpp
     dgrid.cpp
 )

@@ -38,7 +38,9 @@ Actor* ActorManager::getActor(int index) {
 
 void ActorManager::print() {
     for (auto const& actor : m_actors) {
-        fmt::print("{}  {}  {},{}\n",
-            actor->id, actor->type, actor->position.x, actor->position.y);
+        fmt::print("{}  {}  {}  {}  {},{}\n",
+            actor->id, actor->type, 
+            actor->getTypeName(), actor->name,
+            actor->position.x, actor->position.y);
     }
 }
