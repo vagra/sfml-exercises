@@ -148,7 +148,7 @@ int Hero::genDirection() {
 }
 
 int Hero::genStopAction() {
-	int index = rand() % STOPS;
+	const int index = rand() % STOPS;
 
 	return at(STOP_ACTIONS, index);
 }
