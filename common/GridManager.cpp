@@ -96,7 +96,8 @@ void GridManager::updateActors() {
         }
 
         for (int i = 0; i < ids.size(); i++) {
-            other = ActorManager::instance().getActor<Actor>(ids[i]);
+            other = ActorManager::instance().getActor(ids[i]);
+            Ensures(other);
 
             if (actor->atFront(other)) {
                 actor->handleBump(other);
@@ -122,7 +123,8 @@ void GridManager::drawActors(sf::RenderWindow& window) {
         while (elt_idx != -1)
         {
             elt = &mp_grid->elts[elt_idx];
-            actor = ActorManager::instance().getActor<Actor>(elt->id);
+            actor = ActorManager::instance().getActor(elt->id);
+            Ensures(actor);
 
             window.draw(*actor->sprite);
             if (actor->textOn()) {

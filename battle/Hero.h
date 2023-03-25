@@ -73,7 +73,7 @@ public:
     bool inBattle() const noexcept;
     bool inStandby() const noexcept;
 
-    bool canAttack(Hero* enemy) const noexcept;
+    bool canAttack(const Hero* enemy) const noexcept;
     bool canAttack() const noexcept;
     bool canBeAttacked() const noexcept;
 

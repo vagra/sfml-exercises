@@ -27,6 +27,11 @@ int ActorManager::genID() {
     return counter;
 }
 
+Actor* ActorManager::getActor(int index) {
+    assert(index < m_actors.size());
+    return m_actors.at(index).get();
+}
+
 // ---------------------------------------------
 // private methods
 // ---------------------------------------------

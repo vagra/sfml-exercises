@@ -20,7 +20,7 @@ public:
 
 	template <typename T>
 	void makeActors(int count, int types, bool random) {
-		static_assert(std::is_base_of<Actor, T>::value, "T must be a subclass of Actor");
+		static_assert(derived_from<T, Actor>, "T must be a subclass of Actor");
 
 		cout << "make actors with texture, actions and sprite..." << endl;
 
@@ -45,13 +45,6 @@ public:
 		// print();
 	}
 
-	template <typename T>
-	T* getActor(int index) {
-		static_assert(std::is_base_of<Actor, T>::value, "T must be a subclass of Actor");
-		assert(index < m_actors.size());
-		return dynamic_cast<T*>(m_actors.at(index).get());
-	}
-
 	/* public methods */
 	
 	void update(sf::Time elapsed);
@@ -59,6 +52,7 @@ public:
 
 	int getCount();
 	int genID();
+	Actor* getActor(int index);
 
 	/* const member accessers */
 

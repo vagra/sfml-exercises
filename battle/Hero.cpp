@@ -234,7 +234,7 @@ bool Hero::inStandby() const noexcept {
 	return m_fsm.isActive<Standby>();
 }
 
-bool Hero::canAttack(Hero* enemy) const noexcept {
+bool Hero::canAttack(const Hero* enemy) const noexcept {
 
 	if (enemy == nullptr) {
 		return false;

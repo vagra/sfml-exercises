@@ -213,7 +213,8 @@ void App::updateText(sf::Time elapsed) {
 }
 
 void App::changeActor(int actor_id) {
-    actor = ActorManager::instance().getActor<Hero>(actor_id);
+    actor = dynamic_cast<Hero*>(ActorManager::instance().getActor(actor_id));
+    Ensures(actor);
     actor->changeActor();
 }
 
