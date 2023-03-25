@@ -2,9 +2,10 @@
 // LGrid.h
 // ************************************************************************************
 #pragma once
-#pragma warning(disable: 26400 26401 26402 26408 26409)
-#pragma warning(disable: 26426 26429 26432 26440 26455 26461 26462)
-#pragma warning(disable: 26481 26485 26493 26496 26497)
+
+#include <cfloat>
+#include <utility>
+#include <algorithm>
 
 #include "SmallList.h"
 #include "FreeList.h"
@@ -18,20 +19,18 @@ struct LGridQuery4
 struct LGridElt
 {
     // Stores the index to the next element in the loose cell using an indexed SLL.
-    int next{};
+    int next;
 
     // Stores the ID of the element. This can be used to associate external
     // data to the element.
-    int id{};
+    int id;
 
     // Stores the center of the element.
-    float mx{};
-    float my{};
+    float mx, my;
 
     // Stores the half-size of the element relative to the upper-left corner
     // of the grid.
-    float hx{};
-    float hy{};
+    float hx, hy;
 };
 
 struct LGridLooseCell
@@ -39,34 +38,31 @@ struct LGridLooseCell
     // Stores the extents of the grid cell relative to the upper-left corner
     // of the grid which expands and shrinks with the elements inserted and
     // removed.
-    float rect[4]{};
+    float rect[4];
 
     // Stores the index to the first element using an indexed SLL.
-    int head{};
+    int head;
 };
 
 struct LGridLoose
 {
     // Stores all the cells in the loose grid.
-    LGridLooseCell* cells{};
+    LGridLooseCell* cells;
 
     // Stores the number of columns, rows, and cells in the loose grid.
-    int num_cols{};
-    int num_rows{};
-    int num_cells{};
+    int num_cols, num_rows, num_cells;
 
     // Stores the inverse size of a loose cell.
-    float inv_cell_w{};
-    float inv_cell_h{};
+    float inv_cell_w, inv_cell_h;
 };
 
 struct LGridTightCell
 {
     // Stores the index to the next loose cell in the grid cell.
-    int next{};
+    int next;
 
     // Stores the position of the loose cell in the grid.
-    int lcell{};
+    int lcell;
 };
 
 struct LGridTight
@@ -75,16 +71,13 @@ struct LGridTight
     FreeList<LGridTightCell> cells;
 
     // Stores the tight cell heads.
-    int* heads{};
+    int* heads;
 
     // Stores the number of columns, rows, and cells in the tight grid.
-    int num_cols{};
-    int num_rows{};
-    int num_cells{};
+    int num_cols, num_rows, num_cells;
 
     // Stores the inverse size of a tight cell.
-    float inv_cell_w{};
-    float inv_cell_h{};
+    float inv_cell_w, inv_cell_h;
 };
 
 struct LGrid
@@ -99,15 +92,13 @@ struct LGrid
     FreeList<LGridElt> elts;
 
     // Stores the number of elements in the grid.
-    int num_elts{};
+    int num_elts;
 
     // Stores the upper-left corner of the grid.
-    float x{};
-    float y{};
+    float x, y;
 
     // Stores the size of the grid.
-    float w{};
-    float h{};
+    float w, h;
 };
 
 
@@ -226,7 +217,7 @@ static void expand_aabb(LGrid* grid, int cell_idx, float mx, float my, float hx,
         // to see if it was already inserted.
         for (int ty = int(trect.data[1]); ty <= trect.data[3]; ++ty)
         {
-            int* tight_row = grid->tight.heads + (long long)ty*grid->tight.num_cols;
+            int* tight_row = grid->tight.heads + ty*grid->tight.num_cols;
             for (int tx = int(trect.data[0]); tx <= trect.data[2]; ++tx)
             {
                 const LGridTightCell new_tcell = {tight_row[tx], cell_idx};
@@ -243,7 +234,7 @@ static void expand_aabb(LGrid* grid, int cell_idx, float mx, float my, float hx,
         {
             for (int ty = int(trect.data[1]); ty <= trect.data[3]; ++ty)
             {
-                int* tight_row = grid->tight.heads + (long long)ty*grid->tight.num_cols;
+                int* tight_row = grid->tight.heads + ty*grid->tight.num_cols;
                 for (int tx = int(trect.data[0]); tx <= trect.data[2]; ++tx)
                 {
                     if (tx < prev_trect.data[0] || tx > prev_trect.data[2] ||
@@ -257,7 +248,6 @@ static void expand_aabb(LGrid* grid, int cell_idx, float mx, float my, float hx,
         }
     }
 }
-
 
 // Creates a loose grid encompassing the specified extents using the specified cell
 // size. Elements inserted to the loose grid are only inserted in one cell, but the
@@ -361,7 +351,7 @@ static void lgrid_move(LGrid* grid, int id, float prev_mx, float prev_my, float 
     const int prev_cell_idx = lgrid_lcell_idx(grid, prev_mx, prev_my);
     const int new_cell_idx = lgrid_lcell_idx(grid, mx, my);
     LGridLooseCell* lcell = &grid->loose.cells[prev_cell_idx];
-    
+
     if (prev_cell_idx == new_cell_idx)
     {
         // Find the element in the loose cell.
@@ -414,7 +404,7 @@ static SmallList<int> lgrid_query(const LGrid* grid, float mx, float my, float h
     SmallList<int> lcell_idxs;
     for (int ty = int(trect.data[1]); ty <= trect.data[3]; ++ty)
     {
-        const int* tight_row = grid->tight.heads + (long long)ty*grid->tight.num_cols;
+        const int* tight_row = grid->tight.heads + ty*grid->tight.num_cols;
         for (int tx = int(trect.data[0]); tx <= trect.data[2]; ++tx)
         {
             // Iterate through the loose cells that intersect the tight cells.
@@ -503,7 +493,7 @@ static void lgrid_optimize(LGrid* grid)
         const struct rect trect = to_tcell_idx4(grid, lcell->rect[0], lcell->rect[1], lcell->rect[2], lcell->rect[3]);
         for (int ty = int(trect.data[1]); ty <= trect.data[3]; ++ty)
         {
-            int* tight_row = grid->tight.heads + (long long)ty*grid->tight.num_cols;
+            int* tight_row = grid->tight.heads + ty*grid->tight.num_cols;
             for (int tx = int(trect.data[0]); tx <= trect.data[2]; ++tx)
             {
                 const LGridTightCell new_tcell = {tight_row[tx], c};
@@ -512,4 +502,3 @@ static void lgrid_optimize(LGrid* grid)
         }
     }
 }
-

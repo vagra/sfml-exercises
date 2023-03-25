@@ -2,18 +2,10 @@
 // SmallList.hpp:
 // *****************************************************************************
 #pragma once
-#pragma warning(disable: 26400 26401 26402 26408 26409)
-#pragma warning(disable: 26426 26429 26432 26440 26455 26461 26462)
-#pragma warning(disable: 26481 26485 26493 26496 26497)
-#pragma warning(disable: 6386 6387)
 
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
-#include <cfloat>
-#include <utility>
-#include <algorithm>
 
 // Stores a random-access sequence of elements similar to vector, but avoids
 // heap allocations for small lists. T must be trivially constructible and
@@ -72,10 +64,10 @@ private:
     enum { fixed_cap = 256 };
     struct ListData {
         ListData();
-        T buf[fixed_cap]{};
-        T* data{};
-        int num{};
-        int cap{};
+        T buf[fixed_cap];
+        T* data;
+        int num;
+        int cap;
     };
     ListData ld;
 };
@@ -158,14 +150,10 @@ void SmallList<T>::reserve(int n) {
     enum { type_size = sizeof(T) };
     if (n > ld.cap) {
         if (ld.cap == fixed_cap) {
-            assert(n > fixed_cap);
-            ld.data = static_cast<T*>(malloc((long long)n * type_size));
-            assert(ld.data != nullptr);
+            ld.data = static_cast<T*>(malloc(n * type_size));
             memcpy(ld.data, ld.buf, sizeof(ld.buf));
         } else {
-            T* temp = static_cast<T*>(realloc(ld.data, (long long)n * type_size));
-            assert(temp != nullptr);
-            ld.data = temp;
+            ld.data = static_cast<T*>(realloc(ld.data, n * type_size));
         }
         ld.cap = n;
     }
