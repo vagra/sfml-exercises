@@ -4,8 +4,8 @@
 #include "../common/ActorManager.h"
 #include "Hero.h"
 
-constexpr int ROW_HEIGHT = 20;
-constexpr int ROWS = 60;
+constexpr int ROW_HEIGHT = 10;
+constexpr int ROWS = 120;
 
 class Hero;
 

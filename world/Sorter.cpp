@@ -100,13 +100,13 @@ void Sorter::moveTo(Hero* hero, int row) {
 int Sorter::getRow(const Hero* hero) {
 	const int row = narrow_cast<int>(hero->position.y / ROW_HEIGHT);
 
-	return min(ROWS - 1, row);
+	return max(0, min(ROWS - 1, row));
 }
 
 int Sorter::getPrevRow(const Hero* hero) {
 	const int row = narrow_cast<int>(hero->prev_position.y / ROW_HEIGHT);
 
-	return min(ROWS - 1, row);
+	return max(0, min(ROWS - 1, row));
 }
 
 void Sorter::print() {
