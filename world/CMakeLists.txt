@@ -3,9 +3,14 @@ project (world)
 
 # Create a sources variable with a link to all cpp files to compile
 set(SOURCES
-    Actor.cpp
+    ../common/FontManager.cpp
+    ../common/TextureManager.cpp
+    ../common/ActionManager.cpp
+    ../common/ActorManager.cpp
+    ../common/Actor.cpp
+    Sorter.cpp
+    Hero.cpp
     App.cpp
-    TextureManager.cpp
     world.cpp
 )
 

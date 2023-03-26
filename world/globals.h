@@ -1,28 +1,30 @@
 #pragma once
 
-#include <fstream>
-#include <iostream>
-#include <filesystem>
-#include <unordered_map>
-#include <SFML/Graphics.hpp>
-#include <fmt/core.h>
-
-using namespace std;
+#include "../common/headers.h"
 
 
-const int INIT_WIDTH = 1600;
-const int INIT_HEIGHT = 800;
+constexpr int INIT_WIDTH = 1600;
+constexpr int INIT_HEIGHT = 800;
 
-const int ACTORS = 17;
+constexpr int ACTORS = 5000;
+constexpr int ACTOR_TYPES = 17;
+constexpr int ACTIONS = 3;
+constexpr int ROW_ACTIONS = 3;
 
-const int MAX = 5000;
+constexpr int INIT_DIRECTION = 0;
 
-const int FRAME_WIDTH = 100;
-const int FRAME_HEIGHT = 100;
+constexpr int FRAME_WIDTH = 100;
+constexpr int FRAME_HEIGHT = 100;
+constexpr int ORIGIN_X = 50;
+constexpr int ORIGIN_Y = 70;
+
+constexpr float SCALE = 0.7f;
 
 const string PNG_DIR = "../assets/characters/";
-const string PNG_EXT = ".png";
 
-const string ACTOR_PNG = "actor-{}-0.png";
-const string SHADOW_PNG = "shadow.png";
+enum ACTION {
+	WALK = 0,
+	RUN = 1,
+	RAISE = 2
+};
 

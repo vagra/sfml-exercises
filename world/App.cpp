@@ -1,23 +1,21 @@
 #include "App.h"
 
-App::App() {
-    init();
-}
-
 void App::init() {
+
+    FontManager::instance().loadFonts();
+    TextureManager::instance().loadTextures(PNG_DIR);
+    ActionManager::instance().loadActions(PNG_DIR, ROW_ACTIONS);
+    ActorManager::instance().makeActors<Hero>(ACTORS, ACTOR_TYPES, true);
+    Sorter::instance().init();
+
     initWindow();
     initText();
-
-    TextureManager::init();
-
-    initActors();
 }
 
 void App::run() {
     
     sf::Clock clock;
     sf::Time elapsed;
-    int fps;
 
     while (window.isOpen())
     {
@@ -32,44 +30,44 @@ void App::run() {
             {
                 onResize();
             }
+
+            if (event.type == sf::Event::KeyPressed ||
+                event.type == sf::Event::KeyReleased)
+            {
+                onKeyboard();
+            }
         }
 
         elapsed = clock.restart();
 
-        for (auto& actor : actors)
-        {
-            actor.play(elapsed);
-        }
-
-        sort(actors.begin(), actors.end(), Actor::zOrder);
-
-        fps = int(1 / elapsed.asSeconds());
-        text.setString(fmt::format("Character Number: {}\nFPS: {}", MAX, fps));
+        ActorManager::instance().update(elapsed);
+        Sorter::instance().update();
+        updateText(elapsed);
 
         window.clear(BG_COLOR);
-
-        for (auto& actor : actors)
-        {
-            window.draw(actor.sprite);
-        }
-
-        window.draw(text);
+        
+        ActorManager::instance().draw(window);
+        Sorter::instance().draw(window);
+        drawText();
+        
         window.display();
     }
 }
 
 void App::onResize() {
-    sf::Vector2f win = static_cast<sf::Vector2f>(window.getSize());
+    const sf::Vector2f win = static_cast<sf::Vector2f>(window.getSize());
 
-    Actor::setRegion(int(win.x), int(win.y));
+    Actor::setRegion(win.x, win.y);
 
     sf::View view = window.getDefaultView();
     view.setCenter(win / 2.f);
     view.setSize(win);
 
     window.setView(view);
+}
 
-    // cout << fmt::format("win: ({}, {})", win.x, win.y) << endl;
+void App::onKeyboard() {
+    
 }
 
 void App::initWindow() {
@@ -79,25 +77,16 @@ void App::initWindow() {
 }
 
 void App::initText() {
-    if (!font.loadFromFile(FONT_OTF))
-    {
-        cout << "can't read font: " << FONT_OTF << endl;
-    }
-
-    text.setFont(font);
-    text.setCharacterSize(24);
-    text.setFillColor(sf::Color::Yellow);
+    text.setFont(*FontManager::instance().getFont(gui_text.font));
+    text.setCharacterSize(gui_text.size);
+    text.setFillColor(gui_text.color);
 }
 
+void App::drawText() {
+    window.draw(text);
+}
 
-void App::initActors() {
-
-    actors = vector<Actor>();
-
-    for (int i = 0; i < MAX; i++)
-    {
-        Actor actor;
-
-        actors.push_back(actor);
-    }
+void App::updateText(sf::Time elapsed) {
+    int fps = narrow_cast<int>(1 / elapsed.asSeconds());
+    text.setString(fmt::format("Actors: {}\nFPS: {}", ACTORS, fps));
 }

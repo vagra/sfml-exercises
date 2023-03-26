@@ -1,37 +1,41 @@
 #pragma once
 
 #include "globals.h"
-#include "TextureManager.h"
-#include "Actor.h"
+#include "../common/FontManager.h"
+#include "../common/TextureManager.h"
+#include "../common/ActionManager.h"
+#include "../common/ActorManager.h"
+#include "Sorter.h"
+#include "Hero.h"
 
-using namespace std;
 
-const string FONT_OTF = "../assets/fonts/ark-pixel-12px-monospaced-zh_cn.ttf";
-const sf::String APP_NAME = L"人海";
+const Text gui_text{
+	.font = "ark",
+	.size = 24,
+	.color = sf::Color::Yellow
+};
+
 const sf::Color BG_COLOR = sf::Color(126, 161, 116);
+
+const sf::String APP_NAME = L"人海";
 
 class App
 {
 public:
-	App();
-
+	void init();
 	void run();
 
 private:
-
-	void init();
-
 	void initWindow();
+
 	void initText();
-	void initActors();
+	void updateText(sf::Time elapsed);
+	void drawText();
 
 	void onResize();
+	void onKeyboard();
 
 	sf::RenderWindow window;
-	sf::Font font;
 	sf::Text text;
-
-	vector<Actor> actors;
-
 };
 
