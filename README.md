@@ -30,6 +30,12 @@ finite state machine, infinite possibilities.
 - [github](https://github.com)
 - [stackoverflow](https://stackoverflow.com)
 
+- **books**
+  - [Cpp Core Guidelines](https://github.com/isocpp/CppCoreGuidelines)
+  - [Cpp Core Guidelines zh-CN](https://github.com/lynnboy/CppCoreGuidelines-zh-CN)
+  - [Game Programming Patterns](https://github.com/munificent/game-programming-patterns)
+  - [Game Programming Patterns CN](https://github.com/tkchu/Game-Programming-Patterns-CN)
+
 - **library**
   - [sfml](https://github.com/SFML/SFML)
   - [ms-gsl](https://github.com/microsoft/GSL)
