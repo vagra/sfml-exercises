@@ -93,15 +93,15 @@ bool Actor::atFront(const Actor* other) const {
 	case 2:
 		return dx > abs(dy);
 	case 3:
-		return dx > 0 and dy < 0;
+		return dx > 0 && dy < 0;
 	case 4:
 		return -dy > abs(dx);
 	case 5:
-		return dx < 0 and dy < 0;
+		return dx < 0 && dy < 0;
 	case 6:
 		return -dx > abs(dy);
 	case 7:
-		return dx < 0 and dy > 0;
+		return dx < 0 && dy > 0;
 	default:
 		return false;
 	}
