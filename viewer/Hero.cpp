@@ -24,8 +24,8 @@ void Hero::play(sf::Time elapsed) {
 
 	m_frame_timer += elapsed.asMilliseconds();
 
-	if (m_frame_timer >= DURATION || g_change_action) {
-		m_frame_timer = m_frame_timer % DURATION;
+	if (m_frame_timer >= FRAME_CYCLE || g_change_action) {
+		m_frame_timer = m_frame_timer % FRAME_CYCLE;
 		g_change_action = false;
 		step();
 	}
@@ -56,7 +56,7 @@ void Hero::move(bool move) noexcept {
 }
 
 void Hero::turn(int direction) {
-	g_direction = getTextureDirection(direction);
+	g_direction = direction;
 }
 
 void Hero::changeActor() {
@@ -82,18 +82,10 @@ int Hero::getCurrentFrame() const noexcept {
 }
 
 int Hero::getDirection() const {
-	return getScreenDirection(g_direction);
+	return g_direction;
 }
 
 sf::Vector2f Hero::getOffset() const {
 	const int direction = getDirection();
 	return VECTORS.at(direction) * SPEED;
-}
-
-constexpr int Hero::getScreenDirection(int direction) {
-	return (DIRECTIONS + INIT_DIRECTION - direction) % DIRECTIONS;
-}
-
-constexpr int Hero::getTextureDirection(int direction) {
-	return (DIRECTIONS + INIT_DIRECTION - direction) % DIRECTIONS;
 }

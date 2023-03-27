@@ -17,7 +17,7 @@ constexpr int ACTOR_TYPES = 8;
 constexpr int ACTIONS = 12;
 constexpr int ROW_ACTIONS = ACTIONS;
 
-constexpr int INIT_DIRECTION = 6;
+constexpr int INIT_DIRECTION = 0;
 
 constexpr int FRAME_WIDTH = 80;
 constexpr int FRAME_HEIGHT = 80;

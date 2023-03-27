@@ -89,11 +89,6 @@ private:
     sf::Vector2f genPosition();
     int genHit() noexcept;
 
-    /* private static methods */
-
-    static constexpr int getScreenDirection(int direction) noexcept;
-    static constexpr int getTextureDirection(int direction) noexcept;
-
     /* private members */
 
     Hero* m_enemy = nullptr;

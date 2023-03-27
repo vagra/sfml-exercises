@@ -77,7 +77,7 @@ void Hero::play(sf::Time elapsed) {
 }
 
 void Hero::step() {
-	const int direction = getScreenDirection(getDirection());
+	const int direction = getDirection();
 
 	m_frame.x = getStartFrame() + getCurrentFrame();
 	m_frame.y = direction;
@@ -88,7 +88,6 @@ void Hero::step() {
 	m_sprite->setTextureRect(m_area);
 	m_text->setString(to_string(m_fsm.context().hp));
 }
-
 
 int Hero::getStartFrame() const {
 	return m_action_set->getAction(m_fsm.context().action)->start;
@@ -349,17 +348,4 @@ sf::Vector2f Hero::genPosition() {
 
 int Hero::genHit() noexcept {
 	return rand() % (MAX_HIT - MIN_HIT) + MIN_HIT;
-}
-
-
-// ---------------------------------------------
-// private static methods
-// ---------------------------------------------
-
-constexpr int Hero::getScreenDirection(int direction) noexcept {
-	return (DIRECTIONS + INIT_DIRECTION - direction) % DIRECTIONS;
-}
-
-constexpr int Hero::getTextureDirection(int direction) noexcept {
-	return (DIRECTIONS + INIT_DIRECTION - direction) % DIRECTIONS;
 }

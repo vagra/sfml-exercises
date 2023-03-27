@@ -6,9 +6,8 @@
 #include "../common/ActionManager.h"
 #include "../common/ActorManager.h"
 
-constexpr int INIT_DIRECTION = 6;
+constexpr int FRAME_CYCLE = 100;
 constexpr float SPEED = 2.0f;
-constexpr int DURATION = 100;
 
 class Hero : public Actor
 {
@@ -31,8 +30,6 @@ public:
     sf::Vector2f getOffset() const override;
 
 private:
-    static constexpr int getScreenDirection(int direction);
-    static constexpr int getTextureDirection(int direction);
 
     static inline sf::Vector2f g_position = sf::Vector2f(INIT_WIDTH / 2, INIT_HEIGHT / 2);
     static inline int g_frame_step = 0;
