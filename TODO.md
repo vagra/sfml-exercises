@@ -23,3 +23,8 @@
 - [x] if dead, no collision handling, and disappear.
 - [x] when attacking, crash into the enemy.
 - [x] if too close, pull away; if too far, get closer. 
+
+## all
+- [x] rewrite all projects, adapt gsl, extract common classes and move to common.
+- [x] release v1.5.1 builds for windows.
+- [ ] the system has gradually become more complex, considering whether to introduce the ECS library such as entt.
